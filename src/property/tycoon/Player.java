@@ -11,19 +11,22 @@ package property.tycoon;
  * @author shitaab
  */
 public class Player {
-    String[] p= new String[]{"boot","smartphone","goblet","hatstand","spon","cat"};
     int player_balance=1500;
     int Player_position=0;
-    String player_characters;
+    charechter player_characters;
     
-    public Player(int x){
+    public Player(charechter x){
        
-        player_characters=p[x-1];
+        player_characters=x;
         
+    }
+    public enum charechter{
+        
+        boot,smartphone,goblet,hatstand,spon,cat
     }
     public String characters_Player(){
         
-       return player_characters;
+       return player_characters.name();
         
     }
     

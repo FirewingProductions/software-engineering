@@ -17,10 +17,10 @@ public class Game  {
     
     
     
-    public Game(int a,int[] b) {
-         player= new Player[a];
+    public Game( Player.charechter[] b) {
+         player= new Player[b.length];
          
-         for(int x=0;x<a;x++)
+         for(int x=0;x<b.length;x++)
          player[x] = new Player(b[x]);
        
     }

@@ -18,9 +18,15 @@ public class Main {
         public static void main(String[] args) {
         // TODO code application logic here
         int[] b= new int[]{5,2,3,6};
-       Game n=new Game(4,b);
+        Player.charechter[] player= new Player.charechter[]{Player.charechter.boot,Player.charechter.cat,Player.charechter.goblet};
+       Game n=new Game(player);
        
-       
+       /*
+       // enum test
+             System.out.println(n.player[0].player_characters);
+             System.out.println(n.player[1].player_characters);
+             System.out.println(n.player[2].player_characters);
+*/
      
       System.out.println(n.player[0].Player_position);
 n.new_turn(n.player[1]);
