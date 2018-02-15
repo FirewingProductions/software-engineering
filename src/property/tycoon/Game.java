@@ -28,18 +28,18 @@ public class Game  {
    
     
 
-    public void new_turn(int x){
+    public void new_turn(Player player_no){
         a.throw_dice();
-        player[x-1].Player_move(a.dice[0]+a.dice[1]);
+        player_no.Player_move(a.dice[0]+a.dice[1]);
        
-        if (player[x-1].Player_position>=40){
+        if (player_no.Player_position>=40){
             
-            player[x-1].Player_position=0+(player[x-1].Player_position-40);
+           player_no.Player_position=0+(player_no.Player_position-40);
         }
        
         
         if(a.dice[0]==a.dice[1]){
-            new_turn(x);
+            new_turn(player_no);
         }
         
     }

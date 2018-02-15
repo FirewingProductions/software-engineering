@@ -23,39 +23,39 @@ public class Main {
        
      
       System.out.println(n.player[0].Player_position);
-n.new_turn(1);
+n.new_turn(n.player[1]);
 
-             System.out.println(n.player[0].Player_position);
+             System.out.println(n.player[1].Player_position);
 
-n.new_turn(1);
-             System.out.println(n.player[0].Player_position);
+n.new_turn(n.player[1]);
+             System.out.println(n.player[1].Player_position);
 
-n.new_turn(1);
-             System.out.println(n.player[0].Player_position);
+n.new_turn(n.player[1]);
+             System.out.println(n.player[1].Player_position);
 
-n.new_turn(1);
-             System.out.println(n.player[0].Player_position);
-
-
-     n.new_turn(1);
-             System.out.println(n.player[0].Player_position);
+n.new_turn(n.player[1]);
+             System.out.println(n.player[1].Player_position);
 
 
-n.new_turn(1);
-             System.out.println(n.player[0].Player_position);
+n.new_turn(n.player[1]);
+             System.out.println(n.player[1].Player_position);
 
 
-     n.new_turn(1);
-             System.out.println(n.player[0].Player_position);
+n.new_turn(n.player[1]);
+             System.out.println(n.player[1].Player_position);
 
 
-n.new_turn(1);
-             System.out.println(n.player[0].Player_position);
+n.new_turn(n.player[1]);
+             System.out.println(n.player[1].Player_position);
+
+
+n.new_turn(n.player[1]);
+             System.out.println(n.player[1].Player_position);
 
 
 
-     n.new_turn(1);
-             System.out.println(n.player[0].Player_position);
+n.new_turn(n.player[1]);
+             System.out.println(n.player[1].Player_position);
 
 
 
