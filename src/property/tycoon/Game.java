@@ -30,6 +30,7 @@ public class Game  {
 
     public void new_turn(Player player_no){
         a.throw_dice();
+        
         player_no.Player_move(a.dice[0]+a.dice[1]);
        
         if (player_no.Player_position>=40){
@@ -43,8 +44,6 @@ public class Game  {
         }
         
     }
-    
-    
     
     
 
