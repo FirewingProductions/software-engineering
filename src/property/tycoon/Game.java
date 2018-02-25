@@ -11,17 +11,18 @@ package property.tycoon;
  * @author shitaab
  */
 public class Game  {
-            Player[] player;
+            Player[] player; // a list of players 
 
-             Dice a= new Dice();
+             Dice a= new Dice();  // the two dices
     
     
     
-    public Game( Player.charechter[] b) {
+    public Game( Player.character[] b) {
+        // initialization of players class by defining the characters of each player
          player= new Player[b.length];
          
          for(int x=0;x<b.length;x++)
-         player[x] = new Player(b[x]);
+         player[x] = new Player(b[x]);  
        
     }
     
@@ -29,6 +30,8 @@ public class Game  {
     
 
     public void new_turn(Player player_no){
+        // 1) throw the dice 2) check if player has passed go(location number 0) if so we go back to  (location -40 )
+        //3) we check if the player has got double if so then they play again 
         a.throw_dice();
         
         player_no.Player_move(a.dice[0]+a.dice[1]);

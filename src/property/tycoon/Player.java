@@ -13,41 +13,40 @@ import java.util.LinkedList;
  * @author shitaab
  */
 public class Player {
-    int player_balance=1500;
-    int Player_position=0;
-    charechter player_characters;
+    int player_balance=1500; //player starting balance
+    int Player_position=0;   // the position of the player on the board
+    character player_characters;  
     
-    // need to be worked on
     
-    String name;
+    String name;    //the name of the player
     String[] Property; //will be changed to property class instead of string 
-    boolean jailed;
-    int jail_time;
-    Cards[] player_cards;
+    boolean jailed;   
+    int jail_time;  
+    Cards[] player_cards; //if a player still has a card that he draw from the deck of cards
     
     
     
-    public Player(charechter x){
+    public Player(character x){
        
-        player_characters=x;
+        player_characters=x;   // this method assigns the chosen character 
         
     }
-    public enum charechter{
+    public enum character{
         
-        boot,smartphone,goblet,hatstand,spon,cat
+        boot,smartphone,goblet,hatstand,spon,cat  // the possible characters that can be used 
     }
     public String characters_Player(){
         
-       return player_characters.name();
+       return player_characters.name();      //returns the chosen character
         
     }
     
     public int Player_balance(){
         
-        return player_balance;
+        return player_balance;     //returns the balance 
     }
    public void Player_move(int x){
-        Player_position=Player_position+x;
+        Player_position=Player_position+x;  // moves a player to  by any number of steps (X)
        
    }
    
