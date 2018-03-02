@@ -1,0 +1,57 @@
+5
+Functional
+	The software shall be able to have one or more players in the game controlled by the autonomous agent.
+	The software shall be able to have all players controlled by the autonomous agent.
+	The software shall be able to import initial data for the pot luck and opportunity knocks cards.
+	The software shall be able to import initial data for properties.
+	The software shall be able to display current worth of each player at any time.
+	The software shall have an interface which attempts to avoid the players mouse clicks.
+	
+
+
+Non-Funtional
+	The software should be able to run at high speed when all players are autonomous.
+	The software shall be easily customised.
+	
+	
+	
+
+	
+Things unsure about
+	A means of being tested: to ensure that the market is operating properly in accordance with the rules of the game, and to demonstrate that the software is working correctly
+
+
+
+6
+Functional
+	The autonomous agent shall be able to play the game to the same extent as a player.
+	The autonomous agent shall not be able to retire.
+
+
+Non-Functional
+
+
+
+7
+Functional
+	The software shall ensure that the bank has an infinite amount of money.
+	Players shall not be able borrow or lend money to each other.
+	The software shall ensure that properties are never allocated to a player if their assets aren't decremented accordingly.
+	The software shall ensure that the probability of the dice producing a number between 1 and 6 is the same. 
+	
+	
+Non-Funtional
+	The software shall ensure that the user interface displays all information about properties owned by a player or available.
+
+
+
+8
+Functional
+	
+Non-Functional
+	The software should be organised to ensure that the netbeans file hierarchies are preserved. 
+
+
+
+
+
