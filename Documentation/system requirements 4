@@ -1,0 +1,44 @@
+Functional
+The game shall have a minimum of two players.
+The game shall have a maximum of six players.
+The game shall require each player to have a token representation in game.
+The game shall allow the player to choose their token or have it randomly assigned.
+The game shall have the following tokens: boot, smartphone, goblet, hatstand, cat, spoon.
+The game shall have an infinite amount of money available to the bank.
+The game shall not allow the players to borrow money from the bank.
+The game shall allow the players to sell properties to the bank.
+The game shall shullfe the two packs of cards at the start of the game.
+The game shall put used cards onto the bottom of the appropritate deck.
+The game shall have the turn player roll two dice on their turn to show the distance they will move.
+The game shall move the player clockwise a number of squares equal to their dice roll.
+The game shall give the player an additional turn if they roll a double on their turn.
+The game shall send a player to jail if they roll three consecutive doubles.
+The game shall be able to send a player to jail: the player's token is moved to the "in jail" square and does not pass go.
+The game board shall consist of spaces which can be: properties, pot luck, opportunity knocks,
+ free parking, jail/just visiting, instructions.
+The game shall present the player with the top card of the pot luck or opportunity knocks deck when the player 
+  lands on the space associated with it and then carries out the action listed on the card.
+The game shall carry out the instructions listed on an instruction space when the player lands on it.
+The game shall ensure that no player may purchase a property until they have completed a complete circuit of the board.
+The game shall ensure that when a player passes the 'Go' space, they recieve £200 from the bank.
+The game shall ensure that no player owns any of the properties at the start of the game.
+The game shall transfer money from a player to the bank when they purchase an un-owned property and that property is transfered from the bank to the player. 
+The game shall ensure that if a player lands on a space that contains a property they have not yet purchased, they have the ability to by that property.
+The game shall auction a property if it is not yet purchased and the player who landed on the corresponding space did not buy that property.
+When a property is auctioned, each player has the ability to make a bid.
+The bank must sell an auctioned property to the highest bidder.
+The game shall leave auctioned properties unsold if there are no bidders.
+The game shall transfer money from a player 
+
+gone up to 4.11)
+
+
+The game shall begin with each player having £1,500.
+The game's turn order shall play clockwise.
+
+Non-Functional
+
+
+
+
+Domain
