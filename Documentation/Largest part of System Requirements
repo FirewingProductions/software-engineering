@@ -1,0 +1,56 @@
+Functional
+ System is the banker, responsible for distributing cash
+ Bank total 50000
+ Player cannot borrow money from bank, can trade with bank
+ Both card packs shuffled at beginning of each game
+ Used cards placed at bottom of pile
+ Player moves number of place shown on dice
+ If Player throws double, take another turn. On third double: jail (not rewarded for passing go)
+ Property purchases not allowed until player has lapped the board
+ All properties initially owned by bank, card price required for purchase
+ 
+ Once a player has made their move, if they land on a property that has not yet been purchased, 
+ they have the opportunity to buy that property. If they decide not to buy that property then
+ the property is auctioned by the bank. Each player makes a bid to the bank. The bank sells the 
+ property to the highest bidder. If there are no bids, then the property remains unsold. All bidding
+ players must have completed one circuit of the board.
+ 
+ Rent doubled when set collected
+ Landing on house/hotels, pay rent on corresponding card
+ Rent must be paid in cash
+ Player must sell assets if unable to pay in cash
+ If player cannot pay, they are bankrupt and out the game
+ If unowned, player can buy property
+ Houses/hotels are only available if colour group owned by player
+ Mortgaged property will be sold to the bank for half price
+ Fine payments accumulate in centre of board, if player lands on free parking they collect the funds
+ £50 payment to get out of jail, this is added to free parking
+  When in jail, stay there for next 2 rounds, cannot collect rent.
+  Use of 'Get out of jail free card', card returned to bottom of pile
+  Once out of jail, by any means, player moved to 'just visiting', turn ends.    
+ 
+ 
+Non Function
+  Can only be played with 2 – 6 players, computed or otherwise
+  Two dice rolled
+  Players start on 'Go'
+  Players move clockwise
+  Each player has a game token
+  Each player takes a turn to roll, in order
+  Player starts with 1500 cash
+  Board spaces can be : properties, pot luck, opp knocks, free parking
+    Pot luck, opp knocks : take corrosponding card, placed at bottom
+  Player receives 200 on passing go
+  Pay rent on owned property
+  Only at end of turn can player buy houses/hotels
+   Price of house/hotels shown on card
+  Player can sell property back to bank if empty, aswell as houses/hotels
+  No borrowing, or lending between players and bank
+  Purchasing of houses/hotels must be sequential whereby the difference in the highest amount of houses/hotels on a colour group is
+  never more than 1
+  one hotel on each property max
+  hotel price is 5 * house price
+  Player can mortgage, bank will pay half price of property. No rent collected whilst mortgaged
+  
+  
+Domain
