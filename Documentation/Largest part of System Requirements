@@ -1,6 +1,6 @@
 Functional
  System is the banker, responsible for distributing cash
- Bank total 50000
+ Bank total 50000 ******
  Player cannot borrow money from bank, can trade with bank
  Both card packs shuffled at beginning of each game
  Used cards placed at bottom of pile
