@@ -29,8 +29,31 @@ When a property is auctioned, each player has the ability to make a bid.
 The bank must sell an auctioned property to the highest bidder.
 The game shall leave auctioned properties unsold if there are no bidders.
 The game shall transfer money from a player 
+The game shall run on both Windows and Mac, if not possible, Windows as priority.
+The game shall double rent on properties if the owner owns that whole colour group.
+The game shall charge rent when a player lands on a property according to the card when property is improved with houses/hotels
+The game shall make players sell game assets to pay rent if they are unable to pay. If the rent total is still not reached, they are bankrupt and removed from the board.
+The game shall not allow money borrowing/lending between players, and between a player and the bank
+The game shall only allow improving properties when a player have finished moving their token, and completed any property purchase.
+The game shall only allow house/hotel purchases on a property where the player owns the whole colour group
+The game shall allow a player to sell property back to the bank if they need to raise funds. But, houses/hotels on the propert must be sold back first.
+The game shall only allow purchases of houses as long as there is not a difference more than 1 house between all the properties in the set.
+The game shall allow the purchase of a hotel for 5x the price of one house.
+The game shall allow to have at max, 4 houses on one set. and a hotel on another in that set.
+The game shall only allow one hotel on any given property.
+The game shall allow the raising of funds for a player by mortaging their properties, the bank provides half of the original cost.
+The game shall not allow any rent to be collected while a property is under mortgage.
+The game shall allow the player to sell a mortgaged property to the bank, sold for half the original property price shown on the card.
+The game shall put any fines paid into the free parking space in the centre of the board.
+The game shall reward a given player with all money in free parking when they land on it.
+The game shall allow a player to exit jail by paying £50. This £50 is added to free parking.
+The game shall move a player who has exitted jail to the 'just visiting' space and the player turn ends.
+The game shall allow a player to stay in jail, giving up their turn for the next 2 rounds.
+The game shall not allow rent to be collected while a player is in jail.
+The game shall move the player to 'just visiting' if they opt to stay in jail and the two rounds have passed.
+The game shall allow the player to exit jail and move to 'just visiting' if they have a 'get out of jail free' card. The player turn ends, and the card is then placed at the bottom of the appropriate pile.
+The game shall allow a player exiting jail to take their turn as normal the next round.
 
-gone up to 4.11)
 
 
 The game shall begin with each player having £1,500.
@@ -38,7 +61,9 @@ The game's turn order shall play clockwise.
 
 Non-Functional
 
-
+The game shall be 'fun to play', and a 'colourful and intuative' UI, reflecting that of the original game.
 
 
 Domain
+
+
