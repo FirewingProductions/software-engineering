@@ -11,11 +11,14 @@ package propertytycoon;
  * @author shitaab
  */
 public class Space {
- public  int position;
- public   String action;
+   int position;
+    String action;
 
 
-    public Space() {
+    public Space(int position,String action) {
+        
+        this.action=action;
+        this.position=position;
       
 }
     

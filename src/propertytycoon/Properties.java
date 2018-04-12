@@ -5,20 +5,35 @@
  */
 package propertytycoon;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author shitaab
  */
 public class Properties extends Space{
     int cost;
-    int[] rent;
+    ArrayList<Integer> rent;
     String colour;
-   public Properties(){
-        rent= new int[6];
+
+    
+    public Properties(int position,String action,String colour,int cost){
+        super(position,action);
+        rent =new ArrayList<Integer>();
+        this.colour=colour;
+        this.cost=cost;
+    
        
     }
     
    
-   
+   public void rent(int x){
+       
+       rent.add(x);
+   }
+   public int getrent(int x){
+       return rent.get(x-1);
+       
+   }
    
 }

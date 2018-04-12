@@ -74,26 +74,27 @@ public void create_space()throws BiffException, IOException {
                 int i=0; // the counter for propirties
 for (int x = 0; x < totalNoOfRows; x++) {
    //adding the space position and the action
-          space[x]= new Space();
-          space[x].action=sh.getCell(4,x+4).getContents();
-          space[x].position=Integer.parseInt(sh.getCell(0,x+4).getContents()) ;
+  space[x]= new Space(Integer.parseInt(sh.getCell(0,x+4).getContents()),sh.getCell(4,x+4).getContents());
+    
            //if the space can be bought then its count as a propirty
     if(sh.getCell(5,x+4).getContents().contains("Yes")){
         //creating a new propirtie with: location , cost, colour and diffrient rent prices for ex 0 will get no house and 1 will get the rent with a house 
-        properties[i]=new Properties();
-        properties[i].colour=sh.getCell(3,x+4).getContents();
-      properties[i].cost=Integer.parseInt(sh.getCell(7,x+4).getContents()) ;
-      properties[i].position=Integer.parseInt(sh.getCell(0,x+4).getContents()) ;
-      if(!sh.getCell(8,x+4).getContents().contains("See notes")){
-      properties[i].rent[0]= Integer.parseInt(sh.getCell(8,x+4).getContents()) ;
-      properties[i].rent[1]= Integer.parseInt(sh.getCell(10,x+4).getContents()) ;
-      properties[i].rent[2]= Integer.parseInt(sh.getCell(11,x+4).getContents()) ;
-      properties[i].rent[3]= Integer.parseInt(sh.getCell(12,x+4).getContents()) ;
-      properties[i].rent[4]= Integer.parseInt(sh.getCell(13,x+4).getContents()) ;
-      properties[i].rent[5]= Integer.parseInt(sh.getCell(14,x+4).getContents()) ;
+        properties[i]=new Properties(Integer.parseInt(sh.getCell(0,x+4).getContents()),sh.getCell(4,x+4).getContents(),sh.getCell(3,x+4).getContents(),Integer.parseInt(sh.getCell(7,x+4).getContents()));
+       
+      if( !sh.getCell(8,x+4).getContents().contains("See notes")){
+          properties[i].rent(Integer.parseInt(sh.getCell(8,x+4).getContents()));
+          properties[i].rent(Integer.parseInt(sh.getCell(10,x+4).getContents()));
+          properties[i].rent(Integer.parseInt(sh.getCell(11,x+4).getContents()));
+          properties[i].rent(Integer.parseInt(sh.getCell(12,x+4).getContents()));
+          properties[i].rent(Integer.parseInt(sh.getCell(13,x+4).getContents()));
+          properties[i].rent(Integer.parseInt(sh.getCell(14,x+4).getContents()));
+                     System.out.println(properties[i].position+" "+properties[i].colour+" "+properties[i].cost+" "+properties[i].getrent(1)+" "+properties[i].getrent(2)+" "+properties[i].getrent(3)+" "+properties[i].getrent(4)+" "+properties[i].getrent(5)+" "+properties[i].getrent(6));
 
       }
-                     System.out.println(properties[i].position+" "+properties[i].colour+" "+properties[i].cost+" "+properties[i].rent[0]+" "+properties[i].rent[1]+" "+properties[i].rent[2]+" "+properties[i].rent[3]+" "+properties[i].rent[4]+" "+properties[i].rent[5]);
+      else{
+                               System.out.println(properties[i].position+" "+properties[i].colour+" "+properties[i].cost+" ");
+
+      }
 
         i++;
  
