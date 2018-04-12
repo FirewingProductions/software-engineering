@@ -5,20 +5,19 @@
  */
 package propertytycoon;
 
+
 /**
  *
  * @author shitaab
  */
-public class Properties extends Space{
-    int cost;
-    int[] rent;
-    String colour;
-   public Properties(){
-        rent= new int[6];
-       
-    }
+public class Space {
+ public  int position;
+ public   String action;
+
+
+    public Space() {
+      
+}
     
-   
-   
-   
+ 
 }

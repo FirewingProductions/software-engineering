@@ -1,6 +1,7 @@
 package propertytycoon;
 
 import java.io.IOException;
+import jxl.read.biff.BiffException;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -17,7 +18,7 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-        public static void main(String[] args) throws IOException {
+        public static void main(String[] args) throws IOException, BiffException {
         // TODO code application logic here
         int[] b= new int[]{5,2,3,6};
         Player.character[] player= new Player.character[]{Player.character.boot,Player.character.cat,Player.character.goblet};
@@ -28,13 +29,15 @@ public class Main {
              System.out.println(n.player[0].player_characters);
              System.out.println(n.player[1].player_characters);
              System.out.println(n.player[2].player_characters);
-       */
        
-       // testing drawing cards
+       */
+       //testing spaces 
+                         n.create_space();
+
+        /* testing drawing cards
              Cards s;
        
              s= new Cards();
-          Properties   s1= new Properties();
           
                     
           s.shuffel_cards(s.pot_luck_card_data);
@@ -52,15 +55,8 @@ public class Main {
 
 
         }
-                  
-                       for(int i=0;i<s1.properties.size();i++){
-            System.out.println(s1.properties.get(i)); 
-
-    
-               
-                       }
                 
-                       
+              */         
 /* testing player movements 
      
       System.out.println(n.player[0].Player_position);
