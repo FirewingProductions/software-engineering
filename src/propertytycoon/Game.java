@@ -84,43 +84,29 @@ public void create_space()throws BiffException, IOException {
         properties[i]=new Properties(Integer.parseInt(sh.getCell(0,x+4).getContents()),sh.getCell(4,x+4).getContents(),sh.getCell(1,x+4).getContents(),sh.getCell(3,x+4).getContents(),Integer.parseInt(sh.getCell(7,x+4).getContents()),Integer.parseInt(sh.getCell(15,x+4).getContents()));
         
     if( !sh.getCell(8,x+4).getContents().contains("See notes")){
+        
         properties[i].rent(Integer.parseInt(sh.getCell(8,x+4).getContents()));
-        properties[i].rent(Integer.parseInt(sh.getCell(10,x+4).getContents()));
-        properties[i].rent(Integer.parseInt(sh.getCell(11,x+4).getContents()));
-        properties[i].rent(Integer.parseInt(sh.getCell(12,x+4).getContents()));
-        properties[i].rent(Integer.parseInt(sh.getCell(13,x+4).getContents()));
-        properties[i].rent(Integer.parseInt(sh.getCell(14,x+4).getContents()));
+        for (int y=0;y<5;y++)properties[i].rent(Integer.parseInt(sh.getCell(y+10,x+4).getContents()));
         System.out.println(space.get(x).getposition()+" "+properties[i].getcolour()+" "+properties[i].getcost()+" "+properties[i].getrent(1)+" "+properties[i].getrent(2)+" "+properties[i].getrent(3)+" "+properties[i].getrent(4)+" "+properties[i].getrent(5)+" "+properties[i].getrent(6));
 
-      }
+    }
     else if(properties[i].getcolour().contains("Station")){
-          
-        properties[i].rent(Integer.parseInt(sh.getCell(10,x+4).getContents()));
-        properties[i].rent(Integer.parseInt(sh.getCell(11,x+4).getContents()));
-        properties[i].rent(Integer.parseInt(sh.getCell(12,x+4).getContents()));
-        properties[i].rent(Integer.parseInt(sh.getCell(13,x+4).getContents()));
-
-          
-    System.out.println(space.get(x).getposition()+" "+properties[i].getcolour()+" "+properties[i].getcost()+" "+properties[i].getrent(1)+" "+properties[i].getrent(2)+" "+properties[i].getrent(3)+" "+properties[i].getrent(4));
+        
+        for (int y=0;y<4;y++)properties[i].rent(Integer.parseInt(sh.getCell(y+10,x+4).getContents()));
+        System.out.println(space.get(x).getposition()+" "+properties[i].getcolour()+" "+properties[i].getcost()+" "+properties[i].getrent(1)+" "+properties[i].getrent(2)+" "+properties[i].getrent(3)+" "+properties[i].getrent(4));
 
     }
+    
     else if(properties[i].getcolour().contains("Utilities")){
           
-        properties[i].rent(Integer.parseInt(sh.getCell(10,x+4).getContents()));
-        properties[i].rent(Integer.parseInt(sh.getCell(11,x+4).getContents())); 
-        System.out.println(space.get(x).getposition()+" "+properties[i].getcolour()+" "+properties[i].getcost()+" "+properties[i].getrent(1)+" "+properties[i].getrent(2));
+        for (int y=0;y<2;y++)properties[i].rent(Integer.parseInt(sh.getCell(y+10,x+4).getContents()));
+       System.out.println(space.get(x).getposition()+" "+properties[i].getcolour()+" "+properties[i].getcost()+" "+properties[i].getrent(1)+" "+properties[i].getrent(2));
 
     }
 
     i++;
  
-    }
-    
-     
  }
-
-
-
-	
- }
+}
+}
 }
