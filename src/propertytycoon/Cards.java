@@ -109,8 +109,8 @@ String str1;
       
        
        }
-        
-        else if(s.contains("Collect")||s.contains("inherit")||s.contains("collect")||s.contains("Fined")){
+            
+        else if(s.contains("Collect")||s.contains("inherit")||s.contains("collect")){
            
            
                                 System.out.println(p.Player_balance());
