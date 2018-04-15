@@ -20,7 +20,7 @@ public class Main {
      */
         public static void main(String[] args) throws IOException, BiffException {
         // TODO code application logic here
-        int[] b= new int[]{5,2,3,6};
+       
         Player.character[] player= new Player.character[]{Player.character.boot,Player.character.cat,Player.character.goblet};
        Game n=new Game(player);
        
@@ -29,35 +29,35 @@ public class Main {
              System.out.println(n.player[0].player_characters);
              System.out.println(n.player[1].player_characters);
              System.out.println(n.player[2].player_characters);
-       
        */
-       //testing spaces 
-                         n.create_space();
-
-        /* testing drawing cards
-             Cards s;
-       
+       //testing space
+       //testing cards
+              Cards s;
              s= new Cards();
           
                     
-          s.shuffel_cards(s.pot_luck_card_data);
-        s.shuffel_cards(s.Opportunity_knocks_card_data);
-    
+          s.shuffel_cards(s.return_Opportunity_knocks_card_data());
+        s.shuffel_cards(s.return_pot_luck_card_data());
+        n.player[0].Player_move(2);
+      
+        s.activate_card("You have won 2nd prize in a beauty contest collect £20", n.player[0],n.space);
+       
+         System.out.println( n.player[0].Player_position);
+   
                
-             for(int i=0;i<s.pot_luck_card_data.size();i++){
-            System.out.println(s.pot_luck_card_data.get(i)); 
+             for(int i=0;i<s.return_pot_luck_card_size();i++){
+           s.draw_card(s.return_pot_luck_card_data()); 
 
 
         }
-              System.out.println("\n"); 
-                  for(int i=0;i<s.Opportunity_knocks_card_data.size();i++){
-            System.out.println(s.Opportunity_knocks_card_data.get(i)); 
+                  for(int i=0;i<s.return_Opportunity_knocks_card_size();i++){
+           s.draw_card(s.return_Opportunity_knocks_card_data()); 
 
 
         }
                 
-              */         
-/* testing player movements 
+                       
+/*testing player movements 
      
       System.out.println(n.player[0].Player_position);
 n.new_turn(n.player[1]);

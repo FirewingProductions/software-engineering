@@ -11,16 +11,28 @@ package propertytycoon;
  * @author shitaab
  */
 public class Space {
-   int position;
-    String action;
+   private int position;
+   private  String action;
+   private  String space_name;
 
 
-    public Space(int position,String action) {
+    public Space(int position,String action,String space_name) {
         
         this.action=action;
         this.position=position;
-      
+      this.space_name=space_name;
 }
-    
+    public int getposition(){
+        return position;
+        
+    }
+    public String getaction(){
+        
+        return action;
+    }
+     public String space_name(){
+        
+        return space_name;
+    }
  
 }
