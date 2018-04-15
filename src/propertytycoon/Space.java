@@ -16,23 +16,29 @@ public class Space {
    private  String space_name;
 
 
-    public Space(int position,String action,String space_name) {
+public Space(int position,String action,String space_name) {
         
-        this.action=action;
-        this.position=position;
-      this.space_name=space_name;
+    this.action=action;
+    this.position=position;
+    this.space_name=space_name;
 }
-    public int getposition(){
-        return position;
+
+public int getposition(){
+    
+    return position;
         
-    }
-    public String getaction(){
+}
+
+public String getaction(){
         
-        return action;
-    }
-     public String space_name(){
+    return action;
+    
+}
+
+public String space_name(){
         
-        return space_name;
-    }
+    return space_name;
+    
+}
  
 }

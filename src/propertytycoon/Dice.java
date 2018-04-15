@@ -17,21 +17,20 @@ public class Dice {
     public int dice[]=new int[2];
     
     
-    public  Dice(){
+public  Dice(){
         
 
-}
-    public int[] throw_dice(){
+   }
+public int[] throw_dice(){
+        
         Random ran_no1 = new Random();
         Random ran_no2 = new Random();
         dice[0]= ran_no1.nextInt(6) + 1;
         dice[1]= ran_no1.nextInt(6) + 1;
-       System.out.println("dice value: "+dice[0]+" "+dice[1]) ;
+        System.out.println("dice value: "+dice[0]+" "+dice[1]) ;
 
-      return   dice;
-      
-      
-        
+    return   dice;
+    
     }
 
     
