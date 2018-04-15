@@ -13,7 +13,6 @@ package propertytycoon;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import static jdk.nashorn.internal.objects.NativeString.toLowerCase;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
