@@ -27,9 +27,11 @@ public class Cards {
     
 private   LinkedList<String> pot_luck_card_data;   //list of cards
 private   LinkedList<String> Opportunity_knocks_card_data ;  //list of cards
+int parking;
+private Player[] player; // a list of players 
 
     public Cards(){
-        
+              
                pot_luck_card_data=new LinkedList<String>();   
                Opportunity_knocks_card_data =new LinkedList<String>();	
                create_cards();
@@ -75,31 +77,55 @@ private   LinkedList<String> Opportunity_knocks_card_data ;  //list of cards
         
     }
     
-   public void activate_card(String s,Player p, ArrayList<Space> space){
+   public void activate_card(String s,Player p, ArrayList<Space> space,Player p1[],int parking){
        
        
-       if(s.contains("Advance to ")||s.contains("Go to")){
+       if(s.contains("Advance to ")||s.contains("Go to")||s.contains("go")){
+                       System.out.println(p.Player_balance());
+
               String[] v= s.split("to ");
         
              String position=v[1]; 
              
-             String[] v1= position.split("£");
-            System.out.println(v[0]);
-            System.out.println(v1[1]);
+            System.out.println(position);
           for(int d=0;d<space.size();d++){
-            
             
           
             if(position.contains(space.get(d).space_name())){
+                
                 System.out.println(space.get(d).space_name());
-                p.Player_move(space.get(d).getposition());
+                if(s.contains(". If you pass GO, collect £200")){
+                     p.Player_advance(space.get(d).getposition(),true);
+                                System.out.println("true");
+
+                }
+                else{
+                    p.Player_advance(space.get(d).getposition(),false);
+
+                }
             }
             
             
         }
+                      System.out.println(p.Player_balance());
+
+          
+       }
+      else if(s.contains("Go back")&&s.contains("spaces")){
+                     
+             p.Player_move(-Integer.parseInt(get_value_of_Card(s)), false);
+            System.out.println(p.Player_position());
+          
+           
+            
+            
+        
+                      System.out.println(p.Player_balance());
+
+          
        }
        else{
-        if(s.contains("Pay")||s.contains("pay")||s.contains("Fine")||s.contains("Fined")){
+        if(s.contains("Pay")||s.contains("pay")){
            
            
             System.out.println(p.Player_balance());
@@ -110,20 +136,67 @@ private   LinkedList<String> Opportunity_knocks_card_data ;  //list of cards
       
        
             }
-            
+        else if(s.contains("Fine")||s.contains("Fined")){
+           
+           
+            System.out.println(p.Player_balance());
+            String[] v= s.split("£");
+            System.out.println(v[1]);
+            p.Player_balance_de(Integer.parseInt(get_value_of_Card(v[1])));
+            parking=+Integer.parseInt(get_value_of_Card(v[1]));
+            System.out.println(p.Player_balance());
+      
+       
+            }
         else if(s.contains("Collect")||s.contains("inherit")||s.contains("collect")){
            
+           if(s.contains("from each player")){
            
+           
+            System.out.println(p.Player_balance());
+            String[] v= s.split("£");
+            p.Player_balance_in(Integer.parseInt(get_value_of_Card(v[1])));
+            for(int x=0;x<p1.length;x++){
+                
+           if(p1[x].player_characters!=p.player_characters){
+               p1[x].Player_balance_de(Integer.parseInt(get_value_of_Card(v[1])));
+                           System.out.println(p1[x].Player_balance());
+
+           }
+                   }
+      
+       
+            }
+           else{
             System.out.println(p.Player_balance());
             String[] v= s.split("£");
             System.out.println(v[1]);
             p.Player_balance_in(Integer.parseInt(get_value_of_Card(v[1])));
             System.out.println(p.Player_balance());
       
-       
+           }
        }
+        else if(s.contains("You are assessed for repairs")){
+           
+           
+            System.out.println(p.Player_balance());
+            String[] v= s.split("£");
+            p.Player_balance_de(Integer.parseInt(get_value_of_Card(v[1]))*p.houses);
+            p.Player_balance_de(Integer.parseInt(get_value_of_Card(v[2]))*p.hotels);
+            System.out.println(p.Player_balance());
+
+         
+      
+       
+            }
+        
+        
        
      }
+       
+       
+       
+       
   }
    
     public void draw_card(LinkedList s){

@@ -23,7 +23,8 @@ public class Player {
    private boolean jailed;   
    private int jail_time;  
    LinkedList<String> player_cards; //if a player still has a card that he draw from the deck of cards
-    
+   int houses;
+   int hotels;
 public Player(character x){
     player_cards= new LinkedList<>();   
     player_characters=x;   // this method assigns the chosen character 
@@ -44,14 +45,28 @@ public String characters_Player(){
 public int Player_balance(){
         
     return player_balance;     //returns the balansce 
+    
 }
+public void Player_advance(int x,boolean s){
 
-public void Player_move(int x){
-        Player_position=+x;  // moves a player to  by any number of steps (X)
+    Player_position=x;  // moves a player to  by any number of steps (X)
         
-    if (Player_position>=40){
+    if (Player_position+x>40){
+
+        go(s);
         
-        Player_position=-40;
+        
+    }
+}
+public void Player_move(int x,boolean s){
+    
+    Player_position=Player_position+x;  // moves a player to  by any number of steps (X)
+        
+    if (Player_position>40){
+
+        go(s);
+        Player_position=40;
+        
     }
 }
 
@@ -70,22 +85,37 @@ public void Player_balance_de(int x){
     player_balance=player_balance-x;     
 }
    
-public boolean is_jailed(){
+public void is_jailed(){
     
-    return jailed=true;
+    jailed=true;
     
 }
-   public boolean is_out_ofjail(){
+   public void is_out_ofjail(){
        
     jail_time=0;
-    return jailed=false;
+    jailed=false;
     
 } 
-   public void Player_injail(){
+   public void Player_still_in_jail(){
        
     jail_time++;
-       
+    
+    if (jail_time==3){
+        
+        jail_time=0;
+        jailed=false;
+
+         
+    }
    }
+   
+    public void pay_to_Get_out_of_jail(Player p) {
+        p.Player_balance_de(50); 
+        p.is_out_ofjail();
+    
+    
+    
+    }
    
    public int Player_jail_time(){
        
@@ -106,4 +136,12 @@ public boolean is_jailed(){
        return player_cards.get(x);
        
    }
+   
+
+   public void go(boolean s){
+       if(s){
+      System.out.println(player_balance);
+    Player_balance_in(200);
+       }
+}
 }

@@ -37,7 +37,7 @@ public class Game  {
 
     public void throw_dice(Player player){
         // 1) throw the dice 2) check if player has passed go(location number 0) if so we go back to  (location -40 )
-       player.Player_move(a.throw_dice());
+       player.Player_move(a.throw_dice(),true);
        
        
        
@@ -53,12 +53,12 @@ public class Game  {
        
        while( a.Double()){
            int i=1; //double counter
-            player.Player_move(a.throw_dice());
+            player.Player_move(a.throw_dice(),true);
             i++;
             if(i==3){
                 //go to jail
                 player.is_jailed();
-                player.Player_move(10);
+                player.Player_move(10,false);
 
                 break;
             }
@@ -102,7 +102,6 @@ public void create_space()throws BiffException, IOException {
     for (int x = 0; x < totalNoOfRows; x++) {
         //adding the space position and the action
         space.add(new Space(Integer.parseInt(sh.getCell(0,x+4).getContents()),sh.getCell(4,x+4).getContents(),sh.getCell(1,x+4).getContents())) ;
-        System.out.println(space.get(x).getposition()+space.get(x).getaction());
         //if the space can be bought then its count as a propirty
     if(sh.getCell(5,x+4).getContents().contains("Yes")){
         
@@ -135,4 +134,5 @@ public void create_space()throws BiffException, IOException {
  }
 }
 }
+
 }

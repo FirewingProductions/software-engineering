@@ -38,9 +38,10 @@ public class Main {
                     
           s.shuffel_cards(s.return_Opportunity_knocks_card_data());
         s.shuffel_cards(s.return_pot_luck_card_data());
-        n.player[0].Player_move(2);
-      
-        s.activate_card("You have won 2nd prize in a beauty contest collect £20", n.player[0],n.space);
+        n.player[0].Player_move(30,true);
+               System.out.println( n.player[0].Player_position());
+n.player[0].hotels=2;
+        s.activate_card("It's your birthday. Collect £10 from each player", n.player[0],n.space,n.player,n.parking);
        
          System.out.println( n.player[0].Player_position());
    
