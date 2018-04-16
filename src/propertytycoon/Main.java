@@ -42,7 +42,7 @@ public class Main {
       
         s.activate_card("You have won 2nd prize in a beauty contest collect £20", n.player[0],n.space);
        
-         System.out.println( n.player[0].Player_position);
+         System.out.println( n.player[0].Player_position());
    
                
              for(int i=0;i<s.return_pot_luck_card_size();i++){

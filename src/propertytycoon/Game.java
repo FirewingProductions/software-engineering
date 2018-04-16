@@ -26,34 +26,60 @@ public class Game  {
     
     public Game( Player.character[] b) throws BiffException, IOException {
         // initialization of players class by defining the characters of each player
-         player= new Player[b.length];
-         
-         for(int x=0;x<b.length;x++)player[x] = new Player(b[x]);  
-         
-       create_space();
+        player= new Player[b.length];
+        for(int x=0;x<b.length;x++)player[x] = new Player(b[x]);  
+        create_space();
+       
     }
     
    
     
 
-    public void new_turn(Player player_no){
+    public void throw_dice(Player player){
         // 1) throw the dice 2) check if player has passed go(location number 0) if so we go back to  (location -40 )
-        //3) we check if the player has got double if so then they play again 
-        a.throw_dice();
-        player_no.Player_move(a.dice[0]+a.dice[1]);
+       player.Player_move(a.throw_dice());
        
-    if (player_no.Player_position>=40){
-            
-        player_no.Player_position=0+(player_no.Player_position-40);
-    }
        
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       while( a.Double()){
+           int i=1; //double counter
+            player.Player_move(a.throw_dice());
+            i++;
+            if(i==3){
+                //go to jail
+                player.is_jailed();
+                player.Player_move(10);
+
+                break;
+            }
         
-    if(a.dice[0]==a.dice[1]){
+        }
         
-            new_turn(player_no);
-    }
+    
         
 }
+    public void check_player_location(Player player){
+        
+       space.get(player.Player_position()-1).space_name();
+       
+       if(space.get(player.Player_position()-1).getaction().isEmpty()){
+           
+           
+       }
+        
+        
+        
+    }
     
     //new method added to crate spaces 
 public void create_space()throws BiffException, IOException {

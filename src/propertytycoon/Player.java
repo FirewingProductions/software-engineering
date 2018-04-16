@@ -1,5 +1,7 @@
 package propertytycoon;
 
+import java.util.LinkedList;
+
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -14,16 +16,16 @@ package propertytycoon;
 public class Player {
     
    private int player_balance=1500; //player starting balance
-   int Player_position=0;   // the position of the player on the board
+   private int Player_position=0;   // the position of the player on the board
    character player_characters;  
    String name;    //the name of the player
    Properties[] Property; //will be changed to property class instead of string 
-   boolean jailed;   
-   int jail_time;  
-   Cards[] player_cards; //if a player still has a card that he draw from the deck of cards
+   private boolean jailed;   
+   private int jail_time;  
+   LinkedList<String> player_cards; //if a player still has a card that he draw from the deck of cards
     
 public Player(character x){
-       
+    player_cards= new LinkedList<>();   
     player_characters=x;   // this method assigns the chosen character 
         
 }
@@ -41,14 +43,23 @@ public String characters_Player(){
     
 public int Player_balance(){
         
-    return player_balance;     //returns the balance 
+    return player_balance;     //returns the balansce 
 }
 
 public void Player_move(int x){
-    Player_position=x;  // moves a player to  by any number of steps (X)
-       
+        Player_position=+x;  // moves a player to  by any number of steps (X)
+        
+    if (Player_position>=40){
+        
+        Player_position=-40;
+    }
 }
 
+public int Player_position(){
+    
+   return Player_position;
+   
+}
 public void Player_balance_in(int x){
     // adds x to balance 
     player_balance=player_balance+x;     
@@ -59,7 +70,40 @@ public void Player_balance_de(int x){
     player_balance=player_balance-x;     
 }
    
-
-   
+public boolean is_jailed(){
     
+    return jailed=true;
+    
+}
+   public boolean is_out_ofjail(){
+       
+    jail_time=0;
+    return jailed=false;
+    
+} 
+   public void Player_injail(){
+       
+    jail_time++;
+       
+   }
+   
+   public int Player_jail_time(){
+       
+      return jail_time;
+       
+   }
+   
+   public void add_card_to_player(String s){
+       
+       player_cards.add(s);
+       
+   }
+   
+   public String use_get_out_of_jail(Cards card, int x ){
+       //x is the index number of the used card 
+       is_out_ofjail();
+       player_cards.remove(x);
+       return player_cards.get(x);
+       
+   }
 }
