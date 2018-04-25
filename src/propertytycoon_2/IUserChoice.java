@@ -3,16 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package propertytycoon;
+package propertytycoon_2;
 
-/**
- *
- * @author Alex
- */
-public class Agent
+public interface IUserChoice 
 {
-    public Agent(Board board)
-    {
-        
-    }
+    UserChoiceResponse MakeChoice(UserChoiceRequest request);
 }

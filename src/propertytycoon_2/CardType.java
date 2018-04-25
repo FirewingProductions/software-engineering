@@ -3,13 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package propertytycoon;
+package propertytycoon_2;
 
-/**
- *
- * @author Alex
- */
-public interface IUserChoice
+public enum CardType
 {
-    public UserChoiceResponse makeChoice(Enum UserChoiceRequest);
+    PotLuck, Opportunity
 }
