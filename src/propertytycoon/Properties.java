@@ -6,17 +6,20 @@
 package propertytycoon;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author shitaab
  */
 public class Properties extends Space{
-   private  int cost;
-   private  ArrayList<Integer> rent;
-   private  String colour;
-   private  int cost_house;
-   private Player.character  owend;
+   private   int cost;
+   private   ArrayList<Integer> rent;
+   private   String colour;
+   private   int cost_house;
+   private   Player.character  owend;
+   private   Boolean  is_owend=false;
+
    private Boolean  mortgage;
    private  int house;
    
@@ -54,13 +57,30 @@ public int getcost_house(){
 public String getcolour(){
     
     return colour;
-       
-}
-public void property_owener(Player p){
-    
-    owend=p.player_characters;
-}
       
+    
+}
+private boolean property_is_owend(){
+    
+    return is_owend;
+    
+}
+private Player.character property_owener(){
+    
+   return owend;
+   
+}
+
+public  void property_buy(Player p){
+    
+    if(p.Player_balance()>cost&&is_owend==false){
+        is_owend=true;
+        owend=p.player_characters;
+        p.Player_balance_de(cost);
+    } 
+    
+}
+     
 public void buy_house(Player p){
     
     if(!colour.contains("Station")||!colour.contains("Utilities")){

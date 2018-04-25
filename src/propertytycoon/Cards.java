@@ -25,13 +25,12 @@ import java.util.LinkedList;
 
 public class Cards {
     
-private   LinkedList<String> pot_luck_card_data;   //list of cards
-private   LinkedList<String> Opportunity_knocks_card_data ;  //list of cards
-int parking;
-private Player[] player; // a list of players 
-
-    public Cards(){
-              
+private   LinkedList<String> pot_luck_card_data;              //list of cards
+private   LinkedList<String> Opportunity_knocks_card_data ;   //list of cards
+private Player[] player;  
+ ArrayList<Space> space;
+    public Cards(ArrayList<Space> space){
+              this.space= space;
                pot_luck_card_data=new LinkedList<String>();   
                Opportunity_knocks_card_data =new LinkedList<String>();	
                create_cards();
@@ -77,7 +76,7 @@ private Player[] player; // a list of players
         
     }
     
-   public void activate_card(String s,Player p, ArrayList<Space> space,Player p1[],int parking){
+   public void activate_card(String s,Player p,Player p1[]){
        
        
        if(s.contains("Advance to ")||s.contains("Go to")||s.contains("go")){
@@ -90,7 +89,6 @@ private Player[] player; // a list of players
             System.out.println(position);
           for(int d=0;d<space.size();d++){
             
-          
             if(position.contains(space.get(d).space_name())){
                 
                 System.out.println(space.get(d).space_name());
@@ -111,12 +109,32 @@ private Player[] player; // a list of players
 
           
        }
-      else if(s.contains("Go back")&&s.contains("spaces")){
-                     
+      else if(s.contains("Go back")||s.contains("go back")){
+                     if(s.contains("spaces")){
              p.Player_move(-Integer.parseInt(get_value_of_Card(s)), false);
             System.out.println(p.Player_position());
           
-           
+                     }
+                     else{
+                         
+                         String[] v= s.split("to ");
+                         String position=v[1]; 
+             
+                        System.out.println(position);
+                        for(int d=0;d<space.size();d++){
+            
+                            if(position.contains(space.get(d).space_name())){
+                
+                         
+                    p.Player_advance(space.get(d).getposition(),false);
+
+                
+            }
+            
+            
+        }
+                         
+                     }
             
             
         
@@ -124,6 +142,7 @@ private Player[] player; // a list of players
 
           
        }
+      
        else{
         if(s.contains("Pay")||s.contains("pay")){
            
@@ -143,7 +162,7 @@ private Player[] player; // a list of players
             String[] v= s.split("£");
             System.out.println(v[1]);
             p.Player_balance_de(Integer.parseInt(get_value_of_Card(v[1])));
-            parking=+Integer.parseInt(get_value_of_Card(v[1]));
+            Game.add_parking_fine(Integer.parseInt(get_value_of_Card(v[1])));
             System.out.println(p.Player_balance());
       
        
@@ -195,16 +214,18 @@ private Player[] player; // a list of players
      }
        
        
-       
+
        
   }
    
     public void draw_card(LinkedList s){
 // we use number 1 to draw pot_luck_card_data and 2 for Opportunity_knocks_card_data 
     System.out.println(s.getFirst());  // print the drawn card
+    
     s.addLast(s.getFirst());
     s.removeFirst();
    //put the card to the the end of the deck
+   
   
         }
     

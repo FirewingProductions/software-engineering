@@ -1,6 +1,9 @@
 package propertytycoon;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 
 /*
@@ -19,15 +22,22 @@ public class Player {
    private int Player_position=0;   // the position of the player on the board
    character player_characters;  
    String name;    //the name of the player
-   Properties[] Property; //will be changed to property class instead of string 
+   HashMap<String, ArrayList<Properties>> properties; //will be changed to property class instead of string 
    private boolean jailed;   
    private int jail_time;  
    LinkedList<String> player_cards; //if a player still has a card that he draw from the deck of cards
+   ArrayList<String> sets;
    int houses;
    int hotels;
+   
+   String[] colours={"Red","Brown","Purple","Utilities","Station","Green","Deep blue","Blue","Orange","Yellow"};
 public Player(character x){
-    player_cards= new LinkedList<>();   
-    player_characters=x;   // this method assigns the chosen character 
+    player_cards= new LinkedList<>(); 
+    properties= new HashMap<String, ArrayList<Properties>>();
+    player_characters=x;   // this method assigns the chosen character
+    for(int y=0;y<colours.length;y++){
+       properties.put(colours[y],new ArrayList<>());
+    }
         
 }
 
@@ -90,6 +100,11 @@ public void is_jailed(){
     jailed=true;
     
 }
+public void player_has_a_Set(){
+  
+    
+}
+
    public void is_out_ofjail(){
        
     jail_time=0;
@@ -109,10 +124,11 @@ public void is_jailed(){
     }
    }
    
-    public void pay_to_Get_out_of_jail(Player p) {
-        p.Player_balance_de(50); 
-        p.is_out_ofjail();
-    
+    public void pay_to_Get_out_of_jail() {
+        if(jailed==true){
+        Player_balance_de(50); 
+        is_out_ofjail();
+        }
     
     
     }
@@ -129,11 +145,12 @@ public void is_jailed(){
        
    }
    
-   public String use_get_out_of_jail(Cards card, int x ){
+   public void use_get_out_of_jail( LinkedList<String> card, int x ){
        //x is the index number of the used card 
+       if(card.contains("Get out of jail free")){
        is_out_ofjail();
        player_cards.remove(x);
-       return player_cards.get(x);
+       }
        
    }
    
@@ -144,4 +161,16 @@ public void is_jailed(){
     Player_balance_in(200);
        }
 }
+   
+   
+    
+public void property_buy(Properties p){
+    
+  
+    p.property_buy(this);
+    properties.get(p.getcolour()).add(p);
+
+}   
+       
+   
 }

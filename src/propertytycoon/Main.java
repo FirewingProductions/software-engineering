@@ -33,16 +33,19 @@ public class Main {
        //testing space
        //testing cards
               Cards s;
-             s= new Cards();
+             s= new Cards(n.space);
           
                     
           s.shuffel_cards(s.return_Opportunity_knocks_card_data());
         s.shuffel_cards(s.return_pot_luck_card_data());
         n.player[0].Player_move(30,true);
                System.out.println( n.player[0].Player_position());
+                         System.out.println( n.parking);
+
 n.player[0].hotels=2;
-        s.activate_card("It's your birthday. Collect £10 from each player", n.player[0],n.space,n.player,n.parking);
-       
+       s.activate_card("Fined £15 for speeding", n.player[0],n.player);
+                  System.out.println( n.parking);
+
          System.out.println( n.player[0].Player_position());
    
                
@@ -56,7 +59,11 @@ n.player[0].hotels=2;
 
 
         }
-                
+           System.out.println( n.player[0].Player_balance());
+           n.properties.get(0).property_buy(n.player[0]);
+           n.properties.get(1).property_buy(n.player[0]);
+           System.out.println( n.player[0].Player_balance());
+
                        
 /*testing player movements 
      
