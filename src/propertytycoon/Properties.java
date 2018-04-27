@@ -17,11 +17,11 @@ public class Properties extends Space{
    private   ArrayList<Integer> rent;
    private   String colour;
    private   int cost_house;
-   private   Player.character  owend;
+   private   Player.character  owned;
    private   Boolean  is_owend=false;
    private   int pos;
-   private Boolean  mortgage;
-   private  int house;
+   private   Boolean  mortgage;
+   private   int house;
    
 public Properties(int position,String action,String space_name,String colour,int cost,int cost_house){
     super(position,action,space_name);
@@ -64,14 +64,14 @@ public String getcolour(){
       
     
 }
-private boolean property_is_owend(){
+public boolean property_is_owend(){
     
     return is_owend;
     
 }
-private Player.character property_owener(){
+public Player.character property_owener(){
     
-   return owend;
+   return owned;
    
 }
 
@@ -79,7 +79,7 @@ public  void property_buy(Player p){
     
     if(p.Player_balance()>cost&&is_owend==false){
         is_owend=true;
-        owend=p.player_characters;
+        owned=p.player_characters;
         p.Player_balance_de(cost);
     } 
     
@@ -100,7 +100,7 @@ public void buy_house(Player p){
       
 public void  mortgage(Player p){
     
-    if(p.player_characters==owend&&mortgage==false){
+    if(p.player_characters==owned&&mortgage==false){
         p.Player_balance_in(cost/2);
         mortgage=true;
     }
@@ -108,7 +108,7 @@ public void  mortgage(Player p){
 }
 
 public void  un_mortgage(Player p){
-    if(p.player_characters==owend&&mortgage==true){
+    if(p.player_characters==owned&&mortgage==true){
         p.Player_balance_de(cost/2);
         mortgage=false;
 

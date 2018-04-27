@@ -11,6 +11,7 @@ package propertytycoon;
  */
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -38,6 +39,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 import jxl.read.biff.BiffException;
 
@@ -58,6 +60,8 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
     
     private JButton rollButton;
     
+    private JOptionPane statspopup;
+    
     private JFrame mainFrame;
     private JPanel boardpanel;
     private JPanel bpanel1;
@@ -68,6 +72,11 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
     private JPanel opanel1;
     private JPanel opanel3;
     private JPanel opanel4;
+    
+    private JLabel announcementlabel;
+    
+    private JPanel middlepanel;
+    
     private Game game;
 
     private JLabel[] labelTiles;
@@ -77,21 +86,28 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
     private Player[] players;
 
     private Boolean rolled = false;
+    private Boolean showed = false;
     
     public void UI() throws IOException, BiffException {
         
         tokenlabels = new HashMap<>();
 
         turn = 0;
-        Player.character[] chars = new Player.character[3];
+        Player.character[] chars = new Player.character[6];
         chars[0] = Player.character.boot;
         chars[1] = Player.character.cat;
         chars[2] = Player.character.smartphone;
+        chars[3] = Player.character.hatstand;
+        chars[4] = Player.character.spon;
+        chars[5] = Player.character.goblet;
 
-        players = new Player[3];
+        players = new Player[6];
         players[0] = new Player(chars[0]);
         players[1] = new Player(chars[1]);
         players[2] = new Player(chars[2]);
+        players[3] = new Player(chars[3]);
+        players[4] = new Player(chars[4]);
+        players[5] = new Player(chars[5]);
 
         game = new Game(chars);
 
@@ -149,10 +165,10 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         opanel3 = new JPanel();
         opanel4 = new JPanel();
 
-        opanel1.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+        opanel1.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         opanel3.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        opanel4.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
+        opanel4.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
         opanel1.setSize(1000, 100);
 
@@ -177,11 +193,6 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         bpanel3 = new JPanel();
         bpanel4 = new JPanel();
 
-        bpanel1.setBorder(BorderFactory.createLineBorder(Color.GREEN));
-        bpanel2.setBorder(BorderFactory.createLineBorder(Color.BLUE));
-        bpanel3.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        bpanel4.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
-
         bpanel1.setSize(900, 100);
         bpanel2.setSize(100, 600);
         bpanel3.setSize(100, 600);
@@ -197,13 +208,22 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         boardpanel.add(bpanel3, BorderLayout.LINE_END);
         boardpanel.add(bpanel4, BorderLayout.PAGE_END);
 
+        middlepanel = new JPanel();
+        middlepanel.setLayout(new BorderLayout(1,0));
+        
         rollButton = new JButton("Roll");
         rollButton.addActionListener(this);
         rollButton.setPreferredSize(new Dimension(100, 100));
-        rollButton.setBorder(BorderFactory.createLineBorder(Color.ORANGE));
         rollButton.setFont(new Font("Arial", Font.PLAIN, 40));
         rollButton.setActionCommand("rolled");
-        boardpanel.add(rollButton, BorderLayout.CENTER);
+        
+        announcementlabel = new JLabel("GAME STARTED", SwingConstants.CENTER);
+        announcementlabel.setFont(new Font("Arial", Font.PLAIN, 30));
+        middlepanel.add(rollButton, BorderLayout.PAGE_END);
+        middlepanel.add(announcementlabel, BorderLayout.PAGE_START);
+        middlepanel.setBackground(Color.CYAN);
+   
+        boardpanel.add(middlepanel, BorderLayout.CENTER);
 
         
         
@@ -216,77 +236,80 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         BufferedImage wPic;
         Image dimg;
 
-        label = new JLabel();
-        label.setSize(100, 100);
-        wPic = ImageIO.read(new File("C:\\Users\\Surface\\Desktop\\software-engineering-master\\software-engineering-master\\UI\\Buttons\\Bootproperties.png"));
-        dimg = wPic.getScaledInstance(label.getWidth(), label.getHeight(),
+        String temp = "C:\\Users\\Surface\\Desktop\\software-engineering-master\\software-engineering-master\\UI\\Buttons\\";
+        button = new JButton();
+        button.setSize(100, 100);
+        wPic = ImageIO.read(new File(temp + "Bootproperties.png"));
+        dimg = wPic.getScaledInstance(button.getWidth(), button.getHeight(),
                 Image.SCALE_SMOOTH);
-        label = new JLabel(new ImageIcon(dimg));
-        label.setForeground(Color.green);
-        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        opanel1.add(label);
-
-        label = new JLabel();
-        label.setSize(100, 100);
-        wPic = ImageIO.read(new File("C:\\Users\\Surface\\Desktop\\software-engineering-master\\software-engineering-master\\UI\\Buttons\\Catproperties.png"));
-        dimg = wPic.getScaledInstance(label.getWidth(), label.getHeight(),
+        button = new JButton(new ImageIcon(dimg));
+        button.setForeground(Color.green);
+        button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        button.addActionListener(this);
+        button.setActionCommand("boot");
+        opanel1.add(button);
+        
+        
+        button = new JButton();
+        button.setSize(100, 100);
+        wPic = ImageIO.read(new File(temp + "Catproperties.png"));
+        dimg = wPic.getScaledInstance(button.getWidth(), button.getHeight(),
                 Image.SCALE_SMOOTH);
-        label = new JLabel(new ImageIcon(dimg));
-        label.setForeground(Color.green);
-        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        opanel1.add(label);
+        button = new JButton(new ImageIcon(dimg));
+        button.setForeground(Color.green);
+        button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        button.addActionListener(this);
+        button.setActionCommand("cat");
+        opanel1.add(button);
 
-        label = new JLabel();
-        label.setSize(100, 100);
-        wPic = ImageIO.read(new File("C:\\Users\\Surface\\Desktop\\software-engineering-master\\software-engineering-master\\UI\\Buttons\\Gobletproperties.png"));
-        dimg = wPic.getScaledInstance(label.getWidth(), label.getHeight(),
+        button = new JButton();
+        button.setSize(100, 100);
+        wPic = ImageIO.read(new File(temp + "Gobletproperties.png"));
+        dimg = wPic.getScaledInstance(button.getWidth(), button.getHeight(),
                 Image.SCALE_SMOOTH);
-        label = new JLabel(new ImageIcon(dimg));
-        label.setForeground(Color.green);
-        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        opanel1.add(label);
+        button = new JButton(new ImageIcon(dimg));
+        button.setForeground(Color.green);
+        button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        button.addActionListener(this);
+        button.setActionCommand("goblet");
+        opanel1.add(button);
 
-        label = new JLabel();
-        label.setSize(100, 100);
-        wPic = ImageIO.read(new File("C:\\Users\\Surface\\Desktop\\software-engineering-master\\software-engineering-master\\UI\\Buttons\\Hatstandproperties.png"));
-        dimg = wPic.getScaledInstance(label.getWidth(), label.getHeight(),
+        button = new JButton();
+        button.setSize(100, 100);
+        wPic = ImageIO.read(new File(temp + "Hatstandproperties.png"));
+        dimg = wPic.getScaledInstance(button.getWidth(), button.getHeight(),
                 Image.SCALE_SMOOTH);
-        label = new JLabel(new ImageIcon(dimg));
-        label.setForeground(Color.green);
-        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        opanel1.add(label);
+        button = new JButton(new ImageIcon(dimg));
+        button.setForeground(Color.green);
+        button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        button.addActionListener(this);
+        button.setActionCommand("hatstand");
+        opanel1.add(button);
 
-        label = new JLabel();
-        label.setSize(100, 100);
-        wPic = ImageIO.read(new File("C:\\Users\\Surface\\Desktop\\software-engineering-master\\software-engineering-master\\UI\\Buttons\\Smartphoneproperties.png"));
-        dimg = wPic.getScaledInstance(label.getWidth(), label.getHeight(),
+        button = new JButton();
+        button.setSize(100, 100);
+        wPic = ImageIO.read(new File(temp + "Smartphoneproperties.png"));
+        dimg = wPic.getScaledInstance(button.getWidth(), button.getHeight(),
                 Image.SCALE_SMOOTH);
-        label = new JLabel(new ImageIcon(dimg));
-        label.setForeground(Color.green);
-        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        opanel1.add(label);
+        button = new JButton(new ImageIcon(dimg));
+        button.setForeground(Color.green);
+        button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        button.addActionListener(this);
+        button.setActionCommand("smartphone");
+        opanel1.add(button);
 
-        label = new JLabel();
-        label.setSize(100, 100);
-        wPic = ImageIO.read(new File("C:\\Users\\Surface\\Desktop\\software-engineering-master\\software-engineering-master\\UI\\Buttons\\spoonproperties.png"));
-        dimg = wPic.getScaledInstance(label.getWidth(), label.getHeight(),
+        button = new JButton();
+        button.setSize(100, 100);
+        wPic = ImageIO.read(new File(temp + "spoonproperties.png"));
+        dimg = wPic.getScaledInstance(button.getWidth(), button.getHeight(),
                 Image.SCALE_SMOOTH);
-        label = new JLabel(new ImageIcon(dimg));
-        label.setForeground(Color.green);
-        label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        opanel1.add(label);
+        button = new JButton(new ImageIcon(dimg));
+        button.setForeground(Color.green);
+        button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        button.addActionListener(this);
+        button.setActionCommand("spoon");
+        opanel1.add(button);
 
-        /*
-        for (int i = 0; i < 5; i++) {
-
-            JButton rButton = new JButton("RIGHT " + (i + 1));
-            rButton.setPreferredSize(new Dimension(100, 100));
-            rButton.setForeground(Color.blue);
-            opanel3.add(rButton);
-
-          
-        }
-*/
         
         //RIGHT BUTTONS
         String temppath = "C:\\Users\\Surface\\Desktop\\software-engineering-master\\software-engineering-master\\UI\\tokens\\";
@@ -361,7 +384,7 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         label.setForeground(Color.green);
         label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         opanel3.add(label);
-        tokenlabels.put("spoon", label);
+        tokenlabels.put("spon", label);
         
 
         
@@ -487,6 +510,7 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
                 if(prop.returnPos() == players[turn].Player_position() + 1){
                     players[turn].property_buy(prop);
                     System.out.println(players[turn].characters_Player() + " bought " +  prop.space_name());
+                    Announce(players[turn].characters_Player() + " bought " +  prop.space_name());
                 }
             }
            UpdateUI();
@@ -497,8 +521,76 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
            
         }
         
+        if ("boot".equals(e.getActionCommand())) {
+            statspopup = new JOptionPane(); 
+            String b = "";
+            for(Properties p : game.properties){
+                if(p.property_owener() == Player.character.boot){
+                    b = b + " - " + p.space_name();
+                }
+            }
+            statspopup.showMessageDialog(mainFrame, b);
+            
+           
+        }
+        if ("cat".equals(e.getActionCommand())) {
+            statspopup = new JOptionPane(); 
+            String b = "";
+            for(Properties p : game.properties){
+                if(p.property_owener() == Player.character.cat){
+                    b = b + " - " + p.space_name();
+                }
+            }
+            statspopup.showMessageDialog(mainFrame, b);
+           
+        }
+        if ("goblet".equals(e.getActionCommand())) {
+             statspopup = new JOptionPane(); 
+            String b = "";
+            for(Properties p : game.properties){
+                if(p.property_owener() == Player.character.goblet){
+                    b = b + " - " + p.space_name();
+                }
+            }
+            statspopup.showMessageDialog(mainFrame, b);
+           
+        }
+        if ("hatstand".equals(e.getActionCommand())) {
+             statspopup = new JOptionPane(); 
+            String b = "";
+            for(Properties p : game.properties){
+                if(p.property_owener() == Player.character.hatstand){
+                    b = b + " - " + p.space_name();
+                }
+            }
+            statspopup.showMessageDialog(mainFrame, b);
+           
+        }
+        if ("smartphone".equals(e.getActionCommand())) {
+            statspopup = new JOptionPane(); 
+            String b = "";
+            for(Properties p : game.properties){
+                if(p.property_owener() == Player.character.smartphone){
+                    b = b + " - " + p.space_name();
+                }
+            }
+            statspopup.showMessageDialog(mainFrame, b);
+           
+        }
+        if ("spoon".equals(e.getActionCommand())) {
+            statspopup = new JOptionPane(); 
+            String b = "";
+            for(Properties p : game.properties){
+                if(p.property_owener() == Player.character.spon){
+                    b = b + " - " + p.space_name();
+                }
+            }
+            statspopup.showMessageDialog(mainFrame, b);
+           
+        }
+         
     }
-
+    
     private void nextPlayer() {
         rolled = false;
         if (turn >= players.length - 1) {
@@ -528,14 +620,25 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         
            
         }
+        
        UpdateRollButton();
     }
     
     private void UpdateRollButton(){
+        //System.out.println("update roll called");
         if(!rolled){
          rollButton.setText(players[turn].characters_Player().toUpperCase() + "'S TURN , CLICK TO ROLL");
+         showed = false;
         }else{
+            if(!showed){
+                Announce(players[turn].characters_Player() + " landed on "  + game.space.get(players[turn].Player_position()).space_name());
+                showed = true;
+            }
          rollButton.setText(players[turn].characters_Player().toUpperCase() + " HAS ROLLED. PRESS END TURN");   
         }
+    }
+    
+    private void Announce(String string){
+        announcementlabel.setText(string.toUpperCase());
     }
 }
