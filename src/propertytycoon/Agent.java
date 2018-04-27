@@ -11,8 +11,8 @@ package propertytycoon;
  */
 public class Agent
 {
-    public Agent(Board board)
-    {
+   // public Agent(Board board)
+    //{
         
-    }
+    //}
 }

@@ -8,8 +8,9 @@ package propertytycoon;
 /**
  *
  * @author Alex
- */
+ 
 public interface IUserChoice
 {
     public UserChoiceResponse makeChoice(Enum UserChoiceRequest);
 }
+*/

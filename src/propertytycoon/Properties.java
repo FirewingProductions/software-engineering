@@ -19,12 +19,13 @@ public class Properties extends Space{
    private   int cost_house;
    private   Player.character  owend;
    private   Boolean  is_owend=false;
-
+   private   int pos;
    private Boolean  mortgage;
    private  int house;
    
 public Properties(int position,String action,String space_name,String colour,int cost,int cost_house){
     super(position,action,space_name);
+    pos = position;
     rent =new ArrayList<Integer>();
     this.colour=colour;
     this.cost=cost;
@@ -32,7 +33,10 @@ public Properties(int position,String action,String space_name,String colour,int
        
 }
     
-   
+public Integer returnPos(){
+    return pos;
+} 
+
 public void rent(int x){
        
     rent.add(x);
