@@ -54,7 +54,10 @@ public class Game  {
             
         }else
         {
-            
+            switch(space.get(player.Player_position()+1).getaction()){
+                case "Take card":
+                    System.out.println();
+            }
         }
         
         
