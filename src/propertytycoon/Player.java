@@ -43,7 +43,7 @@ public Player(character x){
 
 public enum character{
         
-    boot,smartphone,goblet,hatstand,spon,cat  // the possible characters that can be used 
+    boot,smartphone,goblet,hatstand,spoon,cat  // the possible characters that can be used 
 }
 
 public String characters_Player(){

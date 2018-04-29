@@ -19,13 +19,14 @@ public class Properties extends Space{
    private   int cost_house;
    private   Player.character  owend;
    private   Boolean  is_owend=false;
-
+   private int pos;
    private Boolean  mortgage;
    private  int house;
    
 public Properties(int position,String action,String space_name,String colour,int cost,int cost_house){
     super(position,action,space_name);
     rent =new ArrayList<Integer>();
+    this.pos = position;
     this.colour=colour;
     this.cost=cost;
     this.cost_house=cost_house;
@@ -65,7 +66,7 @@ private boolean property_is_owend(){
     return is_owend;
     
 }
-private Player.character property_owener(){
+public Player.character property_owener(){
     
    return owend;
    
@@ -110,6 +111,10 @@ public void  un_mortgage(Player p){
 
               
     }
+}
+
+public int returnPos(){
+    return pos;
 }
    
 }
