@@ -5,41 +5,39 @@
  */
 package propertytycoon;
 
-
 /**
  *
  * @author shitaab
  */
 public class Space {
-   private int position;
-   private  String action;
-   private  String space_name;
 
+    private int position;
+    private String action;
+    private String space_name;
 
-public Space(int position,String action,String space_name) {
-        
-    this.action=action;
-    this.position=position;
-    this.space_name=space_name;
-}
+    public Space(int position, String action, String space_name) {
 
-public int getposition(){
-    
-    return position;
-        
-}
+        this.action = action;
+        this.position = position;
+        this.space_name = space_name;
+    }
 
-public String getaction(){
-        
-    return action;
-    
-}
+    public int getposition() {
 
-public String space_name(){
-        
-    return space_name;
-    
-}
+        return position;
 
- 
+    }
+
+    public String getaction() {
+
+        return action;
+
+    }
+
+    public String space_name() {
+
+        return space_name;
+
+    }
+
 }

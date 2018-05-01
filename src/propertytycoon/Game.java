@@ -5,7 +5,6 @@ package propertytycoon;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author shitaab
@@ -19,155 +18,148 @@ import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 
-public class Game  {
-            Player[] player; // a list of players 
-            ArrayList<Space> space;
-            Dice a= new Dice();  // the two dices
-             ArrayList<Properties>  properties;
-   HashMap<String, ArrayList<Properties>> properties_final; //will be changed to property class instead of string 
-           String[] colours={"Red","Brown","Purple","Utilities","Station","Green","Deep blue","Blue","Orange","Yellow"};
+public class Game {
 
-            static int parking=0;
-    
-    public Game( Player.character[] b) throws BiffException, IOException {
+    Player[] player; // a list of players 
+    ArrayList<Space> space;
+    Dice a = new Dice();  // the two dices
+    ArrayList<Properties> properties;
+    HashMap<String, ArrayList<Properties>> properties_final; //will be changed to property class instead of string 
+    String[] colours = {"Red", "Brown", "Purple", "Utilities", "Station", "Green", "Deep blue", "Blue", "Orange", "Yellow"};
+
+    static int parking = 0;
+
+    public Game(Player.character[] b) throws BiffException, IOException {
         // initialization of players class by defining the characters of each player
-        player= new Player[b.length];
-        for(int x=0;x<b.length;x++)player[x] = new Player(b[x]); 
-        properties_final= new HashMap<String, ArrayList<Properties>>();
-         for(int y=0;y<colours.length;y++){
-       properties_final.put(colours[y],new ArrayList<>());
-    }
+        player = new Player[b.length];
+        for (int x = 0; x < b.length; x++) {
+            player[x] = new Player(b[x]);
+        }
+        properties_final = new HashMap<String, ArrayList<Properties>>();
+        for (int y = 0; y < colours.length; y++) {
+            properties_final.put(colours[y], new ArrayList<>());
+        }
 
         create_space();
-       
-    }
-    
-   
-    public void player_turn(Player player){
-        
-        throw_dice(player);
-        
-        if(space.get(player.Player_position()+1).getaction()==null){
-            
-            
-            
-            
-        }else
-        {
-            
-        }
-        
-        
-        
+
     }
 
-    private void throw_dice(Player player){
+    public void player_turn(Player player) {
+
+        throw_dice(player);
+
+        if (space.get(player.Player_position() + 1).getaction() == null) {
+
+        } else {
+
+        }
+
+    }
+
+    private void throw_dice(Player player) {
         // 1) throw the dice 2) check if player has passed go(location number 0) if so we go back to  (location -40 )
-       player.Player_move(a.throw_dice(),true);
-       
-       
-       
-     
-       
-       while( a.Double()){
-           int i=1; //double counter
-            player.Player_move(a.throw_dice(),true);
+        player.Player_move(a.throw_dice(), true);
+
+        int i = 1; //double counter
+        while (a.Double()) {
+
+            player.Player_move(a.throw_dice(), true);
             i++;
-            if(i==3){
+            if (i == 3) {
                 //go to jail
                 player.is_jailed();
-                player.Player_move(10,false);
+                player.Player_move(10, false);
 
                 break;
             }
-        
+
         }
-        
-    
-        
-}
-    public void check_player_location(Player player){
-        
-       space.get(player.Player_position()-1).space_name();
-       
-       if(space.get(player.Player_position()-1).getaction().isEmpty()){
-           
-           
-       }
-        
-        
-        
+
     }
-    
+
+    public void check_player_location(Player player) {
+
+        space.get(player.Player_position() - 1).space_name();
+
+        if (space.get(player.Player_position() - 1).getaction().isEmpty()) {
+
+        } else {
+            System.out.println(space.get(player.Player_position() - 1).getaction());
+        }
+
+    }
+
     //new method added to crate spaces 
-public void create_space()throws BiffException, IOException {
-    //loading the exel fine
-    FileInputStream fs = new FileInputStream("src/propertytycoon/properties.xls");
-    Workbook wb = Workbook.getWorkbook(fs); 
-     // TO get the access to the sheet
-    Sheet sh = wb.getSheet("Sheet1");
+    public void create_space() throws BiffException, IOException {
+        //loading the exel fine
+        FileInputStream fs = new FileInputStream("src/propertytycoon/properties.xls");
+        Workbook wb = Workbook.getWorkbook(fs);
+        // TO get the access to the sheet
+        Sheet sh = wb.getSheet("Sheet1");
 
-    // To get the number of rows present in sheet -4 are the rows wich dont have the needed data
-    int totalNoOfRows = sh.getRows()-4;
-    //creating an array of spaces 
-    space=new ArrayList<Space>();
-     //28 rep the number of propirties
-  properties=new ArrayList<Properties>();
-     // To get the number of columns present in sheet
-     int i=0; // the counter for propirties
-     
-     
-    for (int x = 0; x < totalNoOfRows; x++) {
-      
-    if(sh.getCell(5,x+4).getContents().contains("Yes")){
+        // To get the number of rows present in sheet -4 are the rows wich dont have the needed data
+        int totalNoOfRows = sh.getRows() - 4;
+        //creating an array of spaces 
+        space = new ArrayList<Space>();
+        //28 rep the number of propirties
+        properties = new ArrayList<Properties>();
+        // To get the number of columns present in sheet
+        int i = 0; // the counter for propirties
 
-        //creating a new propirtie with: location , cost, colour and diffrient rent prices for ex 0 will get no house and 1 will get the rent with a house 
-         properties.add(new Properties(Integer.parseInt(sh.getCell(0,x+4).getContents()),sh.getCell(4,x+4).getContents(),sh.getCell(1,x+4).getContents(),sh.getCell(3,x+4).getContents(),Integer.parseInt(sh.getCell(7,x+4).getContents()),Integer.parseInt(sh.getCell(15,x+4).getContents())));
-        space.add(properties.get(i));
+        for (int x = 0; x < totalNoOfRows; x++) {
 
-    if( !sh.getCell(8,x+4).getContents().contains("See notes")){
-        
-        properties.get(i).rent(Integer.parseInt(sh.getCell(8,x+4).getContents()));
-        for (int y=0;y<5;y++)properties.get(i).rent(Integer.parseInt(sh.getCell(y+10,x+4).getContents()));
-        System.out.println(space.get(x).getposition()+" "+properties.get(i).getcolour()+" "+properties.get(i).getcost()+" "+properties.get(i).getrent(1)+" "+properties.get(i).getrent(2)+" "+properties.get(i).getrent(3)+" "+properties.get(i).getrent(4)+" "+properties.get(i).getrent(5)+" "+properties.get(i).getrent(6));
+            if (sh.getCell(5, x + 4).getContents().contains("Yes")) {
+
+                //creating a new propirtie with: location , cost, colour and diffrient rent prices for ex 0 will get no house and 1 will get the rent with a house 
+                properties.add(new Properties(Integer.parseInt(sh.getCell(0, x + 4).getContents()), sh.getCell(4, x + 4).getContents(), sh.getCell(1, x + 4).getContents(), sh.getCell(3, x + 4).getContents(), Integer.parseInt(sh.getCell(7, x + 4).getContents()), Integer.parseInt(sh.getCell(15, x + 4).getContents())));
+                space.add(properties.get(i));
+
+                if (!sh.getCell(8, x + 4).getContents().contains("See notes")) {
+
+                    properties.get(i).rent(Integer.parseInt(sh.getCell(8, x + 4).getContents()));
+                    for (int y = 0; y < 5; y++) {
+                        properties.get(i).rent(Integer.parseInt(sh.getCell(y + 10, x + 4).getContents()));
+                    }
+                    System.out.println(space.get(x).getposition() + " " + properties.get(i).getcolour() + " " + properties.get(i).getcost() + " " + properties.get(i).getrent(1) + " " + properties.get(i).getrent(2) + " " + properties.get(i).getrent(3) + " " + properties.get(i).getrent(4) + " " + properties.get(i).getrent(5) + " " + properties.get(i).getrent(6));
+
+                } else if (properties.get(i).getcolour().contains("Station")) {
+
+                    for (int y = 0; y < 4; y++) {
+                        properties.get(i).rent(Integer.parseInt(sh.getCell(y + 10, x + 4).getContents()));
+                    }
+                    System.out.println(space.get(x).getposition() + " " + properties.get(i).getcolour() + " " + properties.get(i).getcost() + " " + properties.get(i).getrent(1) + " " + properties.get(i).getrent(2) + " " + properties.get(i).getrent(3) + " " + properties.get(i).getrent(4));
+
+                } else if (properties.get(i).getcolour().contains("Utilities")) {
+
+                    for (int y = 0; y < 2; y++) {
+                        properties.get(i).rent(Integer.parseInt(sh.getCell(y + 10, x + 4).getContents()));
+                    }
+                    System.out.println(space.get(x).getposition() + " " + properties.get(i).getcolour() + " " + properties.get(i).getcost() + " " + properties.get(i).getrent(1) + " " + properties.get(i).getrent(2));
+                }
+
+                i++;
+            } else {
+                //adding the space position and the action
+                space.add(new Space(Integer.parseInt(sh.getCell(0, x + 4).getContents()), sh.getCell(4, x + 4).getContents(), sh.getCell(1, x + 4).getContents()));
+                //if the space can be bought then its count as a propirty
+            }
+
+        }
+        adding_properties();
+    }
+
+    public static int add_parking_fine(int x) {
+        return parking += x;
 
     }
-    else if(properties.get(i).getcolour().contains("Station")){
-        
-        for (int y=0;y<4;y++)properties.get(i).rent(Integer.parseInt(sh.getCell(y+10,x+4).getContents()));
-        System.out.println(space.get(x).getposition()+" "+properties.get(i).getcolour()+" "+properties.get(i).getcost()+" "+properties.get(i).getrent(1)+" "+properties.get(i).getrent(2)+" "+properties.get(i).getrent(3)+" "+properties.get(i).getrent(4));
 
-    }
-    
-    else if(properties.get(i).getcolour().contains("Utilities")){
-          
-        for (int y=0;y<2;y++)properties.get(i).rent(Integer.parseInt(sh.getCell(y+10,x+4).getContents()));
-       System.out.println(space.get(x).getposition()+" "+properties.get(i).getcolour()+" "+properties.get(i).getcost()+" "+properties.get(i).getrent(1)+" "+properties.get(i).getrent(2));
-    }
+    public void adding_properties() {
 
-    i++;
- }
-    else{
-          //adding the space position and the action
-        space.add(new Space(Integer.parseInt(sh.getCell(0,x+4).getContents()),sh.getCell(4,x+4).getContents(),sh.getCell(1,x+4).getContents())) ;
-        //if the space can be bought then its count as a propirty
+        for (int x = 0; x < properties.size(); x++) {
+
+            properties_final.get(properties.get(x).getcolour()).add(properties.get(x));
+        }
+        System.out.println(properties_final.get("Green").size() + "         ----");
     }
-    
-}
-    adding_properties();
-}
-public  static int add_parking_fine(int x){
-   return parking+=x;
-    
-    
-}
-public void adding_properties(){
-    
-    for(int x=0;x<properties.size();x++){
-        
-        properties_final.get(properties.get(x).getcolour()).add(properties.get(x));
-    }
-    System.out.println(properties_final.get("Green").size()+"         ----");
-}
 
 }
