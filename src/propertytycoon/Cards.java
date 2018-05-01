@@ -55,7 +55,7 @@ public class Cards {
 
     }
 
-    public void shuffel_cards(LinkedList s) {
+    public void shuffle_cards(LinkedList s) {
 
         Collections.shuffle(s); // this method will shuffel the cards in the linkedlist entered 
 

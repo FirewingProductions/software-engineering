@@ -19,7 +19,7 @@ import jxl.Workbook;
 import jxl.read.biff.BiffException;
 
 public class Game {
-    Cards cards;
+    Cards cards ;
 
     Player[] players; // a list of players 
     ArrayList<Space> space;
@@ -27,7 +27,7 @@ public class Game {
     ArrayList<Properties> properties;
     HashMap<String, ArrayList<Properties>> properties_final; //will be changed to property class instead of string 
     String[] colours = {"Red", "Brown", "Purple", "Utilities", "Station", "Green", "Deep blue", "Blue", "Orange", "Yellow"};
-
+    private int bankFunds = 50000;
     static int parking = 0;
 
     public Game(Player.character[] b) throws BiffException, IOException {
@@ -43,7 +43,9 @@ public class Game {
 
         create_space();
    
-    cards = new Cards(space);
+      cards = new Cards(space);
+      cards.shuffle_cards(cards.return_Opportunity_knocks_card_data());
+      cards.shuffle_cards(cards.return_pot_luck_card_data());
     }
 
     public void player_turn(Player player) {
@@ -89,6 +91,19 @@ public class Game {
                 System.out.println(player.player_characters.toString() + " has been jailed");
                 player.is_jailed();
             }
+            
+            if(properties.contains(space.get(player.Player_position()))){
+                int index = properties.indexOf(space.get(player.Player_position()));
+                if(properties.get(index).property_is_owned() && properties.get(index).property_owener() != player ){
+                    //if the property is owned by someone else.. pay rent
+                    System.out.println(player.player_characters.toString() + " landed on someone elses property.. paying rent");
+                    int rentamount = properties.get(index).getrent(properties.get(index).return_house_amount() + 1);
+                    System.out.println("Rent amount : " + rentamount);
+                    player.Player_balance_de(rentamount);
+                    properties.get(index).property_owener().Player_balance_in(rentamount);
+                    System.out.println(properties.get(index).property_owener().characters_Player().toString() + " has been paid " + rentamount + " in rent");
+                }
+            }
 
         } else {
             System.out.println(space.get(player.Player_position()).getaction());
@@ -102,12 +117,17 @@ public class Game {
                         cards.activate_card(player.player_cards.get(0), player, players);
                     }
                     break;
-                case "Pay £200":
+                case "Pay �200":
                     System.out.println("Paying 200 pounds");
                     parking = add_parking_fine(200);
                     break;
+                    
+                case "Pay �100":
+                    System.out.println("Paying 100 pounds");
+                    parking = add_parking_fine(100);
+                    break;
                 case "Collect fines":
-                    System.out.println("Collect parking fines");
+                    System.out.println("Collecting parking fines");
                     player.Player_balance_in(parking);
                     break;
             }
@@ -186,6 +206,10 @@ public class Game {
             properties_final.get(properties.get(x).getcolour()).add(properties.get(x));
         }
         System.out.println(properties_final.get("Green").size() + "         ----");
+    }
+    
+    public void payBank(int amount){
+        bankFunds += amount;
     }
 
 }

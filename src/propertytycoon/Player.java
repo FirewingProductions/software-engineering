@@ -107,10 +107,19 @@ public class Player {
         Player_position = 10;
     }
 
-    public void player_has_a_Set() {
 
+    public Boolean player_has_set(String colour, ArrayList<Properties> props){
+        for(Properties p : props){
+            if(p.property_owener() == this){
+                System.out.println("own");
+            }else{
+                System.out.println("dont own");
+                return false;
+            }
+        }
+        return true;
     }
-
+    
     public void is_out_ofjail() {
 
         jail_time = 0;

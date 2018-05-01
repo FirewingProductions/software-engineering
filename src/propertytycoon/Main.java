@@ -34,8 +34,8 @@ public class Main {
         Cards s;
         s = new Cards(n.space);
 
-        s.shuffel_cards(s.return_Opportunity_knocks_card_data());
-        s.shuffel_cards(s.return_pot_luck_card_data());
+        s.shuffle_cards(s.return_Opportunity_knocks_card_data());
+        s.shuffle_cards(s.return_pot_luck_card_data());
         n.players[0].Player_move(30, true);
         System.out.println(n.players[0].Player_position());
         System.out.println(n.parking);

@@ -18,8 +18,8 @@ public class Properties extends Space {
     private ArrayList<Integer> rent;
     private String colour;
     private int cost_house;
-    private Player.character owend;
-    private Boolean is_owend = false;
+    private Player owned;
+    private Boolean is_owned = false;
     private int pos;
     private Boolean mortgage;
     private int house;
@@ -62,24 +62,25 @@ public class Properties extends Space {
 
     }
 
-    private boolean property_is_owend() {
+    public boolean property_is_owned() {
 
-        return is_owend;
+        return is_owned;
 
     }
 
-    public Player.character property_owener() {
+    public Player property_owener() {
 
-        return owend;
+        return owned;
 
     }
 
     public void property_buy(Player p) {
 
-        if (p.Player_balance() > cost && is_owend == false) {
-            is_owend = true;
-            owend = p.player_characters;
+        if (p.Player_balance() >= cost && is_owned == false) {
+            is_owned = true;
+            owned = p;
             p.Player_balance_de(cost);
+            
         }
 
     }
@@ -88,18 +89,22 @@ public class Properties extends Space {
 
         if (!colour.contains("Station") || !colour.contains("Utilities")) {
 
-            if (house != 6) {
-
+            if (house != 4) {
+                System.out.println("House bought");
                 p.Player_balance_de(cost_house);
                 house++;
 
+            }else{
+                System.out.println("Failed to buy house, too many");
             }
+        }else{
+            System.out.println("Cant buy houses for these properties");
         }
     }
 
     public void mortgage(Player p) {
 
-        if (p.player_characters == owend && mortgage == false) {
+        if (p == owned && mortgage == false) {
             p.Player_balance_in(cost / 2);
             mortgage = true;
         }
@@ -107,7 +112,7 @@ public class Properties extends Space {
     }
 
     public void un_mortgage(Player p) {
-        if (p.player_characters == owend && mortgage == true) {
+        if (p == owned && mortgage == true) {
             p.Player_balance_de(cost / 2);
             mortgage = false;
 
@@ -118,4 +123,7 @@ public class Properties extends Space {
         return pos;
     }
 
+    public int return_house_amount(){
+        return house;
+    }
 }
