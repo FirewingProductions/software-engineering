@@ -19,8 +19,9 @@ import jxl.Workbook;
 import jxl.read.biff.BiffException;
 
 public class Game {
+    Cards cards;
 
-    Player[] player; // a list of players 
+    Player[] players; // a list of players 
     ArrayList<Space> space;
     Dice a = new Dice();  // the two dices
     ArrayList<Properties> properties;
@@ -31,9 +32,9 @@ public class Game {
 
     public Game(Player.character[] b) throws BiffException, IOException {
         // initialization of players class by defining the characters of each player
-        player = new Player[b.length];
+        players = new Player[b.length];
         for (int x = 0; x < b.length; x++) {
-            player[x] = new Player(b[x]);
+            players[x] = new Player(b[x]);
         }
         properties_final = new HashMap<String, ArrayList<Properties>>();
         for (int y = 0; y < colours.length; y++) {
@@ -41,18 +42,19 @@ public class Game {
         }
 
         create_space();
-
+   
+    cards = new Cards(space);
     }
 
     public void player_turn(Player player) {
 
         throw_dice(player);
 
-        if (space.get(player.Player_position() + 1).getaction() == null) {
+      //  if (space.get(player.Player_position()).getaction() == null) {
 
-        } else {
+        //} else {
 
-        }
+        //}
 
     }
 
@@ -79,12 +81,36 @@ public class Game {
 
     public void check_player_location(Player player) {
 
-        space.get(player.Player_position() - 1).space_name();
-
-        if (space.get(player.Player_position() - 1).getaction().isEmpty()) {
+        if (space.get(player.Player_position()).getaction().isEmpty()) {
+            
+            System.out.println(space.get(player.Player_position()).space_name() + " has no action");
+            
+            if(space.get(player.Player_position()).space_name().equalsIgnoreCase("Go to Jail")){
+                System.out.println(player.player_characters.toString() + " has been jailed");
+                player.is_jailed();
+            }
 
         } else {
-            System.out.println(space.get(player.Player_position() - 1).getaction());
+            System.out.println(space.get(player.Player_position()).getaction());
+            switch(space.get(player.Player_position()).getaction()){
+                case "Take card":
+                    if(space.get(player.Player_position()).space_name().equals("Opportunity Knocks")){
+                        player.add_card_to_player(cards.take_card(2));
+                        cards.activate_card(player.player_cards.get(0), player, players);
+                    }else{
+                        player.add_card_to_player(cards.take_card(1));
+                        cards.activate_card(player.player_cards.get(0), player, players);
+                    }
+                    break;
+                case "Pay £200":
+                    System.out.println("Paying 200 pounds");
+                    parking = add_parking_fine(200);
+                    break;
+                case "Collect fines":
+                    System.out.println("Collect parking fines");
+                    player.Player_balance_in(parking);
+                    break;
+            }
         }
 
     }

@@ -19,6 +19,7 @@ public class Player {
 
     private int player_balance = 1500; //player starting balance
     private int Player_position = 0;   // the position of the player on the board
+    private boolean passedgo;
     character player_characters;
     String name;    //the name of the player
     HashMap<String, ArrayList<Properties>> properties; //will be changed to property class instead of string 
@@ -60,12 +61,15 @@ public class Player {
 
     public void Player_advance(int x, boolean s) {
 
-        Player_position = x;  // moves a player to  by any number of steps (X)
+        
 
-        if (Player_position + x > 40) {
-
+        if (Player_position + x > 39) {
+            passedgo = true;
             go(s);
+            Player_position = (Player_position + x) - 39;
 
+        }else{
+            Player_position += x;  // moves a player to  by any number of steps (X)
         }
     }
 
@@ -73,10 +77,10 @@ public class Player {
 
         Player_position = Player_position + x;  // moves a player to  by any number of steps (X)
 
-        if (Player_position > 40) {
-
+        if (Player_position > 39) {
+            passedgo = true;
             go(s);
-            Player_position = 40;
+            Player_position -= 39;
 
         }
     }
@@ -100,7 +104,7 @@ public class Player {
     public void is_jailed() {
 
         jailed = true;
-
+        Player_position = 10;
     }
 
     public void player_has_a_Set() {
@@ -168,5 +172,8 @@ public class Player {
         properties.get(p.getcolour()).add(p);
 
     }
-
+    public boolean checkPassedGo(){
+        return passedgo;
+    }
+  
 }

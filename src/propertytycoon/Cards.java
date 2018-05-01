@@ -170,16 +170,25 @@ public class Cards {
 
     }
 
-    public void draw_card(LinkedList s) {
+    private String draw_card(LinkedList s) {
 // we use number 1 to draw pot_luck_card_data and 2 for Opportunity_knocks_card_data 
         System.out.println(s.getFirst());  // print the drawn card
-
+        String drawncard = s.getFirst().toString();
         s.addLast(s.getFirst());
         s.removeFirst();
         //put the card to the the end of the deck
-
+        
+        return drawncard;
     }
 
+    public String take_card(int choice){
+        if(choice == 1){
+            return draw_card(pot_luck_card_data);
+        }else{
+            return draw_card(Opportunity_knocks_card_data);
+        }
+    }
+    
     public LinkedList return_pot_luck_card_data() {
         return pot_luck_card_data;
 

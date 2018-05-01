@@ -399,12 +399,12 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
 
         if ("rolled".equals(e.getActionCommand())) {
             if (!rolled) {
-                System.out.println(players[turn].characters_Player() + " at space --> " + players[turn].Player_position());
-                System.out.println("- Rolled -");
+                System.out.println(players[turn].characters_Player().toString() + "- Rolled -");
                 game.player_turn(players[turn]);
                 rolled = true;
-                UpdateUI();
                 checkSpace();
+                UpdateUI();
+                
             }
 
         }
@@ -501,7 +501,8 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
             turn++;
         }
         if(players[turn].jailed){
-            System.out.println("Player jailed, turn skipped");
+            System.out.println( players[turn].player_characters.toString() + " jailed, turn skipped");
+            players[turn].Player_still_in_jail();
             nextPlayer();
             
         }else{
@@ -567,7 +568,7 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
 
         int index = game.properties.indexOf(game.space.get(players[turn].Player_position()));
 
-        if (index != -1 && game.properties.get(index).property_owener() == null) {
+        if (index != -1 && game.properties.get(index).property_owener() == null && players[turn].checkPassedGo()) {
             buybutton.setEnabled(true);
         } else {
             buybutton.setEnabled(false);

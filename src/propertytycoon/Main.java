@@ -36,28 +36,29 @@ public class Main {
 
         s.shuffel_cards(s.return_Opportunity_knocks_card_data());
         s.shuffel_cards(s.return_pot_luck_card_data());
-        n.player[0].Player_move(30, true);
-        System.out.println(n.player[0].Player_position());
+        n.players[0].Player_move(30, true);
+        System.out.println(n.players[0].Player_position());
         System.out.println(n.parking);
 
-        n.player[0].hotels = 2;
-        s.activate_card("Fined £15 for speeding", n.player[0], n.player);
+        n.players[0].hotels = 2;
+        s.activate_card("Fined £15 for speeding", n.players[0], n.players);
         System.out.println(n.parking);
 
-        System.out.println(n.player[0].Player_position());
+        System.out.println(n.players[0].Player_position());
 
         for (int i = 0; i < s.return_pot_luck_card_size(); i++) {
-            s.draw_card(s.return_pot_luck_card_data());
+            //s.draw_card(s.return_pot_luck_card_data());
+            s.take_card(1);
 
         }
         for (int i = 0; i < s.return_Opportunity_knocks_card_size(); i++) {
-            s.draw_card(s.return_Opportunity_knocks_card_data());
-
+            //s.draw_card(s.return_Opportunity_knocks_card_data());
+            s.take_card(2);
         }
-        System.out.println(n.player[0].Player_balance());
-        n.properties.get(0).property_buy(n.player[0]);
-        n.properties.get(1).property_buy(n.player[0]);
-        System.out.println(n.player[0].Player_balance());
+        System.out.println(n.players[0].Player_balance());
+        n.properties.get(0).property_buy(n.players[0]);
+        n.properties.get(1).property_buy(n.players[0]);
+        System.out.println(n.players[0].Player_balance());
 
         /*testing player movements 
      
