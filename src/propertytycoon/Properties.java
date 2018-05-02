@@ -39,8 +39,20 @@ public class Properties extends Space {
         rent.add(x);
     }
 
-    public int getrent(int x) {
-        return rent.get(x - 1);
+    public int getrent(int x, ArrayList<Properties> prop) {
+
+        if (owned != null && owned.player_has_set(colour, prop) && house == 0) {
+            System.out.println("Returning rent for colour set");
+            return (rent.get(x - 1) * 2);
+        } else {
+            return rent.get(x - 1);
+        }
+
+    }
+        public int getrent(int x) {
+
+            return rent.get(x - 1);
+        
 
     }
 
@@ -80,24 +92,72 @@ public class Properties extends Space {
             is_owned = true;
             owned = p;
             p.Player_balance_de(cost);
-            
+
         }
 
+    }
+    
+    public String property_sell(Player p){
+        if(house == 0){
+            p.Player_balance_in(cost);
+            owned = null;
+            is_owned = false;
+            p.properties.get(colour).remove(this);
+            return "Property sold";
+        }else{
+            if(house > 4){
+                //selling hotel piece
+                p.Player_balance_in(cost_house * 5);
+                house--;
+                return "Hotel sold";
+            }else{
+                //selling house piece
+                p.Player_balance_in(cost_house);
+                house--;
+                return "House sold";
+            }
+        }
     }
 
     public void buy_house(Player p) {
 
         if (!colour.contains("Station") || !colour.contains("Utilities")) {
 
-            if (house != 4) {
+            if (house < 4) {
                 System.out.println("House bought");
-                p.Player_balance_de(cost_house);
-                house++;
+                if (p.Player_balance() >= cost_house) {
+                    p.Player_balance_de(cost_house);
+                    house++;
+                } else {
+                    System.out.println("Not enough money");
+                }
 
-            }else{
+            } else {
                 System.out.println("Failed to buy house, too many");
+
             }
-        }else{
+        } else {
+            System.out.println("Cant buy houses for these properties");
+        }
+    }
+
+    public void buy_hotel(Player p) {
+        if (!colour.contains("Station") || !colour.contains("Utilities")) {
+
+            if (house >= 4) {
+                if (p.Player_balance() >= cost_house) {
+                    System.out.println("Hotel bought");
+                    p.Player_balance_de(cost_house * 5);
+                    house++;
+                } else {
+                    System.out.println("Not enough money");
+                }
+
+            } else {
+                System.out.println("Failed to buy house, too many");
+
+            }
+        } else {
             System.out.println("Cant buy houses for these properties");
         }
     }
@@ -123,7 +183,7 @@ public class Properties extends Space {
         return pos;
     }
 
-    public int return_house_amount(){
+    public int return_house_amount() {
         return house;
     }
 }

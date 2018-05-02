@@ -66,7 +66,7 @@ public class Player {
         if (Player_position + x > 39) {
             passedgo = true;
             go(s);
-            Player_position = (Player_position + x) - 39;
+            Player_position = (Player_position + x) - 40;
 
         }else{
             Player_position += x;  // moves a player to  by any number of steps (X)
@@ -80,7 +80,7 @@ public class Player {
         if (Player_position > 39) {
             passedgo = true;
             go(s);
-            Player_position -= 39;
+            Player_position -= 40;
 
         }
     }
@@ -120,6 +120,19 @@ public class Player {
         return true;
     }
     
+    public Boolean player_has_set(String colour){
+        ArrayList<Properties> prop = properties.get(colour);
+        for(Properties p : prop){
+            if(p.property_owener() == this){
+                System.out.println("own");
+            }else{
+                System.out.println("dont own");
+                return false;
+            }
+        }
+        return true;
+        
+    }
     public void is_out_ofjail() {
 
         jail_time = 0;

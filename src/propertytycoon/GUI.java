@@ -82,35 +82,35 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
     private Boolean rolled = false, showed = false;
 
     private JButton[][] playerbuttons;
-    
+
     private JFrame cardFrame;
 
     private int playernumber;
 
     String[] colours = {"Red", "Brown", "Purple", "Utilities", "Station", "Green", "Deep blue", "Blue", "Orange", "Yellow"};
-    public static final String[] numbers = { "2", "3", "4", "5", "6" };
+    public static final String[] numbers = {"2", "3", "4", "5", "6"};
+
     public void UI() throws IOException, BiffException {
-        
+
         JFrame frame = new JFrame("Input Dialog");
         //frame.setSize(300, 300);
-        String pnum = (String) JOptionPane.showInputDialog(frame, 
-        "How many players?",
-        "Player number",
-        JOptionPane.QUESTION_MESSAGE, 
-        null, 
-        numbers, 
-        numbers[0]);
+        String pnum = (String) JOptionPane.showInputDialog(frame,
+                "How many players?",
+                "Player number",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                numbers,
+                numbers[0]);
 
-    
-    System.out.println("Number of players selected is : " + pnum);
-        
+        System.out.println("Number of players selected is : " + pnum);
+
         playernumber = Integer.parseInt(pnum);
-        
+
         tokenlabels = new HashMap<>();
 
         turn = 0;
         Player.character[] chars = new Player.character[playernumber];
-        
+
         LinkedList characs = new LinkedList();
         characs.add(Player.character.boot);
         characs.add(Player.character.cat);
@@ -118,19 +118,16 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         characs.add(Player.character.hatstand);
         characs.add(Player.character.smartphone);
         characs.add(Player.character.spoon);
-        
-        
-        for(int y = 0; y < playernumber ; y++){
+
+        for (int y = 0; y < playernumber; y++) {
             System.out.println(characs.peek());
-            chars[y] = (Player.character)characs.poll();
+            chars[y] = (Player.character) characs.poll();
         }
 
-        
         players = new Player[playernumber];
-          for(int y = 0; y < playernumber; y++){
+        for (int y = 0; y < playernumber; y++) {
             players[y] = new Player(chars[y]);
         }
-
 
         game = new Game(chars);
 
@@ -138,9 +135,9 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
 
         String path = getClass().getResource("").toString().substring(5);
         System.out.println(path);
-        
+
         tilesmap = game.space;
- 
+
         mainFrame = new JFrame("Property Tycoon");
         mainFrame.setSize(1650, 1650);
 
@@ -169,7 +166,7 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         boardpanel.setForeground(Color.red);
 
         mainFrame.setLayout(new BorderLayout());
-       
+
         bpanel1 = new JPanel();
         bpanel2 = new JPanel();
         bpanel3 = new JPanel();
@@ -238,56 +235,47 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
             brown.setBackground(new Color(139, 69, 19));
             brown.addActionListener(this);
             brown.setActionCommand(Integer.toString(i) + "brown");
-            
-            
+
             JButton purple = new JButton("");
             purple.setBackground(Color.magenta);
             purple.addActionListener(this);
             purple.setActionCommand(Integer.toString(i) + "purple");
-            
-            
+
             JButton red = new JButton("");
             red.setBackground(Color.red);
             red.addActionListener(this);
             red.setActionCommand(Integer.toString(i) + "red");
-            
-            
+
             JButton green = new JButton("");
             green.setBackground(Color.green);
             green.addActionListener(this);
             green.setActionCommand(Integer.toString(i) + "green");
-            
-            
+
             JButton blue = new JButton("");
             blue.setBackground(Color.cyan);
             blue.addActionListener(this);
             blue.setActionCommand(Integer.toString(i) + "blue");
-            
-            
+
             JButton orange = new JButton("");
             orange.setBackground(Color.orange);
             orange.addActionListener(this);
             orange.setActionCommand(Integer.toString(i) + "orange");
-            
-            
+
             JButton yellow = new JButton("");
             yellow.setBackground(Color.yellow);
             yellow.addActionListener(this);
             yellow.setActionCommand(Integer.toString(i) + "yellow");
-            
-            
+
             JButton darkblue = new JButton("");
             darkblue.setBackground(new Color(30, 144, 255));
             darkblue.addActionListener(this);
             darkblue.setActionCommand(Integer.toString(i) + "darkblue");
-            
-            
+
             JButton utilities = new JButton("");
             utilities.setBackground(Color.PINK);
             utilities.addActionListener(this);
             utilities.setActionCommand(Integer.toString(i) + "utilities");
-            
-            
+
             JButton stations = new JButton("");
             stations.setBackground(Color.WHITE);
             stations.addActionListener(this);
@@ -377,7 +365,7 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
 
         //tiles top
         for (int i = 0; i < 11; i++) {
-            System.out.println(path + tilesmap.get(i).space_name()  + ".png");
+            System.out.println(path + tilesmap.get(i).space_name() + ".png");
             label = new JLabel();
             label.setSize(136, 98);
             wPic = ImageIO.read(new File(path + tilesmap.get(i).space_name() + ".png"));
@@ -393,10 +381,10 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
 
         //tiles left
         for (int i = 8; i >= 0; i--) {
-            System.out.println(path + tilesmap.get(i + 31 ));
+            System.out.println(path + tilesmap.get(i + 31));
             label = new JLabel();
             label.setSize(136, 98);
-            wPic = ImageIO.read(new File(path + tilesmap.get(31 + i).space_name()  + ".png"));
+            wPic = ImageIO.read(new File(path + tilesmap.get(31 + i).space_name() + ".png"));
             dimg = wPic.getScaledInstance(label.getWidth(), label.getHeight(),
                     Image.SCALE_SMOOTH);
             label = new JLabel(new ImageIcon(dimg));
@@ -408,7 +396,7 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         }
         //tiles right
         for (int i = 0; i < 9; i++) {
-            System.out.println(path + tilesmap.get(i + 11 ));
+            System.out.println(path + tilesmap.get(i + 11));
             label = new JLabel();
             label.setSize(136, 98);
             wPic = ImageIO.read(new File(path + tilesmap.get(11 + i).space_name() + ".png"));
@@ -423,7 +411,7 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         }
         //tiles bottom
         for (int i = 10; i >= 0; i--) {
-            System.out.println(path + tilesmap.get(i + 20 ));
+            System.out.println(path + tilesmap.get(i + 20));
             label = new JLabel();
             label.setSize(136, 98);
             wPic = ImageIO.read(new File(path + tilesmap.get(20 + i).space_name() + ".png"));
@@ -469,7 +457,7 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
                 rolled = true;
                 checkSpace();
                 UpdateUI();
-                
+
             }
 
         }
@@ -488,31 +476,58 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         if ("endturn".equals(e.getActionCommand())) {
             nextPlayer();
         }
-    try{
-        
-        System.out.println(e.getActionCommand().substring(0, 8));
-        if(e.getActionCommand().substring(0, 8).equalsIgnoreCase("buyhouse")){
-            System.out.println(e.getActionCommand().substring(8));
-            for(Properties prop : game.properties){
-                
-                if(prop.space_name().equalsIgnoreCase(e.getActionCommand().substring(8))){
-                    System.out.println("Attempting to buy : " + prop.space_name());
-                    prop.buy_house(players[turn]);
-                    UpdateUI();
+        try {
+
+            if (e.getActionCommand().substring(0, 8).equalsIgnoreCase("buyhouse")) {
+                System.out.println(e.getActionCommand().substring(8));
+                for (Properties prop : game.properties) {
+
+                    if (prop.space_name().equalsIgnoreCase(e.getActionCommand().substring(8))) {
+                        System.out.println("Attempting to buy house for : " + prop.space_name());
+                        prop.buy_house(players[turn]);
+                        UpdateUI();
+                        cardFrame.setVisible(false);
+                        cardFrame.dispose();
+                    }
                 }
             }
-        }
-    }catch(Exception ex){
-        
-    }
+            if (e.getActionCommand().substring(0, 8).equalsIgnoreCase("buyhotel")) {
+                System.out.println(e.getActionCommand().substring(8));
+                for (Properties prop : game.properties) {
 
-        try{
+                    if (prop.space_name().equalsIgnoreCase(e.getActionCommand().substring(8))) {
+                        System.out.println("Attempting to buy hotel for : " + prop.space_name());
+                        prop.buy_hotel(players[turn]);
+                        UpdateUI();
+                        cardFrame.setVisible(false);
+                        cardFrame.dispose();
+                    }
+                }
+            }
+            if (e.getActionCommand().substring(0, 4).equalsIgnoreCase("sell")) {
+                System.out.println("Selling a property");
+                for (Properties prop : game.properties) {
+
+                    if (prop.space_name().equalsIgnoreCase(e.getActionCommand().substring(4))) {
+                        System.out.println("Attempting to sell hotel/house or property : " + prop.space_name());
+                        System.out.println(prop.property_sell(players[turn]));
+                        UpdateUI();
+                        cardFrame.setVisible(false);
+                        cardFrame.dispose();
+                    }
+                }
+            }
+        } catch (Exception ex) {
+
+        }
+
+        try {
             System.out.println(e.getActionCommand());
             int playercalled = Integer.parseInt(e.getActionCommand().substring(0, 1));
             System.out.println(playercalled);
             String colour = e.getActionCommand().substring(1);
             //{"Red", "Brown", "Purple", "Utilities", "Station", "Green", "Deep blue", "Blue", "Orange", "Yellow"};
-            switch(colour){
+            switch (colour) {
                 case "red":
                     createCardPanel(players[playercalled], "Red");
                     break;
@@ -544,35 +559,34 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
                     createCardPanel(players[playercalled], "Purple");
                     break;
             }
-        }catch(Exception ex){
-         
+        } catch (Exception ex) {
+
         }
- 
+
     }
 
     private void nextPlayer() {
-        
+
         rolled = false;
-        
+
         if (turn >= players.length - 1) {
             turn = 0;
         } else {
             turn++;
         }
-        if(players[turn].jailed){
-            System.out.println( players[turn].player_characters.toString() + " jailed, turn skipped");
+        if (players[turn].jailed) {
+            System.out.println(players[turn].player_characters.toString() + " jailed, turn skipped");
             players[turn].Player_still_in_jail();
             nextPlayer();
-            
-        }else{
+
+        } else {
             UpdateUI();
         }
 
     }
 
     public void UpdateUI() {
-  
-        
+
         for (JLabel lab : labelTiles) {
             lab.setText("");
         }
@@ -633,10 +647,10 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
             buybutton.setEnabled(false);
         }
     }
-    
-    public void createCardPanel(Player p, String colour){
+
+    public void createCardPanel(Player p, String colour) {
         BufferedImage wPic;
-        
+
         Image dimg;
         ArrayList<String> paths = new ArrayList<>();
         paths.add("boot");
@@ -646,17 +660,17 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         paths.add("smartphone");
         paths.add("spoon");
         String path = getClass().getResource("").toString().substring(5);
-        
+
         //{"Red", "Brown", "Purple", "Utilities", "Station", "Green", "Deep blue", "Blue", "Orange", "Yellow"};
         ArrayList<Properties> props = game.properties_final.get(colour);
-        
+
         String tmp = "Player " + p.characters_Player().toString() + " Colour " + colour;
         cardFrame = new JFrame(tmp);
         cardFrame.setSize(800, 800);
         cardFrame.setVisible(true);
         JPanel container = new JPanel(new GridLayout(props.size(), 5));
         cardFrame.add(container);
-        for(int i = 0; i < props.size(); i++){
+        for (int i = 0; i < props.size(); i++) {
             button = new JButton(props.get(i).space_name().toUpperCase());
             label = new JLabel();
             label.setSize(200, 200);
@@ -665,55 +679,90 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
                 System.out.println(path + tilesmap.get(index).space_name() + ".png");
                 wPic = ImageIO.read(new File(path + tilesmap.get(index).space_name() + ".png"));
                 dimg = wPic.getScaledInstance(200, 200,
-                    Image.SCALE_SMOOTH);
-                  
-            
-            if(props.get(i).property_owener() != p){
-               dimg = GrayFilter.createDisabledImage(dimg);
-           }
-             
-             
-             
-            label = new JLabel(new ImageIcon(dimg));
-            label.setForeground(Color.green);
-            label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            container.add(label);
+                        Image.SCALE_SMOOTH);
+
+                if (props.get(i).property_owener() != p) {
+                    dimg = GrayFilter.createDisabledImage(dimg);
+                }
+
+                label = new JLabel(new ImageIcon(dimg));
+                label.setForeground(Color.green);
+                label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                container.add(label);
             } catch (IOException ex) {
                 Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-          if(props.get(i).property_owener() == p && props.get(i).property_owener() == players[turn] && players[turn].player_has_set(colour, game.properties_final.get(colour))){
-             if(props.get(i).return_house_amount() > 3){
-                button = new JButton(" BUY HOTEL ");
-             }else{
-                 button = new JButton(" BUY HOUSE ");
-                 button.addActionListener(this);
-                button.setActionCommand("buyhouse" + props.get(i).space_name());
-             }
-             container.add(button);
-            
-             
-             button = new JButton(" MORTAGE ");
-             container.add(button);
-          }else{
-              button = new JButton(" - ");
-             container.add(button);
-             
-              button = new JButton(" - ");
-             container.add(button);
-          }
-             
-             button = new JButton(" TRADE ");
-             container.add(button);
-            // button.setEnabled(props.get(i).property_owener().equals(p));
-             
-             //button.setEnabled(props.get(i).property_owener().equals(p));
-             button = new JButton(" INFO ");
-             container.add(button);
-            // button.setEnabled(props.get(i).property_owener().equals(p));
-             
+
+            if (props.get(i).property_owener() == p && props.get(i).property_owener() == players[turn]) {
+                if (players[turn].player_has_set(colour , game.properties_final.get(colour))) {
+                    if (props.get(i).return_house_amount() > 3) {
+                        if (props.get(i).return_house_amount() != 5) {
+                            button = new JButton("(" + (props.get(i).return_house_amount() - 4) + ")" + " +HOTEL ");
+                            button.addActionListener(this);
+                            button.setActionCommand("buyhotel" + props.get(i).space_name());
+                            container.add(button);
+                            /////////////////////////////////////////
+                            button = new JButton(" - HOUSE ");
+                            button.addActionListener(this);
+                            button.setActionCommand("sell" + props.get(i).space_name());
+                            container.add(button);
+                        } else {
+                            button = new JButton("Max");
+                            container.add(button);
+                            ////////////////////////////////////
+                            button = new JButton(" - HOTEL ");
+                            button.addActionListener(this);
+                            button.setActionCommand("sell" + props.get(i).space_name());
+                            container.add(button);
+                        }
+                    } else {
+
+                        button = new JButton("(" + props.get(i).return_house_amount() + ")" + " +HOUSE ");
+                        button.addActionListener(this);
+                        button.setActionCommand("buyhouse" + props.get(i).space_name());
+                        container.add(button);
+                        ///////////////////////////////
+                        if(props.get(i).return_house_amount() != 0){
+                            button = new JButton(" - HOUSE ");
+                            button.addActionListener(this);
+                            button.setActionCommand("sell" + props.get(i).space_name());
+                            container.add(button);
+                        }else{
+                            button = new JButton(" SELL ");
+                            button.addActionListener(this);
+                            button.setActionCommand("sell" + props.get(i).space_name());
+                            container.add(button);
+                        }
+                    }
+                }else{
+                    button = new JButton(" - ");
+                    container.add(button);
+                
+                    button = new JButton(" SELL ");
+                    button.addActionListener(this);
+                    button.setActionCommand("sell" + props.get(i).space_name());
+                    container.add(button);
+                }
+                button = new JButton(" MORTAGE ");
+                button.addActionListener(this);
+                button.setActionCommand("mortgage" + props.get(i).space_name());
+                container.add(button);
+
+            } else {
+                button = new JButton(" - ");
+                container.add(button);
+
+                button = new JButton(" - ");
+                container.add(button);
+
+                button = new JButton(" - ");
+                container.add(button);
+            }
+
+            button = new JButton(" TRADE ");
+            container.add(button);
+
         }
-        
-   
+
     }
 }

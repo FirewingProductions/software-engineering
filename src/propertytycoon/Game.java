@@ -97,7 +97,7 @@ public class Game {
                 if(properties.get(index).property_is_owned() && properties.get(index).property_owener() != player ){
                     //if the property is owned by someone else.. pay rent
                     System.out.println(player.player_characters.toString() + " landed on someone elses property.. paying rent");
-                    int rentamount = properties.get(index).getrent(properties.get(index).return_house_amount() + 1);
+                    int rentamount = properties.get(index).getrent(properties.get(index).return_house_amount() + 1 , properties_final.get(properties.get(index).getcolour()));
                     System.out.println("Rent amount : " + rentamount);
                     player.Player_balance_de(rentamount);
                     properties.get(index).property_owener().Player_balance_in(rentamount);
@@ -166,7 +166,7 @@ public class Game {
                     for (int y = 0; y < 5; y++) {
                         properties.get(i).rent(Integer.parseInt(sh.getCell(y + 10, x + 4).getContents()));
                     }
-                    System.out.println(space.get(x).getposition() + " " + properties.get(i).getcolour() + " " + properties.get(i).getcost() + " " + properties.get(i).getrent(1) + " " + properties.get(i).getrent(2) + " " + properties.get(i).getrent(3) + " " + properties.get(i).getrent(4) + " " + properties.get(i).getrent(5) + " " + properties.get(i).getrent(6));
+                   System.out.println(space.get(x).getposition() + " " + properties.get(i).getcolour() + " " + properties.get(i).getcost() + " " + properties.get(i).getrent(1) + " " + properties.get(i).getrent(2) + " " + properties.get(i).getrent(3) + " " + properties.get(i).getrent(4) + " " + properties.get(i).getrent(5) + " " + properties.get(i).getrent(6));
 
                 } else if (properties.get(i).getcolour().contains("Station")) {
 
