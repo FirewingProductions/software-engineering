@@ -133,15 +133,17 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
 
         labelTiles = new JLabel[40];
 
-        String path = getClass().getResource("").toString().substring(5);
+        String path = getClass().getResource("").toString().substring(5) + "resources/";
         System.out.println(path);
 
         tilesmap = game.space;
 
         mainFrame = new JFrame("Property Tycoon");
-        mainFrame.setSize(1650, 1650);
-
+        //mainFrame.setSize(1650, 1650);  //1650 1650
+        mainFrame.setSize(1031, 1031);
         mainFrame.setLayout(new GridBagLayout());
+        mainFrame.setResizable(false);
+        
         opanel1 = new JPanel();
 
         opanel3 = new JPanel();
@@ -150,11 +152,11 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         opanel3.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         opanel4.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        opanel1.setSize(1000, 100);
+        opanel1.setSize(625, 62);
 
-        opanel3.setSize(200, 1600);
+        opanel3.setSize(125, 1000);
 
-        opanel4.setSize(1000, 100);
+        opanel4.setSize(625, 62);
 
         opanel1.setLayout(new GridLayout(1, 0));
 
@@ -162,7 +164,7 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         opanel4.setLayout(new GridLayout(1, 0));
 
         boardpanel = new JPanel(new BorderLayout());
-        boardpanel.setSize(900, 900);
+        boardpanel.setSize(562, 562);
         boardpanel.setForeground(Color.red);
 
         mainFrame.setLayout(new BorderLayout());
@@ -172,10 +174,10 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         bpanel3 = new JPanel();
         bpanel4 = new JPanel();
 
-        bpanel1.setSize(900, 100);
-        bpanel2.setSize(100, 600);
-        bpanel3.setSize(100, 600);
-        bpanel4.setSize(900, 100);
+        bpanel1.setSize(562, 62);
+        bpanel2.setSize(62, 375);
+        bpanel3.setSize(62, 375);
+        bpanel4.setSize(562, 62);
 
         bpanel1.setLayout(new GridLayout(1, 0));
         bpanel2.setLayout(new GridLayout(0, 1));
@@ -191,13 +193,13 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         middlepanel.setLayout(new BorderLayout(1, 0));
 
         announcementlabel = new JLabel("GAME STARTED", SwingConstants.CENTER);
-        announcementlabel.setFont(new Font("Arial", Font.PLAIN, 30));
+        announcementlabel.setFont(new Font("Arial", Font.PLAIN, 15));
 
         BufferedImage Pic;
         Image img;
 
         Pic = ImageIO.read(new File(path + "background.png"));
-        img = Pic.getScaledInstance(1384, 1302,
+        img = Pic.getScaledInstance(865, 814,
                 Image.SCALE_SMOOTH);
         label = new JLabel(new ImageIcon(img));
 
@@ -223,62 +225,107 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
 
         playerbuttons = new JButton[6][10];
         for (int i = 0; i < 6; i++) {
+            Boolean passed = false;
+            if(i >= players.length){
+                passed = true;
+            }
             opanelin = new JPanel(new GridLayout(0, 2));
             opanel1.add(opanelin);
 
             inneropanel1 = new JPanel();
-            inneropanel2 = new JPanel(new GridLayout(5, 5));
+            inneropanel2 = new JPanel(new GridLayout(5, 2));
             opanelin.add(inneropanel1);
             opanelin.add(inneropanel2);
 
             JButton brown = new JButton("");
             brown.setBackground(new Color(139, 69, 19));
+            if(passed){
+                brown.setBackground(Color.LIGHT_GRAY);
+            }
             brown.addActionListener(this);
+            brown.setPreferredSize(new Dimension(45,15));
             brown.setActionCommand(Integer.toString(i) + "brown");
+           // brown.setFont(new Font("Arial", Font.PLAIN, 9));
 
             JButton purple = new JButton("");
             purple.setBackground(Color.magenta);
+            if(passed){
+                purple.setBackground(Color.LIGHT_GRAY);
+            }
             purple.addActionListener(this);
+            purple.setPreferredSize(new Dimension(45,15));
             purple.setActionCommand(Integer.toString(i) + "purple");
 
             JButton red = new JButton("");
             red.setBackground(Color.red);
+            if(passed){
+                red.setBackground(Color.LIGHT_GRAY);
+            }
             red.addActionListener(this);
+            red.setPreferredSize(new Dimension(45,15));
             red.setActionCommand(Integer.toString(i) + "red");
 
             JButton green = new JButton("");
             green.setBackground(Color.green);
+            if(passed){
+                green.setBackground(Color.LIGHT_GRAY);
+            }
             green.addActionListener(this);
+            green.setPreferredSize(new Dimension(45,15));
             green.setActionCommand(Integer.toString(i) + "green");
 
             JButton blue = new JButton("");
             blue.setBackground(Color.cyan);
+            if(passed){
+                blue.setBackground(Color.LIGHT_GRAY);
+            }
             blue.addActionListener(this);
+            blue.setPreferredSize(new Dimension(45,15));
             blue.setActionCommand(Integer.toString(i) + "blue");
 
             JButton orange = new JButton("");
             orange.setBackground(Color.orange);
+            if(passed){
+                orange.setBackground(Color.LIGHT_GRAY);
+            }
             orange.addActionListener(this);
+            orange.setPreferredSize(new Dimension(45,15));
             orange.setActionCommand(Integer.toString(i) + "orange");
 
             JButton yellow = new JButton("");
             yellow.setBackground(Color.yellow);
+            if(passed){
+                yellow.setBackground(Color.LIGHT_GRAY);
+            }
             yellow.addActionListener(this);
+            yellow.setPreferredSize(new Dimension(45,15));
             yellow.setActionCommand(Integer.toString(i) + "yellow");
 
             JButton darkblue = new JButton("");
             darkblue.setBackground(new Color(30, 144, 255));
+            if(passed){
+                darkblue.setBackground(Color.LIGHT_GRAY);
+            }
             darkblue.addActionListener(this);
+            darkblue.setPreferredSize(new Dimension(45,15));
             darkblue.setActionCommand(Integer.toString(i) + "darkblue");
 
             JButton utilities = new JButton("");
             utilities.setBackground(Color.PINK);
+            if(passed){
+                utilities.setBackground(Color.LIGHT_GRAY);
+            }
             utilities.addActionListener(this);
+            utilities.setPreferredSize(new Dimension(45,15));
             utilities.setActionCommand(Integer.toString(i) + "utilities");
 
             JButton stations = new JButton("");
             stations.setBackground(Color.WHITE);
+            if(passed){
+                stations.setBackground(Color.LIGHT_GRAY);
+            }
             stations.addActionListener(this);
+            stations.setPreferredSize(new Dimension(45,15));
             stations.setActionCommand(Integer.toString(i) + "stations");
 
             playerbuttons[i][0] = red; //red
@@ -304,11 +351,14 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
             inneropanel2.add(stations);
 
             button = new JButton();
-            button.setSize(100, 100);
+            button.setSize(75, 87);
             System.out.println(path + paths.get(i) + ".png");
             wPic = ImageIO.read(new File(path + paths.get(i) + ".png"));
             dimg = wPic.getScaledInstance(button.getWidth(), button.getHeight(),
                     Image.SCALE_SMOOTH);
+            if(passed){
+                dimg = GrayFilter.createDisabledImage(dimg);
+            }
             button = new JButton(new ImageIcon(dimg));
             button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             button.addActionListener(this);
@@ -319,11 +369,18 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
 
         //RIGHT BUTTONS
         for (int i = 0; i < 6; i++) {
+            Boolean passed = false;
+            if(i >= players.length){
+                passed = true;
+            }
             label = new JLabel();
-            label.setSize(200, 200);
+            label.setSize(125, 125);
             wPic = ImageIO.read(new File(path + paths.get(i) + ".png"));
-            dimg = wPic.getScaledInstance(100, 100,
+            dimg = wPic.getScaledInstance(62, 62,
                     Image.SCALE_SMOOTH);
+            if(passed){
+                dimg = GrayFilter.createDisabledImage(dimg);
+            }
             label = new JLabel(new ImageIcon(dimg));
             label.setForeground(Color.green);
             label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -334,32 +391,32 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         //Bottom buttons
         rollButton = new JButton(" ROLL ");
         rollButton.addActionListener(this);
-        rollButton.setPreferredSize(new Dimension(100, 100));
-        rollButton.setFont(new Font("Arial", Font.BOLD, 15));
+        rollButton.setPreferredSize(new Dimension(62, 62));
+        rollButton.setFont(new Font("Arial", Font.BOLD, 10));
         rollButton.setActionCommand("rolled");
         opanel4.add(rollButton);
 
         buybutton = new JButton(" BUY ");
-        buybutton.setPreferredSize(new Dimension(100, 100));
-        buybutton.setForeground(Color.orange);
+        buybutton.setPreferredSize(new Dimension(62, 62));
+        buybutton.setForeground(Color.black);
         buybutton.addActionListener(this);
-        buybutton.setFont(new Font("Arial", Font.BOLD, 20));
+        buybutton.setFont(new Font("Arial", Font.BOLD, 15));
         buybutton.setActionCommand("buy");
         buybutton.setEnabled(false);
         opanel4.add(buybutton);
 
         button = new JButton(" PLACEHOLDER  ");
-        button.setPreferredSize(new Dimension(100, 100));
+        button.setPreferredSize(new Dimension(62, 62));
         button.setForeground(Color.PINK);
-        button.setFont(new Font("Arial", Font.BOLD, 20));
+        button.setFont(new Font("Arial", Font.BOLD, 10));
         opanel4.add(button);
 
         endbutton = new JButton(" END TURN ");
-        endbutton.setPreferredSize(new Dimension(100, 100));
+        endbutton.setPreferredSize(new Dimension(62, 62));
         endbutton.setForeground(Color.BLACK);
         endbutton.addActionListener(this);
         endbutton.setActionCommand("endturn");
-        endbutton.setFont(new Font("Arial", Font.BOLD, 20));
+        endbutton.setFont(new Font("Arial", Font.BOLD, 10));
         endbutton.setEnabled(false);
         opanel4.add(endbutton);
 
@@ -367,7 +424,7 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         for (int i = 0; i < 11; i++) {
             System.out.println(path + tilesmap.get(i).space_name() + ".png");
             label = new JLabel();
-            label.setSize(136, 98);
+            label.setSize(85, 61);
             wPic = ImageIO.read(new File(path + tilesmap.get(i).space_name() + ".png"));
             dimg = wPic.getScaledInstance(label.getWidth(), label.getHeight(),
                     Image.SCALE_SMOOTH);
@@ -383,8 +440,14 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         for (int i = 8; i >= 0; i--) {
             System.out.println(path + tilesmap.get(i + 31));
             label = new JLabel();
-            label.setSize(136, 98);
+            label.setSize(61, 85);
             wPic = ImageIO.read(new File(path + tilesmap.get(31 + i).space_name() + ".png"));
+            if(i == 5){
+                wPic = ImageIO.read(new File(path + "Opportunity knocks left.png"));
+            }
+            if(i == 2){
+                wPic = ImageIO.read(new File(path + "Pot Luck left.png"));
+            }
             dimg = wPic.getScaledInstance(label.getWidth(), label.getHeight(),
                     Image.SCALE_SMOOTH);
             label = new JLabel(new ImageIcon(dimg));
@@ -398,8 +461,11 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         for (int i = 0; i < 9; i++) {
             System.out.println(path + tilesmap.get(i + 11));
             label = new JLabel();
-            label.setSize(136, 98);
+            label.setSize(61,85 );
             wPic = ImageIO.read(new File(path + tilesmap.get(11 + i).space_name() + ".png"));
+            if(i == 6){
+            wPic = ImageIO.read(new File(path + "Pot Luck Right.png"));
+            }
             dimg = wPic.getScaledInstance(label.getWidth(), label.getHeight(),
                     Image.SCALE_SMOOTH);
             label = new JLabel(new ImageIcon(dimg));
@@ -413,7 +479,7 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         for (int i = 10; i >= 0; i--) {
             System.out.println(path + tilesmap.get(i + 20));
             label = new JLabel();
-            label.setSize(136, 98);
+            label.setSize(85, 61);
             wPic = ImageIO.read(new File(path + tilesmap.get(20 + i).space_name() + ".png"));
             dimg = wPic.getScaledInstance(label.getWidth(), label.getHeight(),
                     Image.SCALE_SMOOTH);
@@ -439,7 +505,7 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         infoFrame = new JFrame("Info Pane");
         infoFrame.setAlwaysOnTop(true);
         infoFrame.setLocationRelativeTo(mainFrame);
-        infoFrame.setSize(600, 1000);
+        infoFrame.setSize(375, 625);
     }
 
     public static void main(String args[]) throws IOException, BiffException {
@@ -599,13 +665,13 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
             }
 
             labelTiles[p.Player_position()].setText(labelTiles[p.Player_position()].getText() + p.characters_Player().toUpperCase().substring(0, 3) + " - ");
-            labelTiles[p.Player_position()].setFont(new Font("Arial", Font.BOLD, 20));
+            labelTiles[p.Player_position()].setFont(new Font("Arial", Font.BOLD, 10));
             labelTiles[p.Player_position()].setHorizontalTextPosition(JLabel.CENTER);
             labelTiles[p.Player_position()].setForeground(Color.black);
 
             JLabel curLabel = tokenlabels.get(p.player_characters.name());
             curLabel.setText("£ " + p.Player_balance() + " ");
-            curLabel.setFont(new Font("Arial", Font.BOLD, 20));
+            curLabel.setFont(new Font("Arial", Font.BOLD, 10));
             curLabel.setForeground(Color.black);
             curLabel.setHorizontalTextPosition(JLabel.CENTER);
             curLabel.setVerticalTextPosition(JLabel.BOTTOM);
@@ -659,26 +725,26 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         paths.add("hatstand");
         paths.add("smartphone");
         paths.add("spoon");
-        String path = getClass().getResource("").toString().substring(5);
+        String path = getClass().getResource("").toString().substring(5)  + "resources/";
 
         //{"Red", "Brown", "Purple", "Utilities", "Station", "Green", "Deep blue", "Blue", "Orange", "Yellow"};
         ArrayList<Properties> props = game.properties_final.get(colour);
 
-        String tmp = "Player " + p.characters_Player().toString() + " Colour " + colour;
+        String tmp = "Player " + p.characters_Player() + " Colour " + colour;
         cardFrame = new JFrame(tmp);
-        cardFrame.setSize(800, 800);
+        cardFrame.setSize(500, 500);
         cardFrame.setVisible(true);
         JPanel container = new JPanel(new GridLayout(props.size(), 5));
         cardFrame.add(container);
         for (int i = 0; i < props.size(); i++) {
             button = new JButton(props.get(i).space_name().toUpperCase());
             label = new JLabel();
-            label.setSize(200, 200);
+            label.setSize(125, 125);
             try {
                 int index = tilesmap.indexOf(props.get(i));
                 System.out.println(path + tilesmap.get(index).space_name() + ".png");
                 wPic = ImageIO.read(new File(path + tilesmap.get(index).space_name() + ".png"));
-                dimg = wPic.getScaledInstance(200, 200,
+                dimg = wPic.getScaledInstance(125, 125,
                         Image.SCALE_SMOOTH);
 
                 if (props.get(i).property_owener() != p) {
