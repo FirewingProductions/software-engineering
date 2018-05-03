@@ -60,11 +60,11 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
     private Map<String, JLabel> tokenlabels;
 
     private ArrayList<String> announcementstrings;
-    
+
     private JLabel label;
     private JButton button;
 
-    private JButton rollButton, buybutton, endbutton, auctionbutton;
+    private JButton rollButton, buybutton, endbutton, auctionbutton, mortgagebutton;
 
     private JFrame infoFrame, mainFrame;
 
@@ -113,8 +113,7 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
                 numbers[0]);
 
         System.out.println("Number of players selected is : " + pnum);
-     
-        
+
         playernumber = Integer.parseInt(pnum);
 
         tokenlabels = new HashMap<>();
@@ -519,18 +518,16 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         infoFrame = new JFrame("Info Pane");
         infoFrame.setAlwaysOnTop(true);
         infoFrame.setLocationRelativeTo(mainFrame);
-        infoFrame.setSize(375, 625);
+        infoFrame.setSize(500, 1031);
         infoFrame.setLayout(new BorderLayout(1, 0));
         label = new JLabel(" GAME INFO ");
         label.setFont(new Font("Arial", Font.BOLD, 30));
         label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         infoFrame.add(label, BorderLayout.PAGE_START);
         announcementlabel = new JLabel("", SwingConstants.CENTER);
-        
+
         infoFrame.add(announcementlabel, BorderLayout.CENTER);
-        
-        
-        
+
         infoFrame.setVisible(true);
     }
 
@@ -545,8 +542,8 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
         if ("rolled".equals(e.getActionCommand())) {
             if (!rolled) {
                 System.out.println(players[turn].characters_Player().toString() + " - Rolled -");
-                Announce(players[turn].characters_Player().toString() + " - Rolled -");
-                game.player_turn(players[turn]);
+                //Announce(players[turn].characters_Player().toString() + " - Rolled -");
+                Announce(game.player_turn(players[turn]));
                 rolled = true;
                 checkSpace();
                 UpdateUI();
@@ -631,12 +628,36 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
                     }
                 }
             }
+            if (e.getActionCommand().substring(0, 8).equalsIgnoreCase("mortgage")) {
+                System.out.println("mortgaging a property");
+                for (Properties prop : game.properties) {
+                    if (prop.space_name().equalsIgnoreCase(e.getActionCommand().substring(8))) {
+
+                        Announce(prop.mortgage(players[turn]));
+                        UpdateUI();
+                        cardFrame.setVisible(false);
+                        cardFrame.dispose();
+                    }
+                }
+            }
+            if (e.getActionCommand().substring(0, 10).equalsIgnoreCase("unmortgage")) {
+                System.out.println("mortgaging a property");
+                for (Properties prop : game.properties) {
+                    if (prop.space_name().equalsIgnoreCase(e.getActionCommand().substring(10))) {
+
+                        Announce(prop.un_mortgage(players[turn]));
+                        UpdateUI();
+                        cardFrame.setVisible(false);
+                        cardFrame.dispose();
+                    }
+                }
+            }
         } catch (Exception ex) {
 
         }
 
         try {
-            //System.out.println(e.getActionCommand());
+
             int playercalled = Integer.parseInt(e.getActionCommand().substring(0, 1));
             System.out.println(playercalled);
             String colour = e.getActionCommand().substring(1);
@@ -748,28 +769,27 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
     }
 
     private void Announce(String string) {
-        if(announcementstrings.size() < 30 && !"".equals(string)){
-            
+        if (announcementstrings.size() < 30 && !"".equals(string)) {
+
             announcementstrings.add(string);
-        }else{
-            if(!"".equals(string)){
+        } else {
+            if (!"".equals(string)) {
                 announcementstrings.remove(0);
                 announcementstrings.add(string);
             }
         }
-        String newstring ="";
-        for(String s : announcementstrings){
-         
-           newstring = newstring.concat("<br/>" + s);
-         
-       
+        String newstring = "";
+        for (String s : announcementstrings) {
+
+            newstring = newstring.concat("<br/>" + s);
+
         }
-      
+
         string = "<html>" + newstring + "</html>";
         announcementlabel.setText(string);
-        
+
         System.out.println(string);
-        
+
     }
 
     public void checkSpace() {
@@ -884,10 +904,17 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
                         button.setActionCommand("sell" + props.get(i).space_name());
                         container.add(button);
                     }
-                    button = new JButton(" MORTAGE ");
-                    button.addActionListener(this);
-                    button.setActionCommand("mortgage" + props.get(i).space_name());
-                    container.add(button);
+                    if (!props.get(i).is_mortgaged()) {
+                        mortgagebutton = new JButton(" MORTAGE ");
+                        mortgagebutton.addActionListener(this);
+                        mortgagebutton.setActionCommand("mortgage" + props.get(i).space_name());
+                    } else {
+                        mortgagebutton = new JButton(" UNMORTAGE ");
+                        mortgagebutton.addActionListener(this);
+                        mortgagebutton.setActionCommand("unmortgage" + props.get(i).space_name());
+                    }
+
+                    container.add(mortgagebutton);
                 } else {
                     button = new JButton("Not " + p.characters_Player() + "'s turn");
                     container.add(button);
@@ -952,34 +979,15 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
             if (passed.size() == players.length - 1) {
                 System.out.println("We have a winner");
 
-                game.properties.stream().filter((prop) -> (prop.returnPos() == players[turn].Player_position() + 1 && !prop.property_is_owned())).map((prop) -> {
-                    players[bidturn].property_buy(prop, price);
-                    return prop;
-                }).map((prop) -> {
-                    System.out.println(players[bidturn].characters_Player() + " won " + prop.space_name() + " for : " + price);
-                    return prop;
-                }).map((prop) -> {
-                    Announce(players[bidturn].characters_Player() + " won " + prop.space_name());
-                    return prop;
-                }).map((_item) -> {
-                    buybutton.setEnabled(false);
-                    return _item;
-                }).forEachOrdered((_item) -> {
-                    auctionbutton.setEnabled(false);
-                });
-/*
                 for (Properties prop : game.properties) {
                     if (prop.returnPos() == players[turn].Player_position() + 1 && !prop.property_is_owned()) {
-                        players[bidturn].property_buy(prop, price);
-                        System.out.println(players[bidturn].characters_Player() + " won " + prop.space_name() + " for : " + price);
-                        Announce(players[bidturn].characters_Player() + " won " + prop.space_name());
+                        Announce(players[bidturn].property_buy(prop, price));
                         buybutton.setEnabled(false);
                         auctionbutton.setEnabled(false);
-                        
+
                     }
                 }
 
- */
                 auctioning = false;
 
                 rollButton.setActionCommand("rolled");
@@ -1011,11 +1019,11 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
             }
         }
     }
-    
-    public void checkPlayers(){
-        for(Player p : players){
-            if(p.Player_balance() < price + 10){
-                if(!passed.contains(Arrays.asList(players).indexOf(p))){
+
+    public void checkPlayers() {
+        for (Player p : players) {
+            if (p.Player_balance() < price + 10) {
+                if (!passed.contains(Arrays.asList(players).indexOf(p))) {
                     System.out.println(p.characters_Player() + " cannot afford to stay in the auction");
                     passed.add(Arrays.asList(players).indexOf(p));
                 }

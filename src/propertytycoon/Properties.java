@@ -21,7 +21,7 @@ public class Properties extends Space {
     private Player owned;
     private Boolean is_owned = false;
     private int pos;
-    private Boolean mortgage;
+    private Boolean mortgage = false;
     private int house;
 
     public Properties(int position, String action, String space_name, String colour, int cost, int cost_house) {
@@ -97,15 +97,16 @@ public class Properties extends Space {
         return "Failed to buy property";
     }
 
-    public void property_buy(Player p, int price) {
+    public String property_buy(Player p, int price) {
 
         if (p.Player_balance() >= price && is_owned == false) {
             is_owned = true;
             owned = p;
             p.Player_balance_de(price);
+            return "Property bought";
 
         }
-
+        return "Failed to buy property";
     }
 
     public String property_sell(Player p) {
@@ -175,21 +176,27 @@ public class Properties extends Space {
         }
     }
 
-    public void mortgage(Player p) {
+    public String mortgage(Player p) {
 
         if (p == owned && mortgage == false) {
             p.Player_balance_in(cost / 2);
             mortgage = true;
+            return this.space_name() + " has been mortgaged";
         }
-
+        return "Failed to mortgage";
     }
 
-    public void un_mortgage(Player p) {
+    public String un_mortgage(Player p) {
         if (p == owned && mortgage == true) {
             p.Player_balance_de(cost / 2);
             mortgage = false;
-
+            return this.space_name() + " has been unmortgaged";
         }
+        return "Failed to unmortgage";
+    }
+    
+    public boolean is_mortgaged(){
+        return this.mortgage;
     }
 
     public int returnPos() {
