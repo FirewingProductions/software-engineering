@@ -49,10 +49,10 @@ public class Properties extends Space {
         }
 
     }
-        public int getrent(int x) {
 
-            return rent.get(x - 1);
-        
+    public int getrent(int x) {
+
+        return rent.get(x - 1);
 
     }
 
@@ -86,31 +86,42 @@ public class Properties extends Space {
 
     }
 
-    public void property_buy(Player p) {
+    public String property_buy(Player p) {
 
         if (p.Player_balance() >= cost && is_owned == false) {
             is_owned = true;
             owned = p;
             p.Player_balance_de(cost);
+            return "Property bought";
+        }
+        return "Failed to buy property";
+    }
+
+    public void property_buy(Player p, int price) {
+
+        if (p.Player_balance() >= price && is_owned == false) {
+            is_owned = true;
+            owned = p;
+            p.Player_balance_de(price);
 
         }
 
     }
-    
-    public String property_sell(Player p){
-        if(house == 0){
+
+    public String property_sell(Player p) {
+        if (house == 0) {
             p.Player_balance_in(cost);
             owned = null;
             is_owned = false;
             p.properties.get(colour).remove(this);
             return "Property sold";
-        }else{
-            if(house > 4){
+        } else {
+            if (house > 4) {
                 //selling hotel piece
                 p.Player_balance_in(cost_house * 5);
                 house--;
                 return "Hotel sold";
-            }else{
+            } else {
                 //selling house piece
                 p.Player_balance_in(cost_house);
                 house--;
@@ -119,46 +130,48 @@ public class Properties extends Space {
         }
     }
 
-    public void buy_house(Player p) {
+    public String buy_house(Player p) {
 
         if (!colour.contains("Station") || !colour.contains("Utilities")) {
 
             if (house < 4) {
-                System.out.println("House bought");
+                
                 if (p.Player_balance() >= cost_house) {
                     p.Player_balance_de(cost_house);
                     house++;
+                    return("House bought");
                 } else {
-                    System.out.println("Not enough money");
+                    return "Not enough money";
                 }
 
             } else {
-                System.out.println("Failed to buy house, too many");
+                return("Failed to buy house, too many");
 
             }
         } else {
-            System.out.println("Cant buy houses for these properties");
+            return("Cant buy houses for these properties");
         }
     }
 
-    public void buy_hotel(Player p) {
+    public String buy_hotel(Player p) {
         if (!colour.contains("Station") || !colour.contains("Utilities")) {
 
             if (house >= 4) {
                 if (p.Player_balance() >= cost_house) {
-                    System.out.println("Hotel bought");
+                    
                     p.Player_balance_de(cost_house * 5);
                     house++;
+                    return ("Hotel bought");
                 } else {
-                    System.out.println("Not enough money");
+                    return("Not enough money");
                 }
 
             } else {
-                System.out.println("Failed to buy house, too many");
+                return("Failed to buy house, too many");
 
             }
         } else {
-            System.out.println("Cant buy houses for these properties");
+            return("Cant buy houses for these properties");
         }
     }
 

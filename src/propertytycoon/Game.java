@@ -81,15 +81,16 @@ public class Game {
 
     }
 
-    public void check_player_location(Player player) {
+    public String check_player_location(Player player) {
 
         if (space.get(player.Player_position()).getaction().isEmpty()) {
             
-            System.out.println(space.get(player.Player_position()).space_name() + " has no action");
+            //System.out.println(space.get(player.Player_position()).space_name() + " has no action");
             
             if(space.get(player.Player_position()).space_name().equalsIgnoreCase("Go to Jail")){
                 System.out.println(player.player_characters.toString() + " has been jailed");
                 player.is_jailed();
+                return (player.player_characters.toString() + " has been jailed");
             }
             
             if(properties.contains(space.get(player.Player_position()))){
@@ -102,6 +103,7 @@ public class Game {
                     player.Player_balance_de(rentamount);
                     properties.get(index).property_owener().Player_balance_in(rentamount);
                     System.out.println(properties.get(index).property_owener().characters_Player().toString() + " has been paid " + rentamount + " in rent");
+                    return(player.player_characters.toString() + " landed on " + properties.get(index).property_owener().characters_Player().toString() + "'s property and must pay : " + rentamount);
                 }
             }
 
@@ -110,29 +112,34 @@ public class Game {
             switch(space.get(player.Player_position()).getaction()){
                 case "Take card":
                     if(space.get(player.Player_position()).space_name().equals("Opportunity Knocks")){
-                        player.add_card_to_player(cards.take_card(2));
+                        String card =cards.take_card(2);
+                        player.add_card_to_player(card);
                         cards.activate_card(player.player_cards.get(0), player, players);
+                        return player.characters_Player() + " Took an opportunity knocks card <br/>" + card;
                     }else{
-                        player.add_card_to_player(cards.take_card(1));
+                        String card =cards.take_card(1);
+                        player.add_card_to_player(card);
                         cards.activate_card(player.player_cards.get(0), player, players);
+                        return player.characters_Player() + " Took a pot luck card <br/>" + card;
                     }
-                    break;
+                    
                 case "Pay �200":
                     System.out.println("Paying 200 pounds");
                     parking = add_parking_fine(200);
-                    break;
+                    return player.characters_Player() + " has been fined £200";
                     
                 case "Pay �100":
                     System.out.println("Paying 100 pounds");
                     parking = add_parking_fine(100);
-                    break;
+                    return player.characters_Player() + " has been fined £100";
+                    
                 case "Collect fines":
                     System.out.println("Collecting parking fines");
                     player.Player_balance_in(parking);
-                    break;
+                    return player.characters_Player() + " has collected from free parking : " + parking;
             }
         }
-
+        return "";
     }
 
     //new method added to crate spaces 

@@ -61,14 +61,12 @@ public class Player {
 
     public void Player_advance(int x, boolean s) {
 
-        
-
         if (Player_position + x > 39) {
             passedgo = true;
             go(s);
             Player_position = (Player_position + x) - 40;
 
-        }else{
+        } else {
             Player_position += x;  // moves a player to  by any number of steps (X)
         }
     }
@@ -107,32 +105,20 @@ public class Player {
         Player_position = 10;
     }
 
+    public Boolean player_has_set(String colour, ArrayList<Properties> props) {
+        for (Properties p : props) {
+            if (p.property_owener() == this) {
+               
+            } else {
+                
+                return false;
+            }
+        }
+        return true;
+    }
 
-    public Boolean player_has_set(String colour, ArrayList<Properties> props){
-        for(Properties p : props){
-            if(p.property_owener() == this){
-                System.out.println("own");
-            }else{
-                System.out.println("dont own");
-                return false;
-            }
-        }
-        return true;
-    }
     
-    public Boolean player_has_set(String colour){
-        ArrayList<Properties> prop = properties.get(colour);
-        for(Properties p : prop){
-            if(p.property_owener() == this){
-                System.out.println("own");
-            }else{
-                System.out.println("dont own");
-                return false;
-            }
-        }
-        return true;
-        
-    }
+
     public void is_out_ofjail() {
 
         jail_time = 0;
@@ -141,7 +127,7 @@ public class Player {
     }
 
     public void Player_still_in_jail() {
-
+        Player_position = 10;
         jail_time++;
 
         if (jail_time == 3) {
@@ -188,14 +174,26 @@ public class Player {
         }
     }
 
-    public void property_buy(Properties p) {
+    public String property_buy(Properties p) {
+        String check;
+        check = p.property_buy(this);
+        if("Property bought".equals(check)){
+            properties.get(p.getcolour()).add(p);
+            return characters_Player() + " bought " + p.space_name();
+        }
+        return "Failed to buy property";
+        
+    }
 
-        p.property_buy(this);
+    public void property_buy(Properties p, int price) {
+
+        p.property_buy(this, price);
         properties.get(p.getcolour()).add(p);
 
     }
-    public boolean checkPassedGo(){
+
+    public boolean checkPassedGo() {
         return passedgo;
     }
-  
+
 }
