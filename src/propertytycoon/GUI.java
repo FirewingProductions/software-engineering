@@ -952,22 +952,7 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
             if (passed.size() == players.length - 1) {
                 System.out.println("We have a winner");
 
-                game.properties.stream().filter((prop) -> (prop.returnPos() == players[turn].Player_position() + 1 && !prop.property_is_owned())).map((prop) -> {
-                    players[bidturn].property_buy(prop, price);
-                    return prop;
-                }).map((prop) -> {
-                    System.out.println(players[bidturn].characters_Player() + " won " + prop.space_name() + " for : " + price);
-                    return prop;
-                }).map((prop) -> {
-                    Announce(players[bidturn].characters_Player() + " won " + prop.space_name());
-                    return prop;
-                }).map((_item) -> {
-                    buybutton.setEnabled(false);
-                    return _item;
-                }).forEachOrdered((_item) -> {
-                    auctionbutton.setEnabled(false);
-                });
-/*
+             
                 for (Properties prop : game.properties) {
                     if (prop.returnPos() == players[turn].Player_position() + 1 && !prop.property_is_owned()) {
                         players[bidturn].property_buy(prop, price);
@@ -979,7 +964,7 @@ public class GUI extends javax.swing.JFrame implements ActionListener {
                     }
                 }
 
- */
+ 
                 auctioning = false;
 
                 rollButton.setActionCommand("rolled");
