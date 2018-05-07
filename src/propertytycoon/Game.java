@@ -48,42 +48,41 @@ public class Game {
       cards.shuffle_cards(cards.return_pot_luck_card_data());
     }
 
-    public void player_turn(Player player) {
+    public String player_turn(Player player) {
 
-        throw_dice(player);
-
-      //  if (space.get(player.Player_position()).getaction() == null) {
-
-        //} else {
-
-        //}
+        return throw_dice(player);
 
     }
 
-    private void throw_dice(Player player) {
+    private String throw_dice(Player player) {
         // 1) throw the dice 2) check if player has passed go(location number 0) if so we go back to  (location -40 )
-        player.Player_move(a.throw_dice(), true);
-
+        int roll = a.throw_dice();
+        player.Player_move(roll, true);
+        String rollannounce = player.characters_Player() + " rolled : " + roll ;
+        
         int i = 1; //double counter
         while (a.Double()) {
-
-            player.Player_move(a.throw_dice(), true);
+            roll = a.throw_dice();
+            player.Player_move(roll, true);
+            rollannounce += "<br/>" + player.characters_Player() + "rolled " + roll;
             i++;
             if (i == 3) {
                 //go to jail
+                
                 player.is_jailed();
                 player.Player_move(10, false);
-
-                break;
+                return player.characters_Player() + " has been jailed (double 3 times)";
+                //break;
             }
 
         }
-
+    return rollannounce;
     }
 
     public String check_player_location(Player player) {
 
         if (space.get(player.Player_position()).getaction().isEmpty()) {
+            
             
             //System.out.println(space.get(player.Player_position()).space_name() + " has no action");
             
@@ -96,6 +95,7 @@ public class Game {
             if(properties.contains(space.get(player.Player_position()))){
                 int index = properties.indexOf(space.get(player.Player_position()));
                 if(properties.get(index).property_is_owned() && properties.get(index).property_owener() != player ){
+                    if(!properties.get(index).is_mortgaged()){
                     //if the property is owned by someone else.. pay rent
                     System.out.println(player.player_characters.toString() + " landed on someone elses property.. paying rent");
                     int rentamount = properties.get(index).getrent(properties.get(index).return_house_amount() + 1 , properties_final.get(properties.get(index).getcolour()));
@@ -104,7 +104,10 @@ public class Game {
                     properties.get(index).property_owener().Player_balance_in(rentamount);
                     System.out.println(properties.get(index).property_owener().characters_Player().toString() + " has been paid " + rentamount + " in rent");
                     return(player.player_characters.toString() + " landed on " + properties.get(index).property_owener().characters_Player().toString() + "'s property and must pay : " + rentamount);
-                }
+                    }else{
+                        return(player.player_characters.toString() + " landed on " + properties.get(index).property_owener().characters_Player().toString() + "'s property but its mortgaged");
+                    }
+                    }
             }
 
         } else {

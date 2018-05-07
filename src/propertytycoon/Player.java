@@ -29,6 +29,7 @@ public class Player {
     ArrayList<String> sets;
     int houses;
     int hotels;
+    private boolean bankrupt;
 
     String[] colours = {"Red", "Brown", "Purple", "Utilities", "Station", "Green", "Deep blue", "Blue", "Orange", "Yellow"};
 
@@ -179,17 +180,20 @@ public class Player {
         check = p.property_buy(this);
         if("Property bought".equals(check)){
             properties.get(p.getcolour()).add(p);
-            return characters_Player() + " bought " + p.space_name();
+            return characters_Player() + " bought " + p.space_name() + " for : " + p.getcost();
         }
-        return "Failed to buy property";
+        return "Failed to buy property, check balance";
         
     }
 
-    public void property_buy(Properties p, int price) {
-
-        p.property_buy(this, price);
-        properties.get(p.getcolour()).add(p);
-
+    public String property_buy(Properties p, int price) {
+        String check;
+        check = p.property_buy(this, price);
+        if("Property bought".equals(check)){
+            properties.get(p.getcolour()).add(p);
+            return characters_Player() + " won " + p.space_name() + " for : " + price;
+        }
+        return "Failed to buy property, check balance";
     }
 
     public boolean checkPassedGo() {
