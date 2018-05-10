@@ -4,7 +4,6 @@ package propertytycoon;
 import java.awt.BorderLayout;
 import java.awt.Checkbox;
 import java.awt.Color;
-import java.awt.Component;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -32,17 +31,11 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 
 import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -57,10 +50,13 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import jxl.read.biff.BiffException;
 
+/**
+ * This class implements the game user interface
+ * 
+ */
 public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowListener {
 
     public GUI_2(GameController gameController) throws IOException, BiffException {
@@ -730,6 +726,10 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
         options = request.getOptions();
     }
     
+    /**
+     *
+     * @param request
+     */
     public void getOptionTitles(UserChoiceRequest request)
     {
         options = request.getOptions();
@@ -744,6 +744,10 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
         }
     }
     
+    /**
+     *
+     * @return
+     */
     public String[] initializeAuctionStuff()
     {
         auctionPanel = new JPanel(new GridLayout(2,2));
@@ -761,6 +765,10 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
         return tokens;
     }
     
+    /**
+     *
+     * @param tokens
+     */
     public void initializeTradeStuff(String[] tokens)
     {
         String[] prop = new String[properties.size()];
@@ -777,6 +785,9 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
         tradePanel.add(tradeOtherPlayerBox);
     }
     
+    /**
+     * Displays the log for the current player
+     */
     public void updateLog()
     {
         logCounter++;
@@ -801,6 +812,11 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
         return property;
     }
     
+    /**
+     * Displays a dialog that allows properties to be traded
+     * @param option
+     * @param message
+     */
     public void showTradeDialogue(PlayerOption option, String message)
     {
         try
@@ -818,6 +834,11 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
         }
     }
     
+    /**
+     * Displays a dialog that allows the final result of a property auction to be entered
+     * @param option
+     * @param message
+     */
     public void showAuctionDialogue(PlayerOption option, String message)
     {
         try
@@ -837,6 +858,9 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
         }
     }
     
+    /**
+     * Displays the current active players and their real/auto status
+     */
     public void updateRealAutoPanel()
     {
         String realAutoInfo = "";
@@ -1021,11 +1045,9 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
         }
     }
     
-    public void updatePlayerbuttons()
-    {
-        
-    }
-
+    /**
+     * Populates the game controls from the game model
+     */
     public void UpdateUI() {
 
 //        gameLog.setText(currentRequest.getMessage() + "\n");

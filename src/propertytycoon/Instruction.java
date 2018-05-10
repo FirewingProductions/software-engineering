@@ -8,6 +8,10 @@ package propertytycoon;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * The Instruction class is used by the RulesProvider to instruct the GameModel
+ * to modify the model state
+ */
 public class Instruction 
 {
     private String _message;
@@ -17,10 +21,22 @@ public class Instruction
     private int _targetSpaceIndex;
         
     //default constructor to allow serialisation
+
+    /**
+     * Constructor
+     */
     public Instruction()
     {
     }
 
+    /**
+     * Constructor
+     * @param message
+     * @param instructionType
+     * @param amount1
+     * @param amount2
+     * @param targetSpaceIndex
+     */
     public Instruction(String message, InstructionType instructionType, int amount1, int amount2, int targetSpaceIndex)
     {
         _message = message;
@@ -30,6 +46,11 @@ public class Instruction
         _targetSpaceIndex = targetSpaceIndex;
     }
     
+    /**
+     * converts an instruction to a string for the logs
+     * @param playerTokenName
+     * @return
+     */
     public String toString(String playerTokenName)
     {
         String timestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());

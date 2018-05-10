@@ -5,15 +5,25 @@
  */
 package propertytycoon;
 
+/**
+ * The Card class represents a card on the Opportunity Knocks or Pot-Luck piles
+ */
 public class Card 
 {
     private Instruction _instruction;
 
+    /**
+     * Constructor
+     * @param instruction
+     */
     public Card(Instruction instruction)
     {
         this._instruction = instruction;
     }
         
+    /**
+     * Constructor
+     */
     public Card()
     {
     }
@@ -27,9 +37,5 @@ public class Card
     {
         this._instruction = instruction;
     }
-
-
-
-    
     
 }

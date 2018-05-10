@@ -5,14 +5,25 @@
  */
 package propertytycoon;
 
+/**
+ * The GoSpace represents the GO space on the board
+ */
 public class GoSpace extends InstructionSpace
 {
 
+    /**
+     *  Constructor
+     * @param title
+     * @param _instruction
+     */
     public GoSpace(String title, Instruction _instruction)
     {
         super(title,_instruction);
     }
 
+    /**
+     * Constructor
+     */
     public GoSpace()
     {
         super();

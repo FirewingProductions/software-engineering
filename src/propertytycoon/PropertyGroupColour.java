@@ -5,6 +5,9 @@
  */
 package propertytycoon;
 
+/**
+ * These are the property group colours
+ */
 public enum PropertyGroupColour
 {
     White,

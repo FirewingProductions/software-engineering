@@ -5,17 +5,25 @@
  */
 package propertytycoon;
 
+/**
+ * This class represents board spaces that contain instructions for the player to follow
+ */
 public class InstructionSpace extends Space
 {
     private Instruction _instruction; 
 
+    /**
+     *  Constructor
+     * @param title
+     * @param _instruction
+     */
     public InstructionSpace(String title, Instruction _instruction)
     {
         super(title);
         this._instruction = _instruction;
     }
 
-    public InstructionSpace()
+        public InstructionSpace()
     {
     }
 

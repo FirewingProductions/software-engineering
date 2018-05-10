@@ -7,6 +7,11 @@ package propertytycoon;
 
 import java.util.ArrayList;
 
+/**
+ * The PlayerOption class represents one of the various options that the player
+ * if offered at each stage of the game. It contains a list of instructions that
+ * should be executed if the option is chosen
+ */
 public class PlayerOption
 {
     private String _title;
@@ -18,6 +23,12 @@ public class PlayerOption
     private String _name1;
     private ArrayList<Instruction> _instructions = new ArrayList<Instruction>();
 
+    /**
+     * Constructor
+     * @param title
+     * @param optionType
+     * @param instruction
+     */
     public PlayerOption(String title, PlayerOptionType optionType, Instruction instruction)
     {
         _title = title;
@@ -25,6 +36,13 @@ public class PlayerOption
         _instructions.add(instruction);
     }
 
+    /**
+     * Constructor
+     * @param title
+     * @param optionType
+     * @param instruction1
+     * @param instruction2
+     */
     public PlayerOption(String title, PlayerOptionType optionType, Instruction instruction1, Instruction instruction2)
     {
         _title = title;
@@ -42,6 +60,7 @@ public class PlayerOption
     {
         this._amount3 = _amount3;
     }
+
     public int getAmount2()
     {
         return _amount2;
@@ -52,6 +71,13 @@ public class PlayerOption
         this._amount2 = _amount2;
     }
 
+    /**
+     * Constructor
+     * @param title
+     * @param optionType
+     * @param amount1
+     * @param instruction
+     */
     public PlayerOption(String title, PlayerOptionType optionType, int amount1, Instruction instruction)
     {
         _title = title;
@@ -60,6 +86,13 @@ public class PlayerOption
         _instructions.add(instruction);
     }
         
+    /**
+     * Constructor
+     * @param title
+     * @param optionType
+     * @param name1
+     * @param instruction
+     */
     public PlayerOption(String title, PlayerOptionType optionType, String name1, Instruction instruction)
     {
         _title = title;
@@ -68,15 +101,29 @@ public class PlayerOption
         _instructions.add(instruction);
     }
     
-    public PlayerOption(String title, PlayerOptionType optionType, String name1, int amount1, Instruction instruction)
+    
+    /**
+     * Constructor
+     * @param title
+     * @param optionType
+     * @param name1
+     * @param amount1
+     * @param instruction1
+     * @param instruction2
+     */
+    public PlayerOption(String title, PlayerOptionType optionType, String name1, Instruction instruction1, Instruction instruction2)
     {
         _title = title;
         _optionType = optionType;
         _name1 = name1;
-        _amount1 = amount1;
-        _instructions.add(instruction);
+        _instructions.add(instruction1);
+        _instructions.add(instruction2);
     }
 
+    /**
+     * adds an instruction
+     * @param instruction
+     */
     public void addInstruction(Instruction instruction)
     {
         _instructions.add(instruction);
@@ -131,6 +178,6 @@ public class PlayerOption
     {
         this._optionType = _optionType;
     }
-    
+   
     
 }

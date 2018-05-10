@@ -5,8 +5,12 @@
  */
 package propertytycoon;
 
+/**
+ * Represents the various stages of the game during a player's turn
+ */
 public enum GameStageType
 {
+
     StartOfTurn,
     DiceThrown,
     MovedToNewSpace,

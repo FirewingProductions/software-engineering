@@ -7,6 +7,9 @@ package propertytycoon;
 
 import java.util.ArrayList;
 
+/**
+ * This class contains data for the state of the player
+ */
 public class Player 
 {
     private PlayerTokenType _token;
@@ -34,6 +37,13 @@ public class Player
 
     private boolean _isTurnComplete; //set by the game rules and logic to indicate that processing for this player is complete
 
+    /**
+     * Constructor
+     * @param _token
+     * @param _isActive
+     * @param _isAuto
+     * @param initialBalance
+     */
     public Player(PlayerTokenType _token, boolean _isActive, boolean _isAuto, int initialBalance)
     {
         this._token = _token;
@@ -42,6 +52,10 @@ public class Player
         this._balance = initialBalance;
     }
 
+    /**
+     *
+     * @param _instructionLog
+     */
     public void setInstructionLog(ArrayList<String> _instructionLog)
     {
         this._instructionLog = _instructionLog;
@@ -127,11 +141,13 @@ public class Player
         this._isAuto = _isAuto;
     }
     
+    /**
+     * Constructor
+     */
     public Player()
     {
     }
     
-
     public PlayerTokenType getToken()
     {
         return _token;
@@ -232,6 +248,10 @@ public class Player
         this._diceValue2 = _diceValue2;
     }
     
+    /**
+     * Checks whether the two dice values are the same
+     * @return
+     */
     public boolean hasDouble()
     {
         if (_diceValue1 == _diceValue2)

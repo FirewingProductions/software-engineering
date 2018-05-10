@@ -6,14 +6,19 @@
 package propertytycoon;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
+/**
+ * This class holds the options and instructions returned by the RuleProvider
+ */
 public class RuleResult
 {
     String _message;
     private ArrayList<Instruction> _instructions;
     private ArrayList<PlayerOption> _options;
 
+    /**
+     * Constructor
+     */
     public RuleResult()
     {
         _instructions = new ArrayList<Instruction>();

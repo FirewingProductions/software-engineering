@@ -5,8 +5,12 @@
  */
 package propertytycoon;
 
+/**
+ * These are the various types of instructions
+ */
 public enum InstructionType
 {
+
     MoveSpaces, 
     PayFine, 
     PayFineOrOpportunityKnocks,

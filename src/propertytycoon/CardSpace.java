@@ -5,10 +5,18 @@
  */
 package propertytycoon;
 
+/**
+ * The CardSpace class represents a board space that requires the player to take a card
+ */
 public class CardSpace extends Space
 {
     private CardType _cardType;
 
+    /**
+     * Constructor
+     * @param title
+     * @param cardType
+     */
     public CardSpace(String title, CardType cardType)
     {
         super(title);
