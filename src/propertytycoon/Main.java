@@ -5,6 +5,11 @@
  */
 package propertytycoon;
 
+/**
+ * The main entry point of the application
+ * Loads the initial game model static from the spreadsheet then creates the game controller and the GUI
+ * 
+ */
 public class Main
 {
     public static void main(String[] args)

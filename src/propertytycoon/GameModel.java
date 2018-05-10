@@ -7,6 +7,9 @@ package propertytycoon;
 
 import java.util.ArrayList;
 
+/**
+ * The GameModel class is the top-level class for all game data.
+ */
 public class GameModel 
 {
     private static final int GO_BENEFIT = 200;
@@ -30,6 +33,9 @@ public class GameModel
     
     private ArrayList<String> _globalInstructionLog = new ArrayList<String>();
 
+    /**
+     * Constructor
+     */
     public GameModel()
     {
         _gameStage = GameStageType.StartOfTurn;
@@ -46,6 +52,11 @@ public class GameModel
         }
     }
     
+    /**
+     * Gets the index of the specified property in the properties list
+     * @param property
+     * @return
+     */
     public int getPropertyIndex(Property property)
     {
         for (int propertyIndex = 0; propertyIndex < _properties.size(); propertyIndex++)
@@ -58,6 +69,11 @@ public class GameModel
         return -1; //not found
     }
     
+    /**
+     * Checks whether the player is in jail
+     * @param playerIndex
+     * @return
+     */
     public boolean isInJail(int playerIndex)
     {
         if (playerIndex < 0 || playerIndex >= _players.size())
@@ -87,6 +103,10 @@ public class GameModel
         return _isAbridgedGame;
     }
 
+    /**
+     * Updates the amount of time left in the abridged game
+     * @param startTimeMillis
+     */
     public void updateTimeLeft(long startTimeMillis)
     {
         _abridgedGameMillisLeft = _abridgedGameLengthMillis - (System.currentTimeMillis() - startTimeMillis);
@@ -212,11 +232,19 @@ public class GameModel
         return _finesTotal;
     }
 
+    /**
+     *
+     * @param _finesTotal
+     */
     public void setFinesTotal(int _finesTotal)
     {
         this._finesTotal = _finesTotal;
     }
 
+    /**
+     * Checks whether the game is over
+     * @return boolean
+     */
     public boolean isGameOver()
     {
         if (_isAbridgedGame)
@@ -239,6 +267,10 @@ public class GameModel
         }
     }
     
+    /**
+     * Decides who has won the game
+     * @return player index
+     */
     public int getWinnerIndex()
     {
         int winnerIndex = 0;
@@ -273,6 +305,11 @@ public class GameModel
         return winnerIndex;
     }
     
+    /**
+     * Calculates the worth of a player
+     * @param playerIndex
+     * @return total worth
+     */
     public int getPlayerWorth(int playerIndex)
     {
         Player player = _players.get(playerIndex);
@@ -287,6 +324,9 @@ public class GameModel
         return worth;
     }
     
+    /**
+     * Sets the current player to the next player
+     */
     public void setNextPlayer()
     {
         //move to next active player
@@ -302,6 +342,11 @@ public class GameModel
         }
     }
     
+    /**
+     * Initialises the game
+     * @param numHumanPlayers
+     * @param numAutoPlayers
+     */
     public void initialise(int numHumanPlayers, int numAutoPlayers)
     {
         initialisePlayers(numHumanPlayers, numAutoPlayers);
@@ -309,6 +354,11 @@ public class GameModel
         _gameStage = GameStageType.StartOfTurn;
     }
 
+    /**
+     * Initialises the players
+     * @param numHumanPlayers
+     * @param numAutoPlayers
+     */
     public void initialisePlayers(int numHumanPlayers, int numAutoPlayers)
     {
         _players.clear();
@@ -326,11 +376,20 @@ public class GameModel
             _players.add(new Player(PlayerTokenType.values()[playerIndex], false, false, 1500));
         }
     }
+
+    /**
+     *
+     * @return
+     */
     public Player getCurrentPlayer()
     {
         return _players.get(_currentPlayerIndex);
     }
 
+    /**
+     * Return the get-out-of-jail card to the correct pile
+     * @param player
+     */
     public void returnJailCard(Player player)
     {
         if (player.getHasGetOutOfJailFreeCardFromPotLuck())
@@ -345,17 +404,32 @@ public class GameModel
         }
     }
     
+    /**
+     * Returns the space index where the current player is located
+     * @return
+     */
     public Space getCurrentPlayerSpace()
     {
         int spaceIndex = getCurrentPlayer().getCurrentSpaceIndex();
         return _spaces.get(spaceIndex);
     }
     
+    /**
+     * Executes the specified instruction for the current player
+     * @param instruction
+     * @return any error messages for the user
+     */
     public String executeInstruction(Instruction instruction)
     {
         return executeInstruction(instruction, _currentPlayerIndex);
     }
         
+    /**
+     * Executes the specified instruction for the specified player
+     * @param instruction
+     * @param currentPlayerIndex
+     * @return any error messages for the user
+     */
     public String executeInstruction(Instruction instruction, int currentPlayerIndex)
     {
         Player currentPlayer = _players.get(currentPlayerIndex);
@@ -594,14 +668,16 @@ public class GameModel
             }
              case SellProperty:
             {
-                Property property = ((PropertySpace)currentSpace).getProperty();
+                int propertyIndex = instruction.getTargetSpaceIndex();
+                Property property = _properties.get(propertyIndex);
                 property.setOwnerIndex(-1);
                 currentPlayer.setBalance(currentPlayer.getBalance() + property.getPurchasePrice());
                 break;
             }
             case MortgageProperty:
             {
-                Property property = ((PropertySpace)currentSpace).getProperty();
+                int propertyIndex = instruction.getTargetSpaceIndex();
+                Property property = _properties.get(propertyIndex);
                 property.setIsMortgaged(true);
                 currentPlayer.setBalance(currentPlayer.getBalance() + property.getPurchasePrice() / 2);
                 break;
@@ -729,6 +805,11 @@ public class GameModel
         return players;
     }
     
+    /**
+     * Determines whether the specifies player is bankrupt
+     * @param playerIndex
+     * @return
+     */
     public boolean isBankrupt(int playerIndex)
     {
         Player player = _players.get(playerIndex);
@@ -744,11 +825,20 @@ public class GameModel
         return true;
     }
     
+    /**
+     * Returns the properties owned by the current player
+     * @return
+     */
     public ArrayList<Property> getPlayerProperties()
     {
         return GameModel.this.getPlayerProperties(_currentPlayerIndex);
     }
     
+    /**
+     * Returns the properties owned by the specified player
+     * @param playerIndex
+     * @return
+     */
     public ArrayList<Property> getPlayerProperties(int playerIndex)
     {
         ArrayList<Property> result = new ArrayList<Property>();
@@ -763,6 +853,11 @@ public class GameModel
         return result;
     }
     
+    /**
+     * Gets all of the properties in the specified colour group
+     * @param groupColour
+     * @return
+     */
     public ArrayList<Property> getGroupProperties(PropertyGroupColour groupColour)
     {
         ArrayList<Property> result = new ArrayList<Property>();
@@ -777,6 +872,13 @@ public class GameModel
         return result;
     }
     
+    /**
+     * Gets all of the properties in the specified colour group for
+     * the specified player
+     * @param groupColour
+     * @param playerIndex
+     * @return
+     */
     public ArrayList<Property> getPlayerGroupProperties(PropertyGroupColour groupColour, int playerIndex)
     {
         ArrayList<Property> result = new ArrayList<Property>();
@@ -791,6 +893,11 @@ public class GameModel
         return result;
     }
     
+    /**
+     * Gets all of the Utility properties owned by a player
+     * @param playerIndex
+     * @return
+     */
     public ArrayList<Property> getPlayerUtilities(int playerIndex)
     {
         ArrayList<Property> result = new ArrayList<Property>();
@@ -805,6 +912,11 @@ public class GameModel
         return result;
     }
     
+    /**
+     * Gets all of the Station properties owned by a player
+     * @param playerIndex
+     * @return
+     */
     public ArrayList<Property> getPlayerStations(int playerIndex)
     {
         ArrayList<Property> result = new ArrayList<Property>();

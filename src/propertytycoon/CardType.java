@@ -5,7 +5,11 @@
  */
 package propertytycoon;
 
+/**
+ * Represents the possible card types
+ */
 public enum CardType
 {
-    PotLuck, Opportunity
+    PotLuck,
+    Opportunity
 }

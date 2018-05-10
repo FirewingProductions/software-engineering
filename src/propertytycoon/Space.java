@@ -5,18 +5,28 @@
  */
 package propertytycoon;
 
+/**
+ * This is the superclass representing all board spaces
+ */
 public class Space 
 {
+
     protected String _title;
 
+    /**
+     * Constructor
+     * @param _title
+     */
     public Space(String _title)
     {
         this._title = _title;
     }
     
+    /**
+     * Constructor
+     */
     public Space()
     {
-
     }
 
     public void setTitle(String _title)

@@ -5,10 +5,18 @@
  */
 package propertytycoon;
 
+/**
+ * This class represents a board space holding a property
+ */
 public class PropertySpace extends Space
 {
     private Property _property;
 
+    /**
+     * Constructor
+     * @param title
+     * @param _property
+     */
     public PropertySpace(String title, Property _property)
     {
         super(title);
@@ -24,11 +32,9 @@ public class PropertySpace extends Space
     {
     }
 
-    
     public void setProperty(Property _property)
     {
         this._property = _property;
     }
-    
     
 }

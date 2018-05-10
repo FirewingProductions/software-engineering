@@ -5,8 +5,12 @@
  */
 package propertytycoon;
 
+/**
+ * These are the various option types
+ */
 public enum PlayerOptionType
 {
+
     ThrowDice, 
     BuyProperty, 
     AuctionProperty, 

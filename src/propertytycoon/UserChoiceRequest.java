@@ -7,12 +7,22 @@ package propertytycoon;
 
 import java.util.ArrayList;
 
+/**
+ * This class contains the player options for the next step of the game. It is returned
+ * to the GUI after the Player has clicked the go button  * to send the current 
+ * selected option for processing.
+ */
 public class UserChoiceRequest
 {
     private ArrayList<PlayerOption> _options;
     private String _message;
     private String _latestLogEntry;
 
+    /**
+     * Constructor
+     * @param options
+     * @param message
+     */
     public UserChoiceRequest(ArrayList<PlayerOption> options, String message)
     {
         this();

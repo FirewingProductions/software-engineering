@@ -5,10 +5,17 @@
  */
 package propertytycoon;
 
+/**
+ * This class holds the option that the player has selected
+ */
 public class PlayerOptionResponse
 {
     private PlayerOption _selectedOption;
 
+    /**
+     * Constructor
+     * @param selectedOption
+     */
     public PlayerOptionResponse(PlayerOption selectedOption)
     {
         _selectedOption = selectedOption;

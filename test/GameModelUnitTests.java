@@ -19,7 +19,6 @@ import propertytycoon.GameStageType;
 import propertytycoon.Instruction;
 import propertytycoon.InstructionType;
 
-
 public class GameModelUnitTests
 {
     private GameModel _gameModel;

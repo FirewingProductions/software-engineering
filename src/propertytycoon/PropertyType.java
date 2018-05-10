@@ -5,7 +5,13 @@
  */
 package propertytycoon;
 
+/**
+ * These are the various property types
+ */
 public enum PropertyType
 {
-    Standard, Station, Utility
+
+    Standard,
+    Station,
+    Utility
 }

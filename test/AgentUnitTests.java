@@ -23,7 +23,6 @@ import propertytycoon.PlayerOptionType;
 import propertytycoon.UserChoiceRequest;
 import propertytycoon.UserChoiceResponse;
 
-
 public class AgentUnitTests
 {
     private GameModel _gameModel;

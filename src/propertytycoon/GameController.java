@@ -17,6 +17,10 @@ import java.util.Random;
 import jxl.Sheet;
 import jxl.Workbook;
 
+/**
+ * The GameController provides methods that the GUI can call to start the game
+ * and to process the latest player choice.
+ */
 public class GameController 
 {
     private GameModel _gameModel;
@@ -24,6 +28,10 @@ public class GameController
     private static Random _random = new Random(System.currentTimeMillis());
     private long _gameStartMillis;
 
+    /**
+     * Constructor
+     * @param gameModel
+     */
     public GameController(GameModel gameModel)
     {
         _gameModel = gameModel;
@@ -50,6 +58,12 @@ public class GameController
         this._gameStartMillis = _gameStartMillis;
     }
         
+    /**
+     * Starts the game with the specified players
+     * @param numHumanPlayers
+     * @param numAutoPlayers
+     * @throws Exception
+     */
     public void startGame(int numHumanPlayers, int numAutoPlayers) throws Exception
     {
         int totalPlayers = numHumanPlayers + numAutoPlayers;
@@ -62,20 +76,32 @@ public class GameController
         
     }
 
+    /**
+     * Starts the game with the specified game model
+     * @param gameModel
+     */
     public void startGame(GameModel gameModel)
     {
         _gameModel = gameModel;
         _gameStartMillis = System.currentTimeMillis();
     }
     
+    /**
+     * This method is the core of the game. It is called by the UI to process the selected option
+     * and to determine the next set of option
+     * @param choiceResponse
+     * @return The nest set of player options
+     */
     public UserChoiceRequest processUserResponse(UserChoiceResponse choiceResponse)
     {
         while (!_gameModel.isGameOver())
         {
             _gameModel.updateTimeLeft(_gameStartMillis);
+            PlayerOption option = choiceResponse.getSelectedOption();
+            
+            //execute all instructions in the selected option and update the logs and user messages
             StringBuilder latestLogEntries = new StringBuilder();
             StringBuilder instructionMessages = new StringBuilder();
-            PlayerOption option = choiceResponse.getSelectedOption();
             if (option != null)
             {
                 for (Instruction instruction : option.getInstructions())
@@ -96,12 +122,14 @@ public class GameController
                     latestLogEntries.append(instruction.toString(_gameModel.getCurrentPlayer().getToken().toString()));
                 }
             }
-                        
+             
+            //get the next set of options from the Rule Provider
             RuleResult ruleResult = RuleProvider.CheckRules(_gameModel);
 
             Player currentPlayer = _gameModel.getCurrentPlayer();
             ArrayList<PlayerOption> options = ruleResult.getOptions();
 
+            //send the options to the UI or Agent (for auto players)
             UserChoiceRequest request = new UserChoiceRequest(options, ruleResult.getMessage() + instructionMessages.toString());
             request.setLatestLogEntry(latestLogEntries.toString());
             _gameModel.getGlobalInstructionLog().add(latestLogEntries.toString());
@@ -118,6 +146,14 @@ public class GameController
     }
     
     //used to initialise the game model from the config spreadsheet
+
+    /**
+     * Loads the GameModel from the configuration Excel Spreadsheet
+     * Note that Cards were too complex to read from the spreadsheet and have been hard-coded
+     * @param filename
+     * @return Game Model
+     * @throws FileNotFoundException
+     */
     public static GameModel loadStaticData(String filename) throws FileNotFoundException
     {
         GameModel gameModel = new GameModel();
@@ -309,6 +345,7 @@ public class GameController
         return gameModel;
     }
     
+    //Shuffles the cards
     private static ArrayList<Card> shuffleCards(ArrayList<Card> cards)
     {
         ArrayList<Card> result = new ArrayList<Card>();
@@ -328,7 +365,11 @@ public class GameController
         return result;
     }
     
-    //used to save the current game to XML
+    /**
+     * Saves the current game to XML
+     * @param gameModel
+     * @param filename
+     */
     public static void SaveGame(GameModel gameModel, String filename)
     {
         XMLEncoder encoder = null;
@@ -338,14 +379,18 @@ public class GameController
         }
         catch (Exception ex)
         {
-            System.out.println("ERROR: While Creating or Opening the File Trained_MLP.xml" + ex.toString());
+            System.out.println("ERROR: While Creating or Opening the File" + ex.toString());
             return;
         }
         encoder.writeObject(gameModel);
         encoder.close();
     }
-    
-    //used to load a previous unfinished game from XML
+
+    /**
+     * Reads the current game from XML
+     * @param filename
+     * @return
+     */
     public static GameModel LoadGame(String filename)
     {
         XMLDecoder decoder = null;
@@ -355,7 +400,7 @@ public class GameController
         } 
         catch (Exception ex) 
         {
-            System.out.println("ERROR: File Trained_MLP.xml not found" + ex.toString());
+            System.out.println("ERROR: File not found" + ex.toString());
             return null;
         }
         GameModel gameModel = (GameModel)decoder.readObject();

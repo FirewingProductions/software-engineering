@@ -5,6 +5,9 @@
  */
 package propertytycoon;
 
+/**
+ * The tokens representing the game players
+ */
 public enum PlayerTokenType
 {
     Boot, 

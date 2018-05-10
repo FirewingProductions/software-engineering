@@ -5,6 +5,10 @@
  */
 package propertytycoon;
 
+/**
+ * The property class holds the state of each property including the
+ * static data loaded at the start of the game
+ */
 public class Property
 {
     private int _ownerIndex;
@@ -20,13 +24,21 @@ public class Property
     private int _mortgageValue;
     private int[] _rents; //for residential 0 = no houses, 1..4 houses, 5 = hotel
     
-
+    /**
+     * Constructor
+     */
     public Property()
     {
         _rents = new int[6];
         _ownerIndex = -1;
     }
 
+    /**
+     * Constructor
+     * @param propertyName
+     * @param propertyType
+     * @param propertyGroup
+     */
     public Property(String propertyName, PropertyType propertyType, PropertyGroupColour propertyGroup)
     {
         this();
@@ -135,6 +147,10 @@ public class Property
         this._rents = _rents;
     }
     
+    /**
+     * Checks if the property has a hotel
+     * @return
+     */
     public boolean hasHotel()
     {
         if (_numberOfHouses == 5)

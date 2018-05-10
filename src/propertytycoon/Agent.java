@@ -8,16 +8,29 @@ package propertytycoon;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * The automated agent that plays the game for any player set to 'Auto'
+ */
 public class Agent
 {
     private static final Random _random = new Random(System.currentTimeMillis());
     private final GameModel _gameModel;
 
+    /**
+     * Constructor
+     * @param _gameModel
+     */
     public Agent(GameModel _gameModel)
     {
         this._gameModel = _gameModel;
     }
 
+    /**
+     * Method that chooses from the various options available to the player
+     * at each step of the game
+     * @param request contains a set of options from which the player must choose
+     * @return object containing the selected option
+     */
     public UserChoiceResponse makeChoice(UserChoiceRequest request)
     {
         ArrayList<PlayerOption> options = request.getOptions();
