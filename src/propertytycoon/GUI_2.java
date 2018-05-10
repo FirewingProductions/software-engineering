@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingConstants;
 
 import java.awt.Dimension;
+import java.awt.FileDialog;
 
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -39,6 +40,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -67,7 +69,8 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
     
     PropertyGroupColour[] propertyColours = {PropertyGroupColour.Blue, PropertyGroupColour.Brown, PropertyGroupColour.DarkBlue, PropertyGroupColour.Green,
                         PropertyGroupColour.Orange, PropertyGroupColour.Purple, PropertyGroupColour.Red, PropertyGroupColour.White, PropertyGroupColour.Yellow};
-    PropertyType[] types = {PropertyType.Standard, PropertyType.Station, PropertyType.Utility};
+    PropertyType[] types = {PropertyType.Station, PropertyType.Utility}; //PropertyType.Standard, 
+    String[] types_2 = {"stations", "utilities"};
     
     private int logCounter;
     
@@ -80,8 +83,9 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
     private JTextField auctionAmaountField;
     
     private JPanel tradePanel;
-    private JTextField tradePropertyField;
-    private JComboBox tradePlayerBox;
+    private JComboBox tradeCurrentPlayerPropertyBox;
+    private JComboBox tradeOtherPlayerPropertyBox;
+    private JComboBox tradeOtherPlayerBox;
     
     private JTextArea realAuto;
 
@@ -170,25 +174,6 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
         tradeCheckBox = new Checkbox("Allow Trading?");
         chechBoxPanel.add(abridgedCheckBox);
         chechBoxPanel.add(tradeCheckBox);
-        
-        auctionPanel = new JPanel(new GridLayout(2,2));
-        String[] tokens = new String[players.size()];
-        for (int pl = 0; pl < players.size(); pl++)
-        {
-            tokens[pl] = players.get(pl).getToken().name();
-        }
-        auctionPlayerBox = new JComboBox(tokens);
-        auctionAmaountField = new JTextField();
-        auctionPanel.add(new JLabel("Select player:"));
-        auctionPanel.add(new JLabel("Type bid amount:"));
-        auctionPanel.add(auctionPlayerBox);
-        auctionPanel.add(auctionAmaountField);
-        
-        tradePanel = new JPanel(new GridLayout(2,2));
-        tradePropertyField = new JTextField();
-        tradePlayerBox = new JComboBox(tokens);
-        tradePanel.add(new JLabel("Type name of property to be traded:"));
-        tradePanel.add(new JLabel("Select player to trade with:"));
       
         realAuto = new JTextArea();
         realAuto.setEditable(false);
@@ -211,8 +196,8 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
         quitGameButton = new JButton("Quit");
         saveGameButton = new JButton("Save Game");
         loadGameButton = new JButton("Load Game");
-        SpinnerModel numRealPlayersModel = new SpinnerNumberModel(1,1,6,1);   
-        SpinnerModel numAutoPlayersModel = new SpinnerNumberModel(1,1,6,1);   
+        SpinnerModel numRealPlayersModel = new SpinnerNumberModel(2,0,6,1);   
+        SpinnerModel numAutoPlayersModel = new SpinnerNumberModel(0,0,6,1);   
         numOfRealPlayersBox = new JSpinner(numRealPlayersModel);
         numOfAutoPlayersBox = new JSpinner(numAutoPlayersModel);
         optionTitles = new String[0];
@@ -245,60 +230,25 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
         /////////////////////////////////////////////////////////////////////////  
         
         JFrame frame = new JFrame("Input Dialog");
-        //frame.setSize(300, 300);
-//        String realPlayerNum = (String) JOptionPane.showInputDialog(frame,
-//                "How many real players?",
-//                "Player number",
-//                JOptionPane.QUESTION_MESSAGE,
-//                null,
-//                numbers,
-//                numbers[0]);
-//        
-//        String autoPlayerNum = (String) JOptionPane.showInputDialog(frame,
-//                "How many auto players?",
-//                "Player number",
-//                JOptionPane.QUESTION_MESSAGE,
-//                null,
-//                numbers,
-//                numbers[0]);
-//        
-//
-//        System.out.println("Number of real players selected is : " + realPlayerNum);
-//        System.out.println("Number of auto players selected is : " + autoPlayerNum);
-
-//        playernumber = Integer.parseInt(realPlayerNum); // keep for startGame
 
         tokenlabels = new HashMap<>();
 
         turn = 0;
-//        PlayerTokenType[] chars = new PlayerTokenType[playernumber];
-//
-//        LinkedList characs = new LinkedList();
-//        characs.add(PlayerTokenType.Boot);
-//        characs.add(PlayerTokenType.Cat);
-//        characs.add(PlayerTokenType.Goblet);
-//        characs.add(PlayerTokenType.Hatstand);
-//        characs.add(PlayerTokenType.Smartphone);
-//        characs.add(PlayerTokenType.Spoon);
-//
-//        for (int y = 0; y < playernumber; y++) {
-//            System.out.println(characs.peek());
-//            chars[y] = (PlayerTokenType) characs.poll();
-//        }
-//
-//        players = new Player[playernumber];
-//        for (int y = 0; y < playernumber; y++) {
-//            players[y] = new Player(chars[y]);
-//        }
-//
-//        game = new Game(chars);
          
         ///////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////
         
         labelTiles = new JLabel[40];
 
-        String path = System.getProperty("user.dir") + "\\src\\resources\\";
+        String path = "";
+        if (System.getProperty("os.name").contains("Windows"))
+        {
+            path = System.getProperty("user.dir") + "\\src\\resources\\";
+        }
+        else
+        {
+            path = System.getProperty("user.dir") + "/src/resources/";
+        }
         System.out.println(path);
 
         spaces = gameModel.getSpaces();
@@ -691,6 +641,7 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
             labelTiles[20 + i] = label;
 
         }
+//        setSpaceIndeces();
 
         mainPanel.add(boardpanel, BorderLayout.CENTER);
         boardpanel.setLocation(20, 110);
@@ -704,17 +655,6 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
         }
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         
-        // Should probably have a start game button for this stuff
-//        try
-//        {
-//            gameController.startGame(Integer.parseInt(realPlayerNum), Integer.parseInt(autoPlayerNum));
-//        }
-//        catch (Exception ex)
-//        {
-//            System.out.println("Check startup dialogue return types!");
-//        }
-//        setOptionsFromRequest(gameController.processUserResponse(new UserChoiceResponse(null)));
-//        UpdateUI();
 
         infoFrame = new JFrame("Info Pane");
         infoFrame.setAlwaysOnTop(true);
@@ -780,12 +720,11 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
         mainFrame.add(numOfAutoPlayersBox);
         mainFrame.add(realAuto);
         mainFrame.add(currentPlayerLabel);
+        
+        mainFrame.invalidate();
     }
 
-//    public static void main(String args[]) throws IOException, BiffException {
-//        GUI gui = new GUI();
-//
-//    }
+
     public void setOptionsFromRequest(UserChoiceRequest request)
     {
         options = request.getOptions();
@@ -805,6 +744,39 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
         }
     }
     
+    public String[] initializeAuctionStuff()
+    {
+        auctionPanel = new JPanel(new GridLayout(2,2));
+        String[] tokens = new String[players.size()];
+        for (int pl = 0; pl < players.size(); pl++)
+        {
+            if (players.get(pl).getIsActive()) {tokens[pl] = players.get(pl).getToken().name();}
+        }
+        auctionPlayerBox = new JComboBox(tokens);
+        auctionAmaountField = new JTextField();
+        auctionPanel.add(new JLabel("Select player:"));
+        auctionPanel.add(new JLabel("Type bid amount:"));
+        auctionPanel.add(auctionPlayerBox);
+        auctionPanel.add(auctionAmaountField);
+        return tokens;
+    }
+    
+    public void initializeTradeStuff(String[] tokens)
+    {
+        String[] prop = new String[properties.size()];
+        for (int p = 0; p < properties.size(); p++) {prop[p] = properties.get(p).getPropertyName();}
+        tradePanel = new JPanel(new GridLayout(2,3));
+        tradeCurrentPlayerPropertyBox = new JComboBox(prop);
+        tradeOtherPlayerPropertyBox = new JComboBox(prop);
+        tradeOtherPlayerBox = new JComboBox(tokens);
+        tradePanel.add(new JLabel("Give space index of your property to be traded:"));
+        tradePanel.add(new JLabel("Give space index of other player's property to be traded:"));
+        tradePanel.add(new JLabel("Select player to trade with:"));
+        tradePanel.add(tradeCurrentPlayerPropertyBox);
+        tradePanel.add(tradeOtherPlayerPropertyBox);
+        tradePanel.add(tradeOtherPlayerBox);
+    }
+    
     public void updateLog()
     {
         logCounter++;
@@ -816,6 +788,65 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
             playerHistory += str + "\n";
         }
         gameLog.setText(playerHistory);
+    }
+    
+    public Property getPropertyFromSpaceIndex(int index)
+    {
+        Property property = null;
+        Space space = spaces.get(index);
+        if (space instanceof PropertySpace)
+        {
+            property = ((PropertySpace)space).getProperty();
+        }
+        return property;
+    }
+    
+    public void showTradeDialogue(PlayerOption option, String message)
+    {
+        try
+        {
+            JOptionPane.showConfirmDialog(mainFrame, tradePanel, 
+            message, JOptionPane.OK_CANCEL_OPTION);
+            option.setAmount3(tradeCurrentPlayerPropertyBox.getSelectedIndex());
+            option.setAmount2(tradeOtherPlayerPropertyBox.getSelectedIndex());
+            option.setAmount1(tradeOtherPlayerBox.getSelectedIndex());
+        }
+        catch (Exception ex)
+        {
+            message = "!!!!!!! - Please provide valid integer inputs - !!!!!!!";
+            showTradeDialogue(option, message);
+        }
+    }
+    
+    public void showAuctionDialogue(PlayerOption option, String message)
+    {
+        try
+        {
+            JOptionPane.showConfirmDialog(mainFrame, auctionPanel, 
+            message, JOptionPane.OK_CANCEL_OPTION);
+             option.setAmount1(Integer.parseInt(auctionAmaountField.getText()));
+             int playerIndex = 0;
+             String token = auctionPlayerBox.getSelectedItem().toString();
+             for (Player player : players) {if (player.getToken().name().equals(token)){playerIndex = players.indexOf(player);}}
+             option.setAmount2(playerIndex);
+        }
+        catch (Exception ex)
+        {
+            message = "!!!!!!! - Please provide valid integer auction amount - !!!!!!!";
+            showAuctionDialogue(option, message);
+        }
+    }
+    
+    public void updateRealAutoPanel()
+    {
+        String realAutoInfo = "";
+        ArrayList<Player> activePlayers = new ArrayList<Player>();
+        for (Player player : players)
+        {
+            if (player.getIsActive()) {activePlayers.add(player);}
+        }
+        for (Player player : activePlayers) {realAutoInfo += player.getToken().name() + ": " + ((player.getIsAuto()) ? "Auto" : "Real") + "\n";}
+        realAuto.setText(realAutoInfo);
     }
     
     @Override
@@ -830,28 +861,24 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
     {
         if (e.getSource() == selectOptionButton)    
         {
+            updateRealAutoPanel();
+            
             int selectedIndex = optionsBox.getSelectedIndex();
             PlayerOption option = options.get(selectedIndex);
-            if (option.toString().equals(PlayerOptionType.TradeProperties))
+            if (option.getOptionType().toString().equals(PlayerOptionType.TradeProperties.name()))
             {
-                JOptionPane.showConfirmDialog(mainFrame, tradePanel, 
-               "Please Enter Trade Info", JOptionPane.OK_CANCEL_OPTION);
-                option.setAmount1(Integer.parseInt(tradePropertyField.getText()));
-                option.setAmount2(tradePlayerBox.getSelectedIndex());
+                showTradeDialogue(option, "Please Enter Trade Info");
             }
-            if (option.toString().equals(PlayerOptionType.AuctionProperty))
+            if (option.getOptionType().toString().equals(PlayerOptionType.AuctionProperty.name()))
             {
-                JOptionPane.showConfirmDialog(mainFrame, auctionPanel, 
-               "Please Enter Auction Info", JOptionPane.OK_CANCEL_OPTION);
-                option.setAmount1(Integer.parseInt(auctionAmaountField.getText()));
-                option.setAmount2(auctionPlayerBox.getSelectedIndex());
+                showAuctionDialogue(option, "Please Enter Auction Info");
             }
             
-            if (option.getOptionType().name().equals("EndOfTurn")) {updateLog();}
+//            if (option.getOptionType().name().equals("EndOfTurn")) {updateLog();}
             
             UserChoiceRequest request = gameController.processUserResponse(new UserChoiceResponse(option));
             currentRequest = request;
-            String message = "User Message: " + "\n" + request.getMessage();
+            String message = "User Message: " + "\n\n" + request.getMessage();
             pastActions.setText(message); //+ currentRequest.getMessage()
             UpdateUI();
             getOptionTitles(request);
@@ -860,22 +887,34 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
         {
             try
             {
-                if (abridgedCheckBox.getState()) {gameModel.setIsAbridgedGame(true);}
-                if (tradeCheckBox.getState()) {gameModel.setIsTradingAllowed(true);}
-                gameController.startGame((int)numOfRealPlayersBox.getValue(), (int)numOfAutoPlayersBox.getValue());
-                String realAutoInfo = "";
-                ArrayList<Player> activePlayers = new ArrayList<Player>();
-                for (Player player : players)
+                if (abridgedCheckBox.getState()) 
                 {
-                    if (player.getIsActive()) {activePlayers.add(player);}
+                    gameModel.setIsAbridgedGame(true);
+                    String gameTime = JOptionPane.showInputDialog("Please enter time limit in minutes: ");
+                    int gameTimeMill = Integer.parseInt(gameTime)*60000;
+                    gameModel.setAbridgedGameLengthMillis(gameTimeMill);
                 }
-                for (Player player : activePlayers) {realAutoInfo += player.getToken().name() + ": " + ((player.getIsAuto()) ? "Auto" : "Real") + "\n";}
-                realAuto.setText(realAutoInfo);
+                if (tradeCheckBox.getState()) {gameModel.setIsTradingAllowed(true);}
+                
+                gameController.startGame((int)numOfRealPlayersBox.getValue(), (int)numOfAutoPlayersBox.getValue());
+                
+                String[] tokens = initializeAuctionStuff();
+                initializeTradeStuff(tokens);
+                
+                updateRealAutoPanel();
+                
+                abridgedCheckBox.setEnabled(false);
+                tradeCheckBox.setEnabled(false);
+                numOfRealPlayersBox.setEnabled(false);
+                numOfAutoPlayersBox.setEnabled(false);
+                
+                
                 UpdateUI();
                 getOptionTitles(gameController.processUserResponse(new UserChoiceResponse(null)));
             } 
             catch (Exception ex)
             {
+                int i  = 0;
             }
         }
         
@@ -885,11 +924,28 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
         }
         else if (e.getSource() == saveGameButton)
         {
-            GameController.SaveGame(gameModel, "SavedGame.xml");
+            FileDialog fd = new FileDialog(mainFrame, "Choose a file", FileDialog.SAVE);
+            fd.setDirectory(System.getProperty("user.dir"));
+            fd.setFile("*.xml");
+            fd.setVisible(true);
+            String filename = fd.getFile();
+            if (filename != null)
+              GameController.SaveGame(gameModel, filename);    
         }
         else if (e.getSource() == loadGameButton)
         {
-            gameModel = GameController.LoadGame("SavedGame.xml");
+            FileDialog fd = new FileDialog(mainFrame, "Choose a file", FileDialog.LOAD);
+            fd.setDirectory(System.getProperty("user.dir"));
+            fd.setFile("*.xml");
+            fd.setVisible(true);
+            String filename = fd.getFile();
+            if (filename != null)
+            {
+                gameModel = GameController.LoadGame(filename);
+                gameController.startGame(gameModel);
+                UpdateUI();
+                mainFrame.invalidate();
+            }
         }
         else
         {
@@ -901,30 +957,56 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
                    {
                        String colour = e.getActionCommand().substring(1);
                        PropertyGroupColour selectedColour = null;
+                       PropertyType selectedType = null;
                        for (int pgc = 0; pgc < propertyColours.length; pgc++)
                        {
                            if (propertyColours[pgc].name().toLowerCase().equals(colour)){selectedColour = propertyColours[pgc];}
                        }
                        ArrayList<Property> colourProperties = gameModel.getPlayerGroupProperties(selectedColour, pl);
-                       if (colourProperties.isEmpty())
+                       ArrayList<Property> typeProperties = gameModel.getPlayerUtilities(pl);
+                       ArrayList<Property> stats = gameModel.getPlayerStations(pl);
+                       if (colourProperties.isEmpty() && typeProperties.isEmpty() && stats.isEmpty())
                        {
                            JOptionPane.showMessageDialog(mainFrame,
-                            "There are no properties owned of this colour",
-                            "A plain message",
+                            "There are no properties owned of this colour by this player",
+                            "Property Group Info",
                             JOptionPane.PLAIN_MESSAGE);
                            return;
                        }
                        String propertyGroupInfo = "";
-                       for (Property prop : colourProperties)
+                       if (!colourProperties.isEmpty())
                        {
-                           propertyGroupInfo += prop.getPropertyName() + "\n\n" + "Number of Houses: " + prop.getNumberOfHouses() + "\n"
-                            + "Has a Hotel?: " + ((prop.hasHotel()) ? "Yes" : "No") + "\n"
-                            + "Is priperty Mortgaged?: " + ((prop.getIsMortgaged()) ? "Yes" : "No");
+                            for (Property prop : colourProperties)
+                            {
+                                propertyGroupInfo += prop.getPropertyName() + "\n\n" + "Number of Houses: " + prop.getNumberOfHouses() + "\n"
+                                 + "Has a Hotel?: " + ((prop.hasHotel()) ? "Yes" : "No") + "\n"
+                                 + "Is priperty Mortgaged?: " + ((prop.getIsMortgaged()) ? "Yes" : "No") + "\n\n";
+                            }
+                       }
+                       else
+                       {
+                           if (!typeProperties.isEmpty())
+                           {
+                                for (Property prop : typeProperties)
+                                {
+                                    propertyGroupInfo += "The owner of " + prop.getPropertyName() + " is " 
+                                            + players.get(prop.getOwnerIndex()).getToken().name() + "\n";
+                                }
+                           }
+                           else
+                           {
+                               for (Property prop : stats)
+                                {
+                                    propertyGroupInfo += "The owner of " + prop.getPropertyName() + " is " 
+                                            + players.get(prop.getOwnerIndex()).getToken().name() + "\n";
+                                }
+                           }
                        }
                         JOptionPane.showMessageDialog(mainFrame,
                         propertyGroupInfo, 
                         "Property Group Info",
                         JOptionPane.PLAIN_MESSAGE);
+                        return;
                    }
                 }
             }
@@ -935,49 +1017,8 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
         }
         catch (Exception ex)
         {
-            
+            int i = 0;
         }
-//        try {
-//            System.out.println(e.getActionCommand());
-//            int playercalled = Integer.parseInt(e.getActionCommand().substring(0, 1));
-//            System.out.println(playercalled);
-//            String colour = e.getActionCommand().substring(1);
-//            //{"Red", "Brown", "Purple", "Utilities", "Station", "Green", "Deep blue", "Blue", "Orange", "Yellow"};
-//            switch (colour) {
-//                case "red":
-//                    createCardPanel(players.get(playercalled), "Red");
-//                    break;
-//                case "brown":
-//                    createCardPanel(players.get(playercalled), "Brown");
-//                    break;
-//                case "yellow":
-//                    createCardPanel(players.get(playercalled), "Yellow");
-//                    break;
-//                case "blue":
-//                    createCardPanel(players.get(playercalled), "Blue");
-//                    break;
-//                case "darkblue":
-//                    createCardPanel(players.get(playercalled), "Deep blue");
-//                    break;
-//                case "utilities":
-//                    createCardPanel(players.get(playercalled), "Utility");
-//                    break;
-//                case "stations":
-//                    createCardPanel(players.get(playercalled), "Station");
-//                    break;
-//                case "orange":
-//                    createCardPanel(players.get(playercalled), "Orange");
-//                    break;
-//                case "green":
-//                    createCardPanel(players.get(playercalled), "Green");
-//                    break;
-//                case "purple":
-//                    createCardPanel(players.get(playercalled), "Purple");
-//                    break;
-//            }
-//        } catch (Exception ex) {
-//
-//        }
     }
     
     public void updatePlayerbuttons()
@@ -985,181 +1026,10 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
         
     }
 
-//    @Override
-//    public void actionPerformed(ActionEvent e) {
-//        String selectedOption = "";
-////        if ("rolled".equals(e.getActionCommand())) {
-////            if (!rolled) {
-////                System.out.println(players[turn].characters_Player().toString() + " - Rolled -");
-////                game.player_turn(players[turn]);
-////                rolled = true;
-////                checkSpace();
-////                UpdateUI();
-////            }
-////        }   
-//            selectedOption = "ThrowDice";
-//            UpdateUI();
-//        
-//        if ("buy".equals(e.getActionCommand())) {
-////            for (Properties prop : game.properties) {
-////                if (prop.returnPos() == players[turn].Player_position() + 1) {
-////                    players[turn].property_buy(prop);
-////                    System.out.println(players[turn].characters_Player() + " bought " + prop.space_name());
-////                    Announce(players[turn].characters_Player() + " bought " + prop.space_name());
-////                    buybutton.setEnabled(false);
-////                }
-////            }
-//            int currentPlayerIndex = gameModel.getCurrentPlayerIndex();
-//            for (Space space : spaces)
-//            {
-//                if (space instanceof PropertySpace)
-//                {
-//                    if (((PropertySpace)space).getProperty().getOwnerIndex() == currentPlayerIndex)
-//                    {
-//                        Announce(players.get(currentPlayerIndex).getToken().name() + " bought " + space.getTitle());
-//                    }
-//                }
-//            }
-//            
-//            buybutton.setEnabled(false);
-//            selectedOption = "BuyProperty";
-//            UpdateUI();
-//        }
-//
-//        if ("endturn".equals(e.getActionCommand())) {
-//            selectedOption = "EndOfTurn";
-//        }
-//        try {
-//
-//            if (e.getActionCommand().substring(0, 8).equalsIgnoreCase("buyhouse")) {
-////                System.out.println(e.getActionCommand().substring(8));
-////                for (Properties prop : game.properties) {
-////
-////                    if (prop.space_name().equalsIgnoreCase(e.getActionCommand().substring(8))) {
-////                        System.out.println("Attempting to buy house for : " + prop.space_name());
-////                        prop.buy_house(players[turn]);
-////                        UpdateUI();
-////                        cardFrame.setVisible(false);
-////                        cardFrame.dispose();
-////                    }
-////                }
-//                selectedOption = "ImproveProperty";
-//                UpdateUI();
-//                cardFrame.setVisible(false);
-//                cardFrame.dispose();
-//            }
-//            if (e.getActionCommand().substring(0, 8).equalsIgnoreCase("buyhotel")) {
-////                System.out.println(e.getActionCommand().substring(8));
-////                for (Properties prop : game.properties) {
-////
-////                    if (prop.space_name().equalsIgnoreCase(e.getActionCommand().substring(8))) {
-////                        System.out.println("Attempting to buy hotel for : " + prop.space_name());
-////                        prop.buy_hotel(players[turn]);
-////                        UpdateUI();
-////                        cardFrame.setVisible(false);
-////                        cardFrame.dispose();
-////                    }
-////                }
-//                selectedOption = "ImproveProperty";
-//                UpdateUI();
-//                cardFrame.setVisible(false);
-//                cardFrame.dispose();
-//            }
-//            if (e.getActionCommand().substring(0, 4).equalsIgnoreCase("sell")) {
-////                System.out.println("Selling a property");
-////                for (Properties prop : game.properties) {
-////
-////                    if (prop.space_name().equalsIgnoreCase(e.getActionCommand().substring(4))) {
-////                        System.out.println("Attempting to sell hotel/house or property : " + prop.space_name());
-////                        System.out.println(prop.property_sell(players[turn]));
-////                        UpdateUI();
-////                        cardFrame.setVisible(false);
-////                        cardFrame.dispose();
-////                    }
-////                }
-//                selectedOption = "SellProperty";
-//                UpdateUI();
-//                cardFrame.setVisible(false);
-//                cardFrame.dispose();
-//            }
-//        } catch (Exception ex) {
-//
-//        }
-//
-//        try {
-//            System.out.println(e.getActionCommand());
-//            int playercalled = Integer.parseInt(e.getActionCommand().substring(0, 1));
-//            System.out.println(playercalled);
-//            String colour = e.getActionCommand().substring(1);
-//            //{"Red", "Brown", "Purple", "Utilities", "Station", "Green", "Deep blue", "Blue", "Orange", "Yellow"};
-//            switch (colour) {
-//                case "red":
-//                    createCardPanel(players.get(playercalled), "Red");
-//                    break;
-//                case "brown":
-//                    createCardPanel(players.get(playercalled), "Brown");
-//                    break;
-//                case "yellow":
-//                    createCardPanel(players.get(playercalled), "Yellow");
-//                    break;
-//                case "blue":
-//                    createCardPanel(players.get(playercalled), "Blue");
-//                    break;
-//                case "darkblue":
-//                    createCardPanel(players.get(playercalled), "Deep blue");
-//                    break;
-//                case "utilities":
-//                    createCardPanel(players.get(playercalled), "Utility");
-//                    break;
-//                case "stations":
-//                    createCardPanel(players.get(playercalled), "Station");
-//                    break;
-//                case "orange":
-//                    createCardPanel(players.get(playercalled), "Orange");
-//                    break;
-//                case "green":
-//                    createCardPanel(players.get(playercalled), "Green");
-//                    break;
-//                case "purple":
-//                    createCardPanel(players.get(playercalled), "Purple");
-//                    break;
-//            }
-//        } catch (Exception ex) {
-//
-//        }
-//        
-//        PlayerOption toProcess = null;
-//        for (PlayerOption option : options)
-//        {
-//            if (option.getOptionType().name().equals(selectedOption)){toProcess = option;}
-//        }
-//        UserChoiceRequest request = gameController.processUserResponse(new UserChoiceResponse(toProcess));
-//        UpdateUI();
-//    }
-
-//    private void nextPlayer() {
-//
-//        rolled = false;
-//
-//        if (turn >= players.size() - 1) {
-//            turn = 0;
-//        } else {
-//            turn++;
-//        }
-//        if (players[turn].jailed) {
-//            System.out.println(players[turn].player_characters.toString() + " jailed, turn skipped");
-//            players[turn].Player_still_in_jail();
-//            nextPlayer();
-//
-//        } else {
-//            UpdateUI();
-//        }
-//
-//    }
-
     public void UpdateUI() {
 
 //        gameLog.setText(currentRequest.getMessage() + "\n");
+        updateLog();
         String currentPlayerInfo = "Current Player: " + gameModel.getCurrentPlayer().getToken().name();
         currentPlayerLabel.setText(currentPlayerInfo);
         
@@ -1168,22 +1038,28 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
         }
         
         int i = 0;
+        ArrayList<Property> playerProps = null;
         for (Player player : players) {
+            playerProps = gameModel.getPlayerProperties(i);
             for (int col = 0; col < 10; col++) 
             {
                 int count = 0;
-                for (Property property : gameModel.getPlayerProperties(i))
+                for (Property property : playerProps)
                 {
-                    if (property.getPropertyGroup().name().toLowerCase().equals(playerbuttons[i][col].getActionCommand().substring(1))){count++;}    
+                    String propTypeName = "";
+                    if (property.getPropertyType().name().equals("Station")) {propTypeName = "stations";}
+                    else if (property.getPropertyType().name().equals("Utility")) {propTypeName = "utilities";}
+                    if (property.getPropertyGroup().name().toLowerCase().equals(playerbuttons[i][col].getActionCommand().substring(1))
+                        || propTypeName.equals(playerbuttons[i][col].getActionCommand().substring(1))){count++;}    
                 }   
                 Integer s = count;
                 playerbuttons[i][col].setText(s.toString());
             }
 
-            labelTiles[player.getCurrentSpaceIndex()].setText(labelTiles[player.getCurrentSpaceIndex()].getText() + player.getToken().name().toUpperCase().substring(0, 3) + " - ");
+            labelTiles[player.getCurrentSpaceIndex()].setText(labelTiles[player.getCurrentSpaceIndex()].getText() + " " + player.getToken().name().toUpperCase().substring(0, 3) + " - ");
             labelTiles[player.getCurrentSpaceIndex()].setFont(new Font("Arial", Font.BOLD, 10));
             labelTiles[player.getCurrentSpaceIndex()].setHorizontalTextPosition(JLabel.CENTER);
-            labelTiles[player.getCurrentSpaceIndex()].setForeground(Color.pink);
+            labelTiles[player.getCurrentSpaceIndex()].setForeground(Color.RED);
 
             JLabel curLabel = tokenlabels.get(player.getToken().name());
             curLabel.setText("£ " + player.getBalance() + " ");
@@ -1216,19 +1092,6 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
     private void Announce(String string) {
         announcementlabel.setText(string.toUpperCase());
     }
-
-//    public void checkSpace() {
-////        game.check_player_location(players[turn]);
-////        System.out.println(game.space.get(players[turn].Player_position()).space_name());
-//
-//        int index = properties.indexOf(players.get(gameModel.getCurrentPlayerIndex()).getCurrentSpaceIndex());
-//
-//        if (index != -1 && players.get(properties.get(index).getOwnerIndex()) == null && players[turn].checkPassedGo()) {
-//            buybutton.setEnabled(true);
-//        } else {
-//            buybutton.setEnabled(false);
-//        }
-//    }
 
     public void createCardPanel(Player player, String colour) {
         BufferedImage wPic;

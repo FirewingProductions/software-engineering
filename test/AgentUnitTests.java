@@ -23,6 +23,7 @@ import propertytycoon.PlayerOptionType;
 import propertytycoon.UserChoiceRequest;
 import propertytycoon.UserChoiceResponse;
 
+
 public class AgentUnitTests
 {
     private GameModel _gameModel;
@@ -95,6 +96,7 @@ public class AgentUnitTests
         request.addOption(new PlayerOption("Leave Game", PlayerOptionType.LeaveGame, new Instruction("", InstructionType.LeaveGame, 0, 0, 0)));
 
         _gameModel.getCurrentPlayer().setBalance(2000);
+        _gameModel.getCurrentPlayer().setCurrentSpaceIndex(1);
         UserChoiceResponse choiceResponse = agent.makeChoice(request);
         assertNotNull(choiceResponse);
         assertTrue(choiceResponse.getSelectedOption().getOptionType() == PlayerOptionType.BuyProperty);

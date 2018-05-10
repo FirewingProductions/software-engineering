@@ -13,6 +13,8 @@ public class PlayerOption
     private PlayerOptionType _optionType;
     private int _amount1;
     private int _amount2;
+    private int _amount3;
+
     private String _name1;
     private ArrayList<Instruction> _instructions = new ArrayList<Instruction>();
 
@@ -23,6 +25,23 @@ public class PlayerOption
         _instructions.add(instruction);
     }
 
+    public PlayerOption(String title, PlayerOptionType optionType, Instruction instruction1, Instruction instruction2)
+    {
+        _title = title;
+        _optionType = optionType;
+        _instructions.add(instruction1);
+        _instructions.add(instruction2);
+    }
+        
+    public int getAmount3()
+    {
+        return _amount3;
+    }
+
+    public void setAmount3(int _amount3)
+    {
+        this._amount3 = _amount3;
+    }
     public int getAmount2()
     {
         return _amount2;

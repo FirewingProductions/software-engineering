@@ -8,9 +8,9 @@ package propertytycoon;
 public enum PlayerTokenType
 {
     Boot, 
-    Smartphone, 
+    Cat, 
     Goblet, 
     Hatstand, 
-    Cat, 
+    Smartphone, 
     Spoon
 }

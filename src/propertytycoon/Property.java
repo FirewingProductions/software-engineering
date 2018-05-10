@@ -50,7 +50,7 @@ public class Property
         return _ownerIndex;
     }
 
-    public void setOwner(int ownerIndex)
+    public void setOwnerIndex(int ownerIndex)
     {
         this._ownerIndex = ownerIndex;
     }

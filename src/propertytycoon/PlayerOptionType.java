@@ -15,6 +15,7 @@ public enum PlayerOptionType
     SellHouse, 
     SellProperty,
     MortgageProperty,
+    UnmortgageProperty,
     PayFine,
     SelectOpportunityKnocks,
     LeaveGame,
@@ -24,6 +25,7 @@ public enum PlayerOptionType
     PayRent,
     EndOfTurn,
     SetDoubleThrown,
-    TradeProperties
+    TradeProperties,
+    FollowInstruction
 }
 

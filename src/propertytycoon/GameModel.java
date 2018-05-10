@@ -28,7 +28,7 @@ public class GameModel
     private long _abridgedGameLengthMillis;
     private long _abridgedGameMillisLeft;
     
-    ArrayList<String> _globalInstructionLog = new ArrayList<String>();
+    private ArrayList<String> _globalInstructionLog = new ArrayList<String>();
 
     public GameModel()
     {
@@ -44,6 +44,32 @@ public class GameModel
         {
             _players.add(new Player(PlayerTokenType.values()[playerIndex], false, false, 1500));
         }
+    }
+    
+    public int getPropertyIndex(Property property)
+    {
+        for (int propertyIndex = 0; propertyIndex < _properties.size(); propertyIndex++)
+        {
+            if (property.getPropertyName().equals(_properties.get(propertyIndex).getPropertyName()))
+            {
+                return propertyIndex;
+            }
+        }
+        return -1; //not found
+    }
+    
+    public boolean isInJail(int playerIndex)
+    {
+        if (playerIndex < 0 || playerIndex >= _players.size())
+            return false;
+        
+        Player player = _players.get(playerIndex);
+        Space playerSpace = _spaces.get(player.getCurrentSpaceIndex());
+        if (playerSpace.getTitle().toLowerCase().contains("jail") && !player.getIsJustVisiting())
+        {
+            return true;
+        }
+        return false;
     }
     
     public ArrayList<String> getGlobalInstructionLog()
@@ -325,16 +351,17 @@ public class GameModel
         return _spaces.get(spaceIndex);
     }
     
-    public void executeInstruction(Instruction instruction)
+    public String executeInstruction(Instruction instruction)
     {
-        executeInstruction(instruction, _currentPlayerIndex);
+        return executeInstruction(instruction, _currentPlayerIndex);
     }
         
-    public void executeInstruction(Instruction instruction, int currentPlayerIndex)
+    public String executeInstruction(Instruction instruction, int currentPlayerIndex)
     {
         Player currentPlayer = _players.get(currentPlayerIndex);
         int currentSpaceIndex = currentPlayer.getCurrentSpaceIndex();
         Space currentSpace = _spaces.get(currentSpaceIndex);
+        String message = "";
         
         currentPlayer.logInstruction(instruction);
         
@@ -359,18 +386,21 @@ public class GameModel
                 int amount1 = instruction.getAmount1();
                 currentPlayer.setBalance(currentPlayer.getBalance() - amount1);
                 _finesTotal += amount1;
+                _gameStage = GameStageType.EndOfTurn;
                 break;
             }
             case PayBank:
             {
                 int amount1 = instruction.getAmount1();
                 currentPlayer.setBalance(currentPlayer.getBalance() - amount1);
+                _gameStage = GameStageType.EndOfTurn;
                 break;
             }
             case ReceiveMoney:
             {
                 int amount1 = instruction.getAmount1();
                 currentPlayer.setBalance(currentPlayer.getBalance() + amount1);
+                _gameStage = GameStageType.EndOfTurn;
                 break;
             }
             case ReceiveMoneyFromEachPlayer: 
@@ -386,12 +416,14 @@ public class GameModel
                     }
                 }
                 currentPlayer.setBalance(currentPlayer.getBalance() + totalAmount);
+                _gameStage = GameStageType.EndOfTurn;
                 break;
             }
             case GoDirectTo:
             {
                 int targetSpaceIndex = instruction.getTargetSpaceIndex();
                 currentPlayer.setCurrentSpaceIndex(targetSpaceIndex);
+                _gameStage = GameStageType.MovedToNewSpace;
                 break;
             }
             case GoToJail:
@@ -406,12 +438,14 @@ public class GameModel
                 }
                 currentPlayer.setIsJustVisiting(false);
                 currentPlayer.setTurnsToMiss(2);
+                _gameStage = GameStageType.EndOfTurn;
                 break;
             }
             case SetJustVisitingFlag: 
             {
                 currentPlayer.setIsJustVisiting(true);
                 currentPlayer.setTurnsToMiss(0);
+                _gameStage = GameStageType.EndOfTurn;
                 break;
             }
             case SetDoubleThrown:
@@ -439,6 +473,7 @@ public class GameModel
             {
                 int targetSpaceIndex = instruction.getTargetSpaceIndex();
                 currentPlayer.setCurrentSpaceIndex(targetSpaceIndex);
+                _gameStage = GameStageType.MovedToNewSpace;
                 break;
             }
             case GoBackNumSpaces:
@@ -450,6 +485,7 @@ public class GameModel
                     currentSpaceIndex += _spaces.size();
                 }                
                 currentPlayer.setCurrentSpaceIndex(currentSpaceIndex);
+                _gameStage = GameStageType.MovedToNewSpace;
                 break;
             }
             case AdvanceTo:
@@ -461,6 +497,7 @@ public class GameModel
                     currentPlayer.incrementGoCount();
                 }
                 currentPlayer.setCurrentSpaceIndex(targetSpaceIndex);
+                _gameStage = GameStageType.MovedToNewSpace;
                 break;
             }
             case PayForRepairs:
@@ -477,14 +514,14 @@ public class GameModel
                     else totalAmount += amount1 * property.getNumberOfHouses();
                 }
                 currentPlayer.setBalance(currentPlayer.getBalance() - totalAmount);
-                
-                //allow a player to have a temporary negative balance that must be fixed at the start of his next turn
+                _gameStage = GameStageType.EndOfTurn;
                 break;
             }
             case CollectFines:
             {
                 currentPlayer.setBalance(currentPlayer.getBalance() + _finesTotal);
                 _finesTotal = 0;
+                _gameStage = GameStageType.EndOfTurn;
                 break;
             }
             case GetOutOfJailFree:
@@ -507,8 +544,9 @@ public class GameModel
              case BuyProperty:
             {
                 Property property = ((PropertySpace)currentSpace).getProperty();
-                property.setOwner(_currentPlayerIndex);
+                property.setOwnerIndex(_currentPlayerIndex);
                 currentPlayer.setBalance(currentPlayer.getBalance() - property.getPurchasePrice());
+                _gameStage = GameStageType.EndOfTurn;
                 break;
             }
             case AuctionProperty:
@@ -520,10 +558,10 @@ public class GameModel
                 if (buyer.getTimesPlayerHasPassedGo() > 0)
                 {
                     Property property = ((PropertySpace)currentSpace).getProperty();
-                    property.setOwner(buyerIndex);
-
-                    buyer.setBalance(buyer.getBalance() - property.getPurchasePrice());
+                    property.setOwnerIndex(buyerIndex);
+                    buyer.setBalance(buyer.getBalance() - amount1);
                 }
+                _gameStage = GameStageType.EndOfTurn;
                 break;
             } 
              case ImproveProperty:
@@ -533,6 +571,7 @@ public class GameModel
                 property.setNumberOfHouses(numberOfHouses + 1);
                 int priceOfHouse = property.getHousePrice();
                 currentPlayer.setBalance(currentPlayer.getBalance() - priceOfHouse);
+                _gameStage = GameStageType.EndOfTurn;
                 break;
             } 
              case PayJailFine:
@@ -540,11 +579,13 @@ public class GameModel
                 currentPlayer.setBalance(currentPlayer.getBalance() - 50);
                 _finesTotal += 50;
                 currentPlayer.setIsJustVisiting(true);
+                _gameStage = GameStageType.EndOfTurn;
                 break;
             }
              case SellHouse:
             {
-                Property property = ((PropertySpace)currentSpace).getProperty();
+                int propertyIndex = instruction.getTargetSpaceIndex();
+                Property property = _properties.get(propertyIndex);
                 int numberOfHouses = property.getNumberOfHouses();
                 property.setNumberOfHouses(numberOfHouses - 1);
                 int priceOfHouse = property.getHousePrice();
@@ -554,7 +595,7 @@ public class GameModel
              case SellProperty:
             {
                 Property property = ((PropertySpace)currentSpace).getProperty();
-                property.setOwner(-1);
+                property.setOwnerIndex(-1);
                 currentPlayer.setBalance(currentPlayer.getBalance() + property.getPurchasePrice());
                 break;
             }
@@ -579,37 +620,13 @@ public class GameModel
             }
             case MoveToNextPlayer:
             {
-                currentPlayer.setWasDoubleThrown(false);
-                currentPlayer.setSelectOpportunityKnocks(false);
-                if (!isGameOver())
-                {
-                    if (currentPlayer.getExtraTurns() > 0)
-                    {
-                        currentPlayer.setExtraTurns(currentPlayer.getExtraTurns() - 1);
-                    }
-                    else
-                    {    
-                        _currentPlayerIndex++;
-                        if (_currentPlayerIndex >= _players.size())
-                        {
-                            _currentPlayerIndex = 0;
-                        }
-                        while (!_players.get(_currentPlayerIndex).getIsActive())
-                        {
-                            _currentPlayerIndex++;
-                            if (_currentPlayerIndex >= _players.size())
-                            {
-                                _currentPlayerIndex = 0;
-                            }
-                        }
-                    }
-                    _gameStage = GameStageType.StartOfTurn;
-                }
+                moveToNextPlayer();
                 break;
             }
             case LeaveGame:
             {
                 currentPlayer.setIsActive(false);
+                moveToNextPlayer();
                 break;
             }
             case PayRent:
@@ -619,29 +636,81 @@ public class GameModel
                 Player owner = _players.get(ownerIndex);
                 currentPlayer.setBalance(currentPlayer.getBalance() - rentAmount);
                 owner.setBalance(owner.getBalance() + rentAmount);
+                _gameStage = GameStageType.EndOfTurn;
                 break;
             }
             case SkipTurn:
             {
                 currentPlayer.setTurnsMissed(currentPlayer.getTurnsMissed() + 1);
+                _gameStage = GameStageType.EndOfTurn;
                 break;
             }
             case PayFineOrOpportunityKnocks:
                 break;
             case SetPlayerToBankrupt:
+                currentPlayer.setIsActive(false);
+                moveToNextPlayer();
+
                 break;
             case TradeProperties:
                 int otherPlayerIndex = instruction.getAmount1();
-                int otherPropertyIndex = instruction.getAmount2();
-                Property otherProperty = _properties.get(otherPropertyIndex);
-                otherProperty.setOwner(_currentPlayerIndex);
-                Property currentProperty = ((PropertySpace)currentSpace).getProperty();
-                currentProperty.setOwner(otherPlayerIndex);
+                int propertyIndex1 = instruction.getAmount2();
+                int propertyIndex2 = instruction.getTargetSpaceIndex();
+                Property property1 = _properties.get(propertyIndex1);
+                Property property2 = _properties.get(propertyIndex2);
+                if (property1.getOwnerIndex() == currentPlayerIndex && property2.getOwnerIndex() == otherPlayerIndex)
+                {
+                    property1.setOwnerIndex(otherPlayerIndex);
+                    property2.setOwnerIndex(currentPlayerIndex);
+                    message += executeInstruction(new Instruction("End of turn", InstructionType.MoveToNextPlayer, 0, 0, 0));
+                }
+                else if (property1.getOwnerIndex() == otherPlayerIndex && property2.getOwnerIndex() == currentPlayerIndex)
+                {
+                    property1.setOwnerIndex(_currentPlayerIndex);
+                    property2.setOwnerIndex(otherPlayerIndex);
+                    message += executeInstruction(new Instruction("End of turn", InstructionType.MoveToNextPlayer, 0, 0, 0));
+                }
+                else
+                {
+                    message += " - Properties could not be traded because at least one is not owned by the specified player";
+                }
                 break;
             default:
             {
                 break;
             }
+        }
+        return message;
+    }
+
+    private void moveToNextPlayer()
+    {
+        Player currentPlayer = getCurrentPlayer();
+        currentPlayer.setWasDoubleThrown(false);
+        currentPlayer.setSelectOpportunityKnocks(false);
+        if (!isGameOver())
+        {
+            if (currentPlayer.getExtraTurns() > 0)
+            {
+                currentPlayer.setExtraTurns(currentPlayer.getExtraTurns() - 1);
+            }
+            else
+            {    
+                _currentPlayerIndex++;
+                if (_currentPlayerIndex >= _players.size())
+                {
+                    _currentPlayerIndex = 0;
+                }
+                while (!_players.get(_currentPlayerIndex).getIsActive())
+                {
+                    _currentPlayerIndex++;
+                    if (_currentPlayerIndex >= _players.size())
+                    {
+                        _currentPlayerIndex = 0;
+                    }
+                }
+            }
+            _gameStage = GameStageType.StartOfTurn;
         }
     }
 

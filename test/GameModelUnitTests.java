@@ -19,6 +19,7 @@ import propertytycoon.GameStageType;
 import propertytycoon.Instruction;
 import propertytycoon.InstructionType;
 
+
 public class GameModelUnitTests
 {
     private GameModel _gameModel;
@@ -60,9 +61,9 @@ public class GameModelUnitTests
     {
         _gameModel.getPlayers().get(0).setBalance(500);
         _gameModel.getPlayers().get(0).setIsActive(true);
-        _gameModel.getProperties().get(0).setOwner(0);
+        _gameModel.getProperties().get(0).setOwnerIndex(0);
         _gameModel.getProperties().get(0).setNumberOfHouses(3);
-        _gameModel.getProperties().get(1).setOwner(0);
+        _gameModel.getProperties().get(1).setOwnerIndex(0);
         _gameModel.getProperties().get(1).setNumberOfHouses(2);
         _gameModel.getProperties().get(1).setIsMortgaged(true);
 
@@ -80,4 +81,13 @@ public class GameModelUnitTests
         assertTrue(_gameModel.getPlayers().get(0).getCurrentSpaceIndex() == 2);
         assertTrue(_gameModel.getGameStage() == GameStageType.MovedToNewSpace);
     }
+   
+    @Test
+    public void executeInstruction_GoBack_Test()
+    {
+        _gameModel.executeInstruction(new Instruction("Go Back 3 spaces", InstructionType.GoBackNumSpaces, 3, 0, 0), 0);
+        
+        assertTrue(_gameModel.getCurrentPlayerIndex() == 0);
+        assertTrue(_gameModel.getPlayers().get(0).getCurrentSpaceIndex() == 37);
+    }    
 }

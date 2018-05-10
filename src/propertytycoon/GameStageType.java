@@ -9,5 +9,6 @@ public enum GameStageType
 {
     StartOfTurn,
     DiceThrown,
-    MovedToNewSpace
+    MovedToNewSpace,
+    EndOfTurn
 }

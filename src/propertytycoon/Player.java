@@ -26,9 +26,9 @@ public class Player
     private boolean _hasGetOutOfJailFreeCardFromPotLuck;
     private boolean _hasGetOutOfJailFreeCardFromOpportunity;
     private boolean _selectOpportunityKnocks;
-    int _timesPlayerHasPassedGo;
+    private int _timesPlayerHasPassedGo;
     
-    ArrayList<String> _instructionLog = new ArrayList<String>();
+    private ArrayList<String> _instructionLog = new ArrayList<String>();
 
     private int _balance;
 
@@ -40,6 +40,11 @@ public class Player
         this._isActive = _isActive;
         this._isAuto = _isAuto;
         this._balance = initialBalance;
+    }
+
+    public void setInstructionLog(ArrayList<String> _instructionLog)
+    {
+        this._instructionLog = _instructionLog;
     }
     
     public ArrayList<String> getInstructionLog()
@@ -192,9 +197,9 @@ public class Player
         return _isJustVisiting;
     }
 
-    public void setIsJustVisiting(boolean _isInJail)
+    public void setIsJustVisiting(boolean isJustVisiting)
     {
-        this._isJustVisiting = _isInJail;
+        this._isJustVisiting = isJustVisiting;
     }
 
     public int getTurnsToMiss()

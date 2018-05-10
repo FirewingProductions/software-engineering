@@ -5,6 +5,7 @@
  */
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
@@ -13,11 +14,16 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import propertytycoon.Card;
 import propertytycoon.GameController;
 import propertytycoon.GameModel;
+import propertytycoon.GameStageType;
+import propertytycoon.Instruction;
+import propertytycoon.InstructionType;
 import propertytycoon.PlayerOptionType;
 import propertytycoon.UserChoiceRequest;
 import propertytycoon.UserChoiceResponse;
+
 
 public class GameControllerUnitTests
 {
@@ -119,7 +125,61 @@ public class GameControllerUnitTests
         assertTrue(choiceRequest.getOptions().get(0).getOptionType() == PlayerOptionType.ThrowDice);
         assertTrue(choiceRequest.getOptions().get(1).getOptionType() == PlayerOptionType.LeaveGame);
     }
+    
+    @Test
+    public void processUserResponseTest2()
+    {
+        try
+        {
+            _gameController.startGame(3, 2);
+        } 
+        catch (Exception ex)
+        {
+            assertTrue("Exception thrown - " + ex.getMessage(), false);
+        }
 
+        _gameModel.setGameStage(GameStageType.MovedToNewSpace);
+        _gameModel.getCurrentPlayer().setCurrentSpaceIndex(7);  //opportunoty knocks       
+        _gameModel.getOpportunityCards().add(0, (new Card(new Instruction("Move Back 3 Spaces", InstructionType.GoBackNumSpaces, 3, 0, 0))));
+
+        UserChoiceResponse choiceResponse = new UserChoiceResponse(null);
+        UserChoiceRequest choiceRequest = _gameController.processUserResponse(choiceResponse);
+        
+        assertNotNull(choiceRequest);
+        assertTrue(choiceRequest.getOptions().size() == 2);
+        assertTrue(choiceRequest.getOptions().get(0).getInstructions().get(0).getInstructionType() == InstructionType.GoBackNumSpaces);
+    }    
+    
+    @Test
+    public void processUserResponse_abridgedGame_Test()
+    {
+        try
+        {
+            _gameModel.setIsAbridgedGame(true);
+            _gameModel.setAbridgedGameLengthMillis(600000);
+            
+            _gameController.startGame(3, 2);
+        } 
+        catch (Exception ex)
+        {
+            assertTrue("Exception thrown - " + ex.getMessage(), false);
+        }
+        UserChoiceResponse choiceResponse = new UserChoiceResponse(null);
+        UserChoiceRequest choiceRequest = _gameController.processUserResponse(choiceResponse);
+        
+        assertNotNull(choiceRequest);
+        assertTrue(choiceRequest.getOptions().size() == 2);
+        assertTrue(choiceRequest.getMessage().equals("Start your turn"));
+        assertTrue(choiceRequest.getOptions().get(0).getOptionType() == PlayerOptionType.ThrowDice);
+        assertTrue(choiceRequest.getOptions().get(1).getOptionType() == PlayerOptionType.LeaveGame);
+        
+        choiceResponse = new UserChoiceResponse(choiceRequest.getOptions().get(0));
+        choiceRequest = _gameController.processUserResponse(choiceResponse);
+        
+        assertNotNull(choiceRequest);
+        assertTrue(choiceRequest.getOptions().size() == 2);
+    }
+    
     @Test
     public void getAbridgedGameOverTest()
     {
@@ -130,17 +190,17 @@ public class GameControllerUnitTests
         
         _gameModel.getPlayers().get(0).setBalance(500);
         _gameModel.getPlayers().get(0).setIsActive(true);
-        _gameModel.getProperties().get(0).setOwner(0);
+        _gameModel.getProperties().get(0).setOwnerIndex(0);
         _gameModel.getProperties().get(0).setNumberOfHouses(3);
-        _gameModel.getProperties().get(1).setOwner(0);
+        _gameModel.getProperties().get(1).setOwnerIndex(0);
         _gameModel.getProperties().get(1).setNumberOfHouses(2);
         _gameModel.getProperties().get(1).setIsMortgaged(true);
 
         _gameModel.getPlayers().get(1).setBalance(1500);
         _gameModel.getPlayers().get(1).setIsActive(true);
-        _gameModel.getProperties().get(2).setOwner(1);
+        _gameModel.getProperties().get(2).setOwnerIndex(1);
         _gameModel.getProperties().get(2).setNumberOfHouses(4);
-        _gameModel.getProperties().get(3).setOwner(1);
+        _gameModel.getProperties().get(3).setOwnerIndex(1);
         _gameModel.getProperties().get(3).setNumberOfHouses(3);
         _gameModel.getProperties().get(3).setIsMortgaged(false);
 
@@ -149,4 +209,30 @@ public class GameControllerUnitTests
         assertTrue(winnwerIndex == 1);
     }
  
+    @Test
+    public void saveLoadGameTest()
+    {
+        _gameModel.setCurrentPlayerIndex(2);
+        _gameModel.getPlayers().get(0).setBalance(500);
+        _gameModel.getProperties().get(0).setOwnerIndex(0);
+        _gameModel.getProperties().get(0).setNumberOfHouses(3);
+        _gameModel.getPlayers().get(1).setBalance(1500);
+        ArrayList<String> globalLog = new ArrayList<>();
+        globalLog.add("hello");
+        _gameModel.setGlobalInstructionLog(globalLog);
+        _gameModel.getPlayers().get(0).setInstructionLog(globalLog);
+        
+        GameController.SaveGame(_gameModel, "saveTest.xml");
+        GameModel loadedModel = GameController.LoadGame("saveTest.xml");
+        
+        assertTrue(loadedModel.getCurrentPlayerIndex() == 2);
+        assertTrue(loadedModel.getPlayers().get(0).getBalance() == 500);
+        assertTrue(loadedModel.getProperties().get(0).getOwnerIndex() == 0);
+        assertTrue(loadedModel.getProperties().get(0).getNumberOfHouses() == 3);
+        assertTrue(loadedModel.getPlayers().get(1).getBalance() == 1500);
+        assertTrue(loadedModel.getGlobalInstructionLog().get(0).equals("hello"));
+        assertTrue(loadedModel.getPlayers().get(0).getInstructionLog().get(0).equals("hello"));
+        
+    }
+
 }

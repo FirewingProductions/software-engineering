@@ -57,12 +57,17 @@ public class Agent
                             selectedOptionIndex = optionIndex;
                             break;
                         }
+                        else
+                        {
+                            validOptions.remove(optionIndex);
+                            selectedOptionIndex = _random.nextInt(validOptions.size());
+                        }
                     }
                 }
             }
         }
         
-        PlayerOption chosenOption = options.get(selectedOptionIndex);
+        PlayerOption chosenOption = validOptions.get(selectedOptionIndex);
            
         return new UserChoiceResponse(chosenOption);
     }

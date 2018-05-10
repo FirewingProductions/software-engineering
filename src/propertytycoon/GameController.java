@@ -52,7 +52,7 @@ public class GameController
         
     public void startGame(int numHumanPlayers, int numAutoPlayers) throws Exception
     {
-        int totalPlayers = numAutoPlayers + numAutoPlayers;
+        int totalPlayers = numHumanPlayers + numAutoPlayers;
         if (totalPlayers < 1 || totalPlayers > 6)
         {
             throw new Exception("Total players must be between 2 and 6");
@@ -61,6 +61,12 @@ public class GameController
         _gameStartMillis = System.currentTimeMillis();
         
     }
+
+    public void startGame(GameModel gameModel)
+    {
+        _gameModel = gameModel;
+        _gameStartMillis = System.currentTimeMillis();
+    }
     
     public UserChoiceRequest processUserResponse(UserChoiceResponse choiceResponse)
     {
@@ -68,12 +74,23 @@ public class GameController
         {
             _gameModel.updateTimeLeft(_gameStartMillis);
             StringBuilder latestLogEntries = new StringBuilder();
-            if (choiceResponse.getSelectedOption() != null)
+            StringBuilder instructionMessages = new StringBuilder();
+            PlayerOption option = choiceResponse.getSelectedOption();
+            if (option != null)
             {
-                for (Instruction instruction : choiceResponse.getSelectedOption().getInstructions())
+                for (Instruction instruction : option.getInstructions())
                 {
-                    instruction.setMessage(choiceResponse.getSelectedOption().getTitle());
-                    _gameModel.executeInstruction(instruction);
+                    instruction.setMessage(option.getTitle());
+                    if (option.getOptionType() == PlayerOptionType.AuctionProperty || option.getOptionType() == PlayerOptionType.TradeProperties)
+                    {
+                        instruction.setAmount(option.getAmount1());
+                        instruction.setAmount2(option.getAmount2());
+                        instruction.setTargetSpaceIndex(option.getAmount3());
+                    }
+                    
+                    String message = _gameModel.executeInstruction(instruction);
+                    
+                    instructionMessages.append(message);
                     if (latestLogEntries.length() > 0)
                         latestLogEntries.append("\r\n");
                     latestLogEntries.append(instruction.toString(_gameModel.getCurrentPlayer().getToken().toString()));
@@ -85,7 +102,7 @@ public class GameController
             Player currentPlayer = _gameModel.getCurrentPlayer();
             ArrayList<PlayerOption> options = ruleResult.getOptions();
 
-            UserChoiceRequest request = new UserChoiceRequest(options, ruleResult.getMessage());
+            UserChoiceRequest request = new UserChoiceRequest(options, ruleResult.getMessage() + instructionMessages.toString());
             request.setLatestLogEntry(latestLogEntries.toString());
             _gameModel.getGlobalInstructionLog().add(latestLogEntries.toString());
             if (!currentPlayer.getIsAuto())
@@ -161,6 +178,7 @@ public class GameController
                 }
                 else if (canBeBoughtStr.equals("Yes"))
                 {
+                    int propertyPrice = Integer.parseInt(propertyCostStr);
                     int housePrice = Integer.parseInt(houseCostStr);
                     int motgageValue = Integer.parseInt(mortgageValueStr);
                     
@@ -172,6 +190,7 @@ public class GameController
                         {
                             rents[i] = Integer.parseInt(rentStrings[i]);
                         }
+                        property.setPurchasePrice(propertyPrice);
                         property.setHousePrice(housePrice);
                         property.setMortgageValue(motgageValue);
                         space = new PropertySpace(name, property);
@@ -185,6 +204,7 @@ public class GameController
                         {
                             rents[i] = Integer.parseInt(rentStrings[i]);
                         }
+                        property.setPurchasePrice(propertyPrice);
                         property.setHousePrice(housePrice);
                         property.setMortgageValue(motgageValue);
                         space = new PropertySpace(name, property);
@@ -201,6 +221,7 @@ public class GameController
                         {
                             rents[i] = Integer.parseInt(rentStrings[i]);
                         }
+                        property.setPurchasePrice(propertyPrice);
                         property.setHousePrice(housePrice);
                         property.setMortgageValue(motgageValue);
                         space = new PropertySpace(name, property);
@@ -211,7 +232,7 @@ public class GameController
                 {
                     if (name.equals("Free Parking"))
                     {
-                        Instruction instruction = new Instruction(action, InstructionType.CollectFines, 0, 0, 0);
+                        Instruction instruction = new Instruction(name + " - " + action, InstructionType.CollectFines, 0, 0, 0);
                         space = new InstructionSpace(name, instruction);
                     }
                     else if (name.equals("Go to Jail"))
@@ -267,7 +288,7 @@ public class GameController
             opportunityCards.add(new Card(new Instruction("You are assessed for repairs, £40/house, £115/hotel", InstructionType.PayForRepairs, 40, 115, 0)));
             opportunityCards.add(new Card(new Instruction("Advance to GO", InstructionType.AdvanceTo, 0, 0, 0)));
             opportunityCards.add(new Card(new Instruction("You are assessed for repairs, £25/house, £100/hotel", InstructionType.PayForRepairs, 25, 100, 0)));
-            opportunityCards.add(new Card(new Instruction("Go back 3 spaces", InstructionType.GoBackNumSpaces, 0, 0, 3)));
+            opportunityCards.add(new Card(new Instruction("Go back 3 spaces", InstructionType.GoBackNumSpaces, 3, 0, 0)));
             opportunityCards.add(new Card(new Instruction("Advance to Skywalker Drive. If you pass GO collect £200", InstructionType.AdvanceTo, 0, 0, 11)));
             opportunityCards.add(new Card(new Instruction("Go to jail. Do not pass GO, do not collect £200", InstructionType.GoToJail ,0, 0, 0)));
             opportunityCards.add(new Card(new Instruction("Drunk in charge of a skateboard. Fine £20", InstructionType.PayFine, 20, 0, 0)));

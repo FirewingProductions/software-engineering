@@ -1,4 +1,8 @@
-
+﻿/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
 import java.io.FileNotFoundException;
 import java.util.HashSet;
@@ -20,6 +24,7 @@ import propertytycoon.InstructionType;
 import propertytycoon.PlayerOptionType;
 import propertytycoon.RuleProvider;
 import propertytycoon.RuleResult;
+
 
 public class RuleProviderUnitTests
 {
@@ -61,7 +66,7 @@ public class RuleProviderUnitTests
     }
     
     @Test
-    public void startOfTurn_userBackrupt_Test()
+    public void anyStage_userBackrupt_Test()
     {
         _gameModel.getCurrentPlayer().setBalance(-1);
         RuleResult ruleResult = RuleProvider.CheckRules(_gameModel);
@@ -71,7 +76,27 @@ public class RuleProviderUnitTests
         assertTrue(ruleResult.getOptions().get(0).getOptionType() == PlayerOptionType.LeaveGame);
     }
     
+    @Test
+    public void anyStage_negativeBalance_Test()
+    {
+        _gameModel.setGameStage(GameStageType.MovedToNewSpace);  //should work at any stage
+        _gameModel.setCurrentPlayerIndex(0);
+        _gameModel.getCurrentPlayer().setBalance(-1);
+        _gameModel.getProperties().get(0).setOwnerIndex(0); //brown
+        _gameModel.getProperties().get(1).setOwnerIndex(0); //brown
+        _gameModel.getProperties().get(0).setNumberOfHouses(1);
+        _gameModel.getProperties().get(3).setOwnerIndex(0);
         
+        RuleResult ruleResult = RuleProvider.CheckRules(_gameModel);
+        
+        assertTrue(ruleResult.getMessage().contains("You have run out of money"));
+        assertTrue(ruleResult.getOptions().size() == 4);
+        assertTrue(ruleResult.getOptions().get(0).getOptionType() == PlayerOptionType.SellHouse);
+        assertTrue(ruleResult.getOptions().get(1).getOptionType() == PlayerOptionType.SellProperty);
+        assertTrue(ruleResult.getOptions().get(2).getOptionType() == PlayerOptionType.MortgageProperty);
+        assertTrue(ruleResult.getOptions().get(3).getOptionType() == PlayerOptionType.LeaveGame);
+    }
+    
     @Test
     public void diceThrown_double_Test()
     {
@@ -138,27 +163,62 @@ public class RuleProviderUnitTests
     {
         _gameModel.setGameStage(GameStageType.MovedToNewSpace);
         _gameModel.getCurrentPlayer().setCurrentSpaceIndex(7);  //opportunoty knocks
-        _gameModel.getOpportunityCards().add(0, new Card(new Instruction("Pay a £10 fine or take opportunity knocks", InstructionType.PayFineOrOpportunityKnocks, 10, 0, 0)));
+        _gameModel.getOpportunityCards().add(0, (new Card(new Instruction("Fined £15 for speeding", InstructionType.PayFine, 15, 0, 0))));
         
         RuleResult ruleResult = RuleProvider.CheckRules(_gameModel);
         
         assertTrue(ruleResult.getMessage().toLowerCase().contains("card"));
-        assertTrue(ruleResult.getOptions().size() == 3);
-
-        for (Instruction instruction : ruleResult.getOptions().get(0).getInstructions())
-        {
-            _gameModel.executeInstruction(instruction);
-        }
-        assertTrue(_gameModel.getCurrentPlayerIndex() == 0);
+        assertTrue(ruleResult.getOptions().size() == 2);
+        assertTrue(ruleResult.getOptions().get(0).getInstructions().get(1).getInstructionType() == InstructionType.MoveToNextPlayer);
         
-        ruleResult = RuleProvider.CheckRules(_gameModel);
-
         for (Instruction instruction : ruleResult.getOptions().get(0).getInstructions())
         {
             _gameModel.executeInstruction(instruction);
         }
-
         assertTrue(_gameModel.getCurrentPlayerIndex() == 1);
-
+    }    
+    
+    @Test
+    public void movedToNewSpace_cardSpace_Test3()
+    {
+        _gameModel.setGameStage(GameStageType.MovedToNewSpace);
+        _gameModel.getCurrentPlayer().setCurrentSpaceIndex(7);  //opportunoty knocks
+        _gameModel.getOpportunityCards().add(0, new Card(new Instruction("Move Back 3 Spaces", InstructionType.GoBackNumSpaces, 3, 0, 0)));
+        
+        RuleResult ruleResult = RuleProvider.CheckRules(_gameModel);
+        
+        assertTrue(ruleResult.getMessage().toLowerCase().contains("card"));
+        assertTrue(ruleResult.getOptions().size() == 2);
+        assertTrue(ruleResult.getOptions().get(0).getInstructions().get(1).getInstructionType() == InstructionType.MoveToNextPlayer);
+        
+        for (Instruction instruction : ruleResult.getOptions().get(0).getInstructions())
+        {
+            _gameModel.executeInstruction(instruction);
+        }
+        assertTrue(_gameModel.getPlayers().get(0).getCurrentSpaceIndex() == 4);
+        assertTrue(_gameModel.getCurrentPlayerIndex() == 1);
     }
+   
+    @Test
+    public void movedToNewSpace_propertySpace_payRent_Test1()
+    {
+        _gameModel.setGameStage(GameStageType.MovedToNewSpace);  //should work at any stage
+        _gameModel.setCurrentPlayerIndex(0);
+        _gameModel.getCurrentPlayer().setBalance(1000);
+        _gameModel.getCurrentPlayer().setCurrentSpaceIndex(1);
+        _gameModel.getProperties().get(0).setOwnerIndex(1); //brown
+        _gameModel.getProperties().get(1).setOwnerIndex(1); //brown
+        _gameModel.getProperties().get(0).setNumberOfHouses(1);
+        
+        RuleResult ruleResult = RuleProvider.CheckRules(_gameModel);
+        
+        assertTrue(ruleResult.getMessage().contains("You must pay rent"));
+        assertTrue(ruleResult.getOptions().size() == 2);
+        assertTrue(ruleResult.getOptions().get(0).getOptionType() == PlayerOptionType.PayRent);
+        int rentDue = ruleResult.getOptions().get(0).getInstructions().get(0).getAmount1();
+        assertTrue(rentDue == 10);
+        int ownerIndex = ruleResult.getOptions().get(0).getInstructions().get(0).getTargetSpaceIndex();
+        assertTrue(ownerIndex == 1);
+        assertTrue(ruleResult.getOptions().get(1).getOptionType() == PlayerOptionType.LeaveGame);
+    }    
 }
