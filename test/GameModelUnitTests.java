@@ -69,7 +69,7 @@ public class GameModelUnitTests
 
         int worth = _gameModel.getPlayerWorth(0);
         
-        assertTrue(worth == 700);
+        assertTrue(worth == 790);
     }
     
     @Test

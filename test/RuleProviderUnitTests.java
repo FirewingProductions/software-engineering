@@ -25,7 +25,6 @@ import propertytycoon.PlayerOptionType;
 import propertytycoon.RuleProvider;
 import propertytycoon.RuleResult;
 
-
 public class RuleProviderUnitTests
 {
     private GameModel _gameModel;
@@ -149,13 +148,14 @@ public class RuleProviderUnitTests
         
         assertTrue(ruleResult.getMessage().toLowerCase().contains("card"));
         assertTrue(ruleResult.getOptions().size() == 2);
-        assertTrue(ruleResult.getOptions().get(0).getInstructions().get(1).getInstructionType() == InstructionType.MoveToNextPlayer);
+        InstructionType instructionType = ruleResult.getOptions().get(0).getInstructions().get(0).getInstructionType();
+        assertTrue(instructionType == InstructionType.PayFine);
         
         for (Instruction instruction : ruleResult.getOptions().get(0).getInstructions())
         {
             _gameModel.executeInstruction(instruction);
         }
-        assertTrue(_gameModel.getCurrentPlayerIndex() == 1);
+        assertTrue(_gameModel.getCurrentPlayerIndex() == 0);
     }
     
     @Test
@@ -169,13 +169,13 @@ public class RuleProviderUnitTests
         
         assertTrue(ruleResult.getMessage().toLowerCase().contains("card"));
         assertTrue(ruleResult.getOptions().size() == 2);
-        assertTrue(ruleResult.getOptions().get(0).getInstructions().get(1).getInstructionType() == InstructionType.MoveToNextPlayer);
+        assertTrue(ruleResult.getOptions().get(0).getInstructions().get(0).getInstructionType() == InstructionType.PayFine);
         
         for (Instruction instruction : ruleResult.getOptions().get(0).getInstructions())
         {
             _gameModel.executeInstruction(instruction);
         }
-        assertTrue(_gameModel.getCurrentPlayerIndex() == 1);
+        assertTrue(_gameModel.getCurrentPlayerIndex() == 0);
     }    
     
     @Test
@@ -189,18 +189,41 @@ public class RuleProviderUnitTests
         
         assertTrue(ruleResult.getMessage().toLowerCase().contains("card"));
         assertTrue(ruleResult.getOptions().size() == 2);
-        assertTrue(ruleResult.getOptions().get(0).getInstructions().get(1).getInstructionType() == InstructionType.MoveToNextPlayer);
+        assertTrue(ruleResult.getOptions().get(0).getInstructions().get(0).getInstructionType() == InstructionType.GoBackNumSpaces);
         
         for (Instruction instruction : ruleResult.getOptions().get(0).getInstructions())
         {
             _gameModel.executeInstruction(instruction);
         }
         assertTrue(_gameModel.getPlayers().get(0).getCurrentSpaceIndex() == 4);
-        assertTrue(_gameModel.getCurrentPlayerIndex() == 1);
+        assertTrue(_gameModel.getCurrentPlayerIndex() == 0);
     }
    
     @Test
     public void movedToNewSpace_propertySpace_payRent_Test1()
+    {
+        _gameModel.setGameStage(GameStageType.MovedToNewSpace);  //should work at any stage
+        _gameModel.setCurrentPlayerIndex(0);
+        _gameModel.getCurrentPlayer().setBalance(1000);
+        _gameModel.getCurrentPlayer().setCurrentSpaceIndex(1);
+        _gameModel.getProperties().get(0).setOwnerIndex(1); //brown
+        _gameModel.getProperties().get(1).setOwnerIndex(1); //brown
+        _gameModel.getProperties().get(0).setNumberOfHouses(1);
+        
+        RuleResult ruleResult = RuleProvider.CheckRules(_gameModel);
+        
+        assertTrue(ruleResult.getMessage().contains("You must pay rent"));
+        assertTrue(ruleResult.getOptions().size() == 2);
+        assertTrue(ruleResult.getOptions().get(0).getOptionType() == PlayerOptionType.PayRent);
+        int rentDue = ruleResult.getOptions().get(0).getInstructions().get(0).getAmount1();
+        assertTrue(rentDue == 10);
+        int ownerIndex = ruleResult.getOptions().get(0).getInstructions().get(0).getTargetSpaceIndex();
+        assertTrue(ownerIndex == 1);
+        assertTrue(ruleResult.getOptions().get(1).getOptionType() == PlayerOptionType.LeaveGame);
+    }    
+
+    @Test
+    public void movedToNewSpace_propertySpace_payRent_Utility()
     {
         _gameModel.setGameStage(GameStageType.MovedToNewSpace);  //should work at any stage
         _gameModel.setCurrentPlayerIndex(0);
