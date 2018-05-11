@@ -1,3 +1,4 @@
+
 package propertytycoon;
 
 
@@ -1272,3 +1273,5 @@ public class GUI_2 extends javax.swing.JFrame implements ActionListener,WindowLi
     public void windowDeactivated(WindowEvent e) {}
     public void windowClosed(WindowEvent e) {}
 }
+
+

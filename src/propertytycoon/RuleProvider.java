@@ -345,7 +345,8 @@ public class RuleProvider
                         }
                     }
                     else if (currentProperty.getPropertyType() != PropertyType.Standard)
-                    {
+                    {                    result.addOption(new PlayerOption("Trade properties", PlayerOptionType.TradeProperties, new Instruction("", InstructionType.TradeProperties, 0, 0, 0)));
+
                         int propertyIndex = gameModel.getPropertyIndex(currentProperty);
                         result.setMessage("Property Option: " + currentProperty.getPropertyName());
                         result.addOption(new PlayerOption("Sell Property " + currentProperty.getPropertyName() + " for " + currentProperty.getPurchasePrice(), PlayerOptionType.SellProperty, currentProperty.getPropertyName(), new Instruction("", InstructionType.SellProperty, 0, 0, propertyIndex), endOfTurnInstruction));
@@ -413,6 +414,8 @@ public class RuleProvider
                     }
                     result.setMessage("End of turn - move to next player");
                     result.addOption(new PlayerOption("Move to next player", PlayerOptionType.EndOfTurn, new Instruction("End of turn", InstructionType.MoveToNextPlayer, 0, 0, 0)));
+                                        result.addOption(new PlayerOption("Trade properties", PlayerOptionType.TradeProperties, new Instruction("", InstructionType.TradeProperties, 0, 0, 0)));
+
                     if (gameModel.isIsTradingAllowed())
                     {
                         result.addOption(new PlayerOption("Trade properties", PlayerOptionType.TradeProperties, new Instruction("", InstructionType.TradeProperties, 0, 0, 0)));
@@ -462,17 +465,20 @@ public class RuleProvider
                 else
                 {
                     result.setMessage("End of turn - move to next player");
+                                        result.addOption(new PlayerOption("Trade properties", PlayerOptionType.TradeProperties, new Instruction("", InstructionType.TradeProperties, 0, 0, 0)));
+
                     result.addOption(new PlayerOption("Move to next player", PlayerOptionType.EndOfTurn, new Instruction("End of turn", InstructionType.MoveToNextPlayer, 0, 0, 0)));
                     return result;
                 }
         
             case EndOfTurn:
             {
-                if (gameModel.isIsTradingAllowed())
-                {
-                    result.addOption(new PlayerOption("Trade properties", PlayerOptionType.TradeProperties, new Instruction("", InstructionType.TradeProperties, 0, 0, 0)));
-                }
+                 
+                
+
                 result.addOption(new PlayerOption("End Turn", PlayerOptionType.EndOfTurn, new Instruction("", InstructionType.MoveToNextPlayer, 0, 0, 0)));
+              result.addOption(new PlayerOption("Trade properties", PlayerOptionType.TradeProperties, new Instruction("", InstructionType.TradeProperties, 0, 0, 0)));
+
                 result.addOption(new PlayerOption("Leave Game", PlayerOptionType.LeaveGame, new Instruction("", InstructionType.LeaveGame, 0, 0, 0)));
 
                 break;
