@@ -8,6 +8,17 @@ package propertytycoon;
 
 import java.util.ArrayList;
 import java.util.Random;
+import propertytycoon.Card.CardSpace;
+import propertytycoon.Card.CardType;
+import propertytycoon.GameModel.GameStageType;
+import static propertytycoon.GameModel.GameStageType.MovedToNewSpace;
+import propertytycoon.Instruction.InstructionSpace;
+import propertytycoon.Instruction.InstructionType;
+import propertytycoon.Player.PlayerOption;
+import propertytycoon.Player.PlayerOptionType;
+import propertytycoon.Property.PropertyGroupColour;
+import propertytycoon.Property.PropertySpace;
+import propertytycoon.Property.PropertyType;
 
 /**
  * The RuleProvider class contains all rules for the game.
@@ -474,6 +485,66 @@ public class RuleProvider
     }
 
 
+public static class RuleResult
+{
+    String _message;
+    private ArrayList<Instruction> _instructions;
+    private ArrayList<PlayerOption> _options;
+
+    /**
+     * Constructor
+     */
+    public RuleResult()
+    {
+        _instructions = new ArrayList<Instruction>();
+        _options = new ArrayList<PlayerOption>();
+    }
+
+    public void addInstruction(Instruction instruction)
+    {
+        _instructions.add(instruction);
+    }
+    
+    public void addInstructions(ArrayList<Instruction> instructions)
+    {
+        _instructions.addAll(instructions);
+    }
+
+    public void addOption(PlayerOption option)
+    {
+        _options.add(option);
+    }
+        
+    public ArrayList<Instruction> getInstructions()
+    {
+        return _instructions;
+    }
+
+    public void setInstructions(ArrayList<Instruction> _instructions)
+    {
+        this._instructions = _instructions;
+    }
+
+    public String getMessage()
+    {
+        return _message;
+    }
+
+    public void setMessage(String _message)
+    {
+        this._message = _message;
+    }
+
+    public ArrayList<PlayerOption> getOptions()
+    {
+        return _options;
+    }
+
+    public void setOptions(ArrayList<PlayerOption> _options)
+    {
+        this._options = _options;
+    }
+}
 
 }
 

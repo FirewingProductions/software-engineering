@@ -52,6 +52,12 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.WindowConstants;
 import jxl.read.biff.BiffException;
+import propertytycoon.Player.PlayerOption;
+import propertytycoon.Player.PlayerOptionType;
+import propertytycoon.Property.PropertyGroupColour;
+import propertytycoon.Property.PropertySpace;
+import propertytycoon.Property.PropertyType;
+import propertytycoon.UserChoiceRequest.UserChoiceResponse;
 
 /**
  * This class implements the game user interface
