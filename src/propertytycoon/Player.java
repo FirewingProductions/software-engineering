@@ -29,7 +29,7 @@ public class Player
     private boolean _hasGetOutOfJailFreeCardFromPotLuck;
     private boolean _hasGetOutOfJailFreeCardFromOpportunity;
     private boolean _selectOpportunityKnocks;
-    private int _timesPlayerHasPassedGo = 1;
+    private int _timesPlayerHasPassedGo;
     
     private ArrayList<String> _instructionLog = new ArrayList<String>();
 

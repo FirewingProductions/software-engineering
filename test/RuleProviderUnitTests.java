@@ -160,26 +160,6 @@ public class RuleProviderUnitTests
     {
         _gameModel.setGameStage(GameStageType.MovedToNewSpace);
         _gameModel.getCurrentPlayer().setCurrentSpaceIndex(7);  //opportunoty knocks
-        _gameModel.getOpportunityCards().add(0, (new Card(new Instruction("Fined £15 for speeding", InstructionType.PayFine, 15, 0, 0))));
-        
-        RuleResult ruleResult = RuleProvider.CheckRules(_gameModel);
-        
-        assertTrue(ruleResult.getMessage().toLowerCase().contains("card"));
-        assertTrue(ruleResult.getOptions().size() == 2);
-        assertTrue(ruleResult.getOptions().get(0).getInstructions().get(0).getInstructionType() == InstructionType.PayFine);
-        
-        for (Instruction instruction : ruleResult.getOptions().get(0).getInstructions())
-        {
-            _gameModel.executeInstruction(instruction);
-        }
-        assertTrue(_gameModel.getCurrentPlayerIndex() == 0);
-    }    
-    
-    @Test
-    public void movedToNewSpace_cardSpace_Test3()
-    {
-        _gameModel.setGameStage(GameStageType.MovedToNewSpace);
-        _gameModel.getCurrentPlayer().setCurrentSpaceIndex(7);  //opportunoty knocks
         _gameModel.getOpportunityCards().add(0, new Card(new Instruction("Move Back 3 Spaces", InstructionType.GoBackNumSpaces, 3, 0, 0)));
         
         RuleResult ruleResult = RuleProvider.CheckRules(_gameModel);
@@ -219,26 +199,5 @@ public class RuleProviderUnitTests
         assertTrue(ruleResult.getOptions().get(1).getOptionType() == PlayerOptionType.LeaveGame);
     }    
 
-    @Test
-    public void movedToNewSpace_propertySpace_payRent_Utility()
-    {
-        _gameModel.setGameStage(GameStageType.MovedToNewSpace);  //should work at any stage
-        _gameModel.setCurrentPlayerIndex(0);
-        _gameModel.getCurrentPlayer().setBalance(1000);
-        _gameModel.getCurrentPlayer().setCurrentSpaceIndex(1);
-        _gameModel.getProperties().get(0).setOwnerIndex(1); //brown
-        _gameModel.getProperties().get(1).setOwnerIndex(1); //brown
-        _gameModel.getProperties().get(0).setNumberOfHouses(1);
-        
-        RuleResult ruleResult = RuleProvider.CheckRules(_gameModel);
-        
-        assertTrue(ruleResult.getMessage().contains("You must pay rent"));
-        assertTrue(ruleResult.getOptions().size() == 2);
-        assertTrue(ruleResult.getOptions().get(0).getOptionType() == PlayerOptionType.PayRent);
-        int rentDue = ruleResult.getOptions().get(0).getInstructions().get(0).getAmount1();
-        assertTrue(rentDue == 10);
-        int ownerIndex = ruleResult.getOptions().get(0).getInstructions().get(0).getTargetSpaceIndex();
-        assertTrue(ownerIndex == 1);
-        assertTrue(ruleResult.getOptions().get(1).getOptionType() == PlayerOptionType.LeaveGame);
-    }    
+  
 }
