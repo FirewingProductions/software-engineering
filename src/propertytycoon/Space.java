@@ -5,6 +5,8 @@
  */
 package propertytycoon;
 
+import propertytycoon.Instruction.InstructionSpace;
+
 /**
  * This is the superclass representing all board spaces
  */
@@ -38,4 +40,50 @@ public class Space
     {
         return _title;
     }
+    
+    public static class JailSpace extends Space
+{
+
+    /**
+     * Constructor
+     * @param title
+     */
+    public JailSpace(String title)
+    {
+        super(title);
+    }
+
+    /**
+     * Constructor
+     */
+    public JailSpace()
+    {
+    }
+    
+}
+public static class GoSpace extends InstructionSpace
+{
+
+    /**
+     *  Constructor
+     * @param title
+     * @param _instruction
+     */
+    public  GoSpace(String title, Instruction _instruction)
+    {
+        super(title,_instruction);
+    }
+
+    /**
+     * Constructor
+     */
+    public GoSpace()
+    {
+        super();
+    }
+
+       
+    
+}
+
 }

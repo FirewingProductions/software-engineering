@@ -6,6 +6,10 @@
 package propertytycoon;
 
 import java.util.ArrayList;
+import propertytycoon.Instruction.InstructionType;
+import propertytycoon.Property.PropertyGroupColour;
+import propertytycoon.Property.PropertySpace;
+import propertytycoon.Property.PropertyType;
 
 /**
  * The GameModel class is the top-level class for all game data.
@@ -48,7 +52,7 @@ public class GameModel
                         
         for (int playerIndex = 0; playerIndex < 6; ++playerIndex)
         {
-            _players.add(new Player(PlayerTokenType.values()[playerIndex], false, false, 1500));
+            _players.add(new Player(Player.PlayerTokenType.values()[playerIndex], false, false, 1500));
         }
     }
     
@@ -365,15 +369,15 @@ public class GameModel
         int playerIndex = 0;
         for (; playerIndex < numHumanPlayers; ++playerIndex)
         {
-            _players.add(new Player(PlayerTokenType.values()[playerIndex], true, false, 1500));
+            _players.add(new Player(Player.PlayerTokenType.values()[playerIndex], true, false, 1500));
         }
         for (;playerIndex < numHumanPlayers + numAutoPlayers; ++playerIndex)
         {
-            _players.add(new Player(PlayerTokenType.values()[playerIndex], true, true, 1500));
+            _players.add(new Player(Player.PlayerTokenType.values()[playerIndex], true, true, 1500));
         }
         for (;playerIndex < 6; ++playerIndex)
         {
-            _players.add(new Player(PlayerTokenType.values()[playerIndex], false, false, 1500));
+            _players.add(new Player(Player.PlayerTokenType.values()[playerIndex], false, false, 1500));
         }
     }
 
@@ -940,5 +944,13 @@ public class GameModel
     {
         this._potLuckCards = _cards;
     }
-   
+   public static  enum GameStageType
+{
+
+    StartOfTurn,
+    DiceThrown,
+    MovedToNewSpace,
+    EndOfTurn
+}
+
 }

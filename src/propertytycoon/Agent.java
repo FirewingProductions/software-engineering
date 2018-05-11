@@ -7,6 +7,10 @@ package propertytycoon;
 
 import java.util.ArrayList;
 import java.util.Random;
+import propertytycoon.Player.PlayerOption;
+import propertytycoon.Player.PlayerOptionType;
+import propertytycoon.Property.PropertySpace;
+import propertytycoon.UserChoiceRequest.UserChoiceResponse;
 
 /**
  * The automated agent that plays the game for any player set to 'Auto'
