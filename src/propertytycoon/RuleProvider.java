@@ -8,17 +8,6 @@ package propertytycoon;
 
 import java.util.ArrayList;
 import java.util.Random;
-import propertytycoon.Card.CardSpace;
-import propertytycoon.Card.CardType;
-import propertytycoon.GameModel.GameStageType;
-import static propertytycoon.GameModel.GameStageType.MovedToNewSpace;
-import propertytycoon.Instruction.InstructionSpace;
-import propertytycoon.Instruction.InstructionType;
-import propertytycoon.Player.PlayerOption;
-import propertytycoon.Player.PlayerOptionType;
-import propertytycoon.Property.PropertyGroupColour;
-import propertytycoon.Property.PropertySpace;
-import propertytycoon.Property.PropertyType;
 
 /**
  * The RuleProvider class contains all rules for the game.
@@ -68,53 +57,7 @@ public class RuleProvider
             {
                 //build valid options for clearing the negative balance
                 result.setMessage("You have run out of money, so need to sell something");
-
-                //Add all options to sell or motgage various properties
-                ArrayList<Property> playerProperties = gameModel.getPlayerProperties(currentPlayerIndex);
-
-                //find out which groups the player owns
-                ArrayList<PropertyGroupColour> playerGroups = new ArrayList<>();
-                for (Property playerProperty : playerProperties)
-                {
-                    PropertyGroupColour groupColor = playerProperty.getPropertyGroup();
-                    if (!playerGroups.contains(groupColor))
-                    {
-                        playerGroups.add(groupColor);
-                    }
-                }
-
-                //find out which houses can be sold
-                for (PropertyGroupColour groupColour : playerGroups)
-                {
-                    ArrayList<Property> playerGroupProperties = gameModel.getPlayerGroupProperties(groupColour, currentPlayerIndex);
-                    int maxNumberOfHouses = 0;
-                    for (Property groupProperty : playerGroupProperties)
-                    {
-                        if (groupProperty.getNumberOfHouses() > maxNumberOfHouses)
-                            maxNumberOfHouses = groupProperty.getNumberOfHouses();
-                    }
-                    ArrayList<Property> propertiesWithMaxHouses = new ArrayList<>();
-                    for (Property groupProperty : playerGroupProperties)
-                    {
-                        if (groupProperty.getNumberOfHouses() == maxNumberOfHouses)
-                            propertiesWithMaxHouses.add(groupProperty);
-                    }
-                    for (Property groupProperty : propertiesWithMaxHouses)
-                    {
-                        int groupPropertyIndex = gameModel.getPropertyIndex(groupProperty);
-                        if (groupProperty.getNumberOfHouses() > 0)
-                        {
-                            result.addOption(new PlayerOption("Sell House on " + groupProperty.getPropertyName() + " for " + groupProperty.getHousePrice(), PlayerOptionType.SellHouse, groupProperty.getPropertyName(), 
-                                new Instruction("", InstructionType.SellHouse, 0, 0, groupPropertyIndex)));
-                        }
-                        else
-                        {
-                            result.addOption(new PlayerOption("Sell Property " + groupProperty.getPropertyName() + " for " + groupProperty.getPurchasePrice(), PlayerOptionType.SellProperty, groupProperty.getPropertyName(), new Instruction("", InstructionType.SellProperty, 0, 0, groupPropertyIndex)));
-                            result.addOption(new PlayerOption("Mortgage Property " + groupProperty.getPropertyName(), PlayerOptionType.MortgageProperty, groupProperty.getPropertyName(), new Instruction("", InstructionType.MortgageProperty, 0, 0, groupPropertyIndex)));
-                        }
-                    }
-                }
-
+                addSellOptions(gameModel, currentPlayerIndex, result); //Add all options to sell or motgage various properties
                 result.addOption(new PlayerOption("Leave Game", PlayerOptionType.LeaveGame, new Instruction("", InstructionType.LeaveGame, 0, 0, 0)));
                 return result;
             }
@@ -187,8 +130,9 @@ public class RuleProvider
                     {
                         if (currentProperty.getOwnerIndex() < 0)  //no-one owns it yet
                         {
+                            //Rule 8: Players may not purchase property until they have completed one complete circuit of the board by passing the Go space
                             if (currentPlayer.getBalance() >= currentProperty.getPurchasePrice() 
-                                    && currentPlayer.getTimesPlayerHasPassedGo() > 0)  //Rule 8: Players may not purchase property until they have completed one complete circuit of the board by passing the Go space
+                                    && currentPlayer.getTimesPlayerHasPassedGo() > 0)  
                             {
                                 result.setMessage("You may buy the property " + currentProperty.getPropertyName());
                                 result.addOption(new PlayerOption("Buy property", PlayerOptionType.BuyProperty, new Instruction("", InstructionType.BuyProperty, 0, 0, 0)));
@@ -197,7 +141,7 @@ public class RuleProvider
                                 {
                                     result.addOption(new PlayerOption("Trade properties", PlayerOptionType.TradeProperties, new Instruction("", InstructionType.TradeProperties, 0, 0, 0)));
                                 }
-                                result.addOption(new PlayerOption("End Turn", PlayerOptionType.EndOfTurn, new Instruction("", InstructionType.MoveToNextPlayer, 0, 0, 0)));
+                                result.addOption(new PlayerOption("End Turn", PlayerOptionType.EndOfTurn, new Instruction("", InstructionType.SetEndOfTurn, 0, 0, 0)));
                                 result.addOption(new PlayerOption("Leave Game", PlayerOptionType.LeaveGame, new Instruction("", InstructionType.LeaveGame, 0, 0, 0)));
                                 return result;
                             }
@@ -291,137 +235,11 @@ public class RuleProvider
                             }
                             else
                             {
-                                result.setMessage("End of turn - move to next player");
-                                result.addOption(new PlayerOption("Move to next player", PlayerOptionType.EndOfTurn, new Instruction("End of turn", InstructionType.MoveToNextPlayer, 0, 0, 0)));
-                                if (gameModel.isIsTradingAllowed())
-                                {
-                                    result.addOption(new PlayerOption("Trade properties", PlayerOptionType.TradeProperties, new Instruction("", InstructionType.TradeProperties, 0, 0, 0)));
-                                }
-                                result.addOption(new PlayerOption("Leave Game", PlayerOptionType.LeaveGame, new Instruction("", InstructionType.LeaveGame, 0, 0, 0)));
-                                return result;
+                                gameModel.setGameStage(GameStageType.EndOfTurn);
+                                addEndOfTurnOptions(gameModel, currentPlayerIndex, result);
                             }
                         }
                     }
-                    else if (currentProperty.getIsMortgaged())
-                    {
-                        result.setMessage("Property is Mortgaged");
-                        result.addOption(new PlayerOption("Un-mortgage property", PlayerOptionType.UnmortgageProperty, new Instruction("End of turn", InstructionType.UnMortgageProperty, 0, 0, 0)));
-                        result.addOption(new PlayerOption("Move to next player", PlayerOptionType.EndOfTurn, new Instruction("End of turn", InstructionType.MoveToNextPlayer, 0, 0, 0)));
-                        if (gameModel.isIsTradingAllowed())
-                        {
-                            result.addOption(new PlayerOption("Trade properties", PlayerOptionType.TradeProperties, new Instruction("", InstructionType.TradeProperties, 0, 0, 0)));
-                        }
-                        result.addOption(new PlayerOption("Leave Game", PlayerOptionType.LeaveGame, new Instruction("", InstructionType.LeaveGame, 0, 0, 0)));
-                        return result;
-                    }
-                    else if (currentProperty.getPropertyType() == PropertyType.Standard 
-                            && currentPlayer.getBalance() >= currentProperty.getHousePrice() 
-                            && !currentProperty.hasHotel()) //player does own the property so can it be improved?
-                    {
-                        //Rule 17: Houses and hotels may only be purchased for properties where a player owns all of the properties in a particular colour coded group.
-                        ArrayList<Property> groupProperties = gameModel.getGroupProperties(currentPropertyColour);
-                        ArrayList<Property> playerGroupProperties = gameModel.getPlayerGroupProperties(currentPropertyColour, currentPlayerIndex);
-                        if (groupProperties.size() == playerGroupProperties.size())
-                        {
-                            //player owns all of the properties in the group
-                            //Rule 20: Where a coloured set of properties is owned and developed by a player, there may never be a difference of more than 1 house between the properties in that set
-                            int numHousesOnCurrentProperty = currentProperty.getNumberOfHouses();
-                            boolean canImprove = true;
-                            for (Property property : playerGroupProperties)
-                            {
-                                if (numHousesOnCurrentProperty > property.getNumberOfHouses())
-                                {
-                                    //can't improve, so nothing else to do. Move to next player
-                                    canImprove = false;
-                                }
-                            }
-                            if (canImprove)
-                            {
-                                result.setMessage("Property can be improved: " + currentProperty.getPropertyName());
-                                result.addOption(new PlayerOption("Improve property", PlayerOptionType.ImproveProperty, new Instruction("", InstructionType.ImproveProperty, 0, 0, 0)));
-                                result.addOption(new PlayerOption("Leave Game", PlayerOptionType.LeaveGame, new Instruction("", InstructionType.LeaveGame, 0, 0, 0)));
-                                return result;
-                            }
-                        }
-                    }
-                    else if (currentProperty.getPropertyType() != PropertyType.Standard)
-                    {                    result.addOption(new PlayerOption("Trade properties", PlayerOptionType.TradeProperties, new Instruction("", InstructionType.TradeProperties, 0, 0, 0)));
-
-                        int propertyIndex = gameModel.getPropertyIndex(currentProperty);
-                        result.setMessage("Property Option: " + currentProperty.getPropertyName());
-                        result.addOption(new PlayerOption("Sell Property " + currentProperty.getPropertyName() + " for " + currentProperty.getPurchasePrice(), PlayerOptionType.SellProperty, currentProperty.getPropertyName(), new Instruction("", InstructionType.SellProperty, 0, 0, propertyIndex), endOfTurnInstruction));
-                        result.addOption(new PlayerOption("Mortgage Property " + currentProperty.getPropertyName(), PlayerOptionType.MortgageProperty, currentProperty.getPropertyName(), new Instruction("", InstructionType.MortgageProperty, 0, 0, propertyIndex), endOfTurnInstruction));
-                        result.addOption(new PlayerOption("Move to next player", PlayerOptionType.EndOfTurn, new Instruction("End of turn", InstructionType.MoveToNextPlayer, 0, 0, 0)));
-                        if (gameModel.isIsTradingAllowed())
-                        {
-                            result.addOption(new PlayerOption("Trade properties", PlayerOptionType.TradeProperties, new Instruction("", InstructionType.TradeProperties, 0, 0, 0)));
-                        }
-                        result.addOption(new PlayerOption("Leave Game", PlayerOptionType.LeaveGame, new Instruction("", InstructionType.LeaveGame, 0, 0, 0)));
-                        return result;
-                    }
-                    else
-                    {
-                        ArrayList<Property> groupProperties = gameModel.getGroupProperties(currentPropertyColour);
-                        ArrayList<Property> playerGroupProperties = gameModel.getPlayerGroupProperties(currentPropertyColour, currentPlayerIndex);
-                        if (groupProperties.size() == playerGroupProperties.size())
-                        {
-                            //player owns all of the properties in the group and there are no
-                            //Rule 20: Where a coloured set of properties is owned and developed by a player, there may never be a difference of more than 1 house between the properties in that set
-                            int numHousesOnCurrentProperty = currentProperty.getNumberOfHouses();
-                            if (numHousesOnCurrentProperty > 0)
-                            {
-                                boolean canSellHouse = true;
-                                int totalHouses = 0;
-                                for (Property property : playerGroupProperties)
-                                {
-                                    totalHouses += property.getNumberOfHouses();
-                                    if (numHousesOnCurrentProperty < property.getNumberOfHouses())
-                                    {
-                                        canSellHouse = false;
-                                    }
-                                }
-
-                                if (canSellHouse)
-                                {
-//                                    result.setMessage("Property can be improved: " + currentProperty.getPropertyName());
-                                    int propertyIndex = gameModel.getPropertyIndex(currentProperty);
-                                    result.setMessage("Property Option: " + currentProperty.getPropertyName());                                    
-                                    result.addOption(new PlayerOption("Sell House", PlayerOptionType.SellHouse, new Instruction("", InstructionType.SellHouse, 0, 0, propertyIndex), endOfTurnInstruction));
-                                    result.addOption(new PlayerOption("Move to next player", PlayerOptionType.EndOfTurn, new Instruction("End of turn", InstructionType.MoveToNextPlayer, 0, 0, 0)));
-                                    if (gameModel.isIsTradingAllowed())
-                                    {
-                                        result.addOption(new PlayerOption("Trade properties", PlayerOptionType.TradeProperties, new Instruction("", InstructionType.TradeProperties, 0, 0, 0)));
-                                    }
-                                    result.addOption(new PlayerOption("Leave Game", PlayerOptionType.LeaveGame, new Instruction("", InstructionType.LeaveGame, 0, 0, 0)));
-                                    return result;
-                                }
-                                else if (totalHouses == 0)
-                                {
-                                    int propertyIndex = gameModel.getPropertyIndex(currentProperty);
-                                    result.setMessage("Property Option: " + currentProperty.getPropertyName());                                    
-                                    result.addOption(new PlayerOption("Sell Property " + currentProperty.getPropertyName() + " for " + currentProperty.getPurchasePrice(), PlayerOptionType.SellProperty, currentProperty.getPropertyName(), new Instruction("", InstructionType.SellProperty, 0, 0, propertyIndex) , endOfTurnInstruction));
-                                    result.addOption(new PlayerOption("Mortgage Property " + currentProperty.getPropertyName(), PlayerOptionType.MortgageProperty, currentProperty.getPropertyName(), new Instruction("", InstructionType.MortgageProperty, 0, 0, propertyIndex), endOfTurnInstruction));
-                                    result.addOption(new PlayerOption("Move to next player", PlayerOptionType.EndOfTurn, new Instruction("End of turn", InstructionType.MoveToNextPlayer, 0, 0, 0)));
-                                    if (gameModel.isIsTradingAllowed())
-                                    {
-                                        result.addOption(new PlayerOption("Trade properties", PlayerOptionType.TradeProperties, new Instruction("", InstructionType.TradeProperties, 0, 0, 0)));
-                                    }
-                                    result.addOption(new PlayerOption("Leave Game", PlayerOptionType.LeaveGame, new Instruction("", InstructionType.LeaveGame, 0, 0, 0)));
-                                    return result;
-                                }
-                            }
-                        }
-                    }
-                    result.setMessage("End of turn - move to next player");
-                    result.addOption(new PlayerOption("Move to next player", PlayerOptionType.EndOfTurn, new Instruction("End of turn", InstructionType.MoveToNextPlayer, 0, 0, 0)));
-                                        result.addOption(new PlayerOption("Trade properties", PlayerOptionType.TradeProperties, new Instruction("", InstructionType.TradeProperties, 0, 0, 0)));
-
-                    if (gameModel.isIsTradingAllowed())
-                    {
-                        result.addOption(new PlayerOption("Trade properties", PlayerOptionType.TradeProperties, new Instruction("", InstructionType.TradeProperties, 0, 0, 0)));
-                    }
-                    result.addOption(new PlayerOption("Leave Game", PlayerOptionType.LeaveGame, new Instruction("", InstructionType.LeaveGame, 0, 0, 0)));
-                    return result;
                 }
                 else if (currentSpace instanceof CardSpace)
                 {
@@ -465,22 +283,13 @@ public class RuleProvider
                 else
                 {
                     result.setMessage("End of turn - move to next player");
-                                        result.addOption(new PlayerOption("Trade properties", PlayerOptionType.TradeProperties, new Instruction("", InstructionType.TradeProperties, 0, 0, 0)));
-
                     result.addOption(new PlayerOption("Move to next player", PlayerOptionType.EndOfTurn, new Instruction("End of turn", InstructionType.MoveToNextPlayer, 0, 0, 0)));
                     return result;
                 }
         
             case EndOfTurn:
             {
-                 
-                
-
-                result.addOption(new PlayerOption("End Turn", PlayerOptionType.EndOfTurn, new Instruction("", InstructionType.MoveToNextPlayer, 0, 0, 0)));
-              result.addOption(new PlayerOption("Trade properties", PlayerOptionType.TradeProperties, new Instruction("", InstructionType.TradeProperties, 0, 0, 0)));
-
-                result.addOption(new PlayerOption("Leave Game", PlayerOptionType.LeaveGame, new Instruction("", InstructionType.LeaveGame, 0, 0, 0)));
-
+                addEndOfTurnOptions(gameModel, currentPlayerIndex, result);
                 break;
             }
             default:
@@ -489,68 +298,110 @@ public class RuleProvider
         
         return result;
     }
-
-
-public static class RuleResult
-{
-    String _message;
-    private ArrayList<Instruction> _instructions;
-    private ArrayList<PlayerOption> _options;
-
-    /**
-     * Constructor
-     */
-    public RuleResult()
-    {
-        _instructions = new ArrayList<Instruction>();
-        _options = new ArrayList<PlayerOption>();
-    }
-
-    public void addInstruction(Instruction instruction)
-    {
-        _instructions.add(instruction);
-    }
     
-    public void addInstructions(ArrayList<Instruction> instructions)
+    private static void addEndOfTurnOptions(GameModel gameModel, int currentPlayerIndex, RuleResult result)
     {
-        _instructions.addAll(instructions);
+        result.setMessage("End of turn - available improvement, sales and trading options");
+        addImprovementOptions(gameModel, currentPlayerIndex, result);
+        addSellOptions(gameModel, currentPlayerIndex, result);
+        if (gameModel.isIsTradingAllowed())
+        {
+            result.addOption(new PlayerOption("Trade properties", PlayerOptionType.TradeProperties, new Instruction("", InstructionType.TradeProperties, 0, 0, 0)));
+        }
+        result.addOption(new PlayerOption("End Turn", PlayerOptionType.EndOfTurn, new Instruction("", InstructionType.MoveToNextPlayer, 0, 0, 0)));
+        result.addOption(new PlayerOption("Leave Game", PlayerOptionType.LeaveGame, new Instruction("", InstructionType.LeaveGame, 0, 0, 0)));
     }
 
-    public void addOption(PlayerOption option)
+    private static void addImprovementOptions(GameModel gameModel, int currentPlayerIndex, RuleResult result)
     {
-        _options.add(option);
-    }
-        
-    public ArrayList<Instruction> getInstructions()
-    {
-        return _instructions;
+        ArrayList<Property> playerProperties = gameModel.getPlayerProperties(currentPlayerIndex);
+        Player currentPlayer = gameModel.getPlayers().get(currentPlayerIndex);
+   
+        //Rule 17: Houses and hotels may only be purchased for properties where a player owns all of the properties in a particular colour coded group.
+        for (Property currentProperty : playerProperties)
+        {
+            int currentPropertyIndex = gameModel.getPropertyIndex(currentProperty);
+            if (currentProperty.getIsMortgaged() && currentPlayer.getBalance() >= currentProperty.getMortgageValue())
+            {
+                result.addOption(new PlayerOption("Un-mortgage property " + currentProperty.getPropertyName(), PlayerOptionType.UnmortgageProperty, new Instruction("End of turn", InstructionType.UnMortgageProperty, 0, 0, currentPropertyIndex)));
+            }
+            else
+            {
+                //Rule 20: Where a coloured set of properties is owned and developed by a player, there may never be a difference of more than 1 house between the properties in that set
+                PropertyGroupColour propertyColour = currentProperty.getPropertyGroup();
+                ArrayList<Property> groupProperties = gameModel.getGroupProperties(propertyColour);
+                ArrayList<Property> playerGroupProperties = gameModel.getPlayerGroupProperties(propertyColour, currentPlayerIndex);
+
+                if (groupProperties.size() == playerGroupProperties.size())  //player owns all of the properties in the group
+                {
+                    int numHousesOnCurrentProperty = currentProperty.getNumberOfHouses();
+                    boolean canImprove = true;
+                    for (Property groupPproperty : playerGroupProperties)
+                    {
+                        if (numHousesOnCurrentProperty > groupPproperty.getNumberOfHouses())
+                        {
+                            //can't improve, so nothing else to do. Move to next player
+                            canImprove = false;
+                        }
+                    }
+                    if (canImprove && currentPlayer.getBalance() >= currentProperty.getHousePrice())
+                    {
+                        result.addOption(new PlayerOption("Buy house on " + currentProperty.getPropertyName(), PlayerOptionType.ImproveProperty, new Instruction("", InstructionType.ImproveProperty, 0, 0, currentPropertyIndex)));
+                    }
+                }
+            }
+        }
     }
 
-    public void setInstructions(ArrayList<Instruction> _instructions)
+    private static void addSellOptions(GameModel gameModel, int currentPlayerIndex, RuleResult result)
     {
-        this._instructions = _instructions;
+        ArrayList<Property> playerProperties = gameModel.getPlayerProperties(currentPlayerIndex);
+
+        //find out which groups the player owns
+        ArrayList<PropertyGroupColour> playerGroups = new ArrayList<>();
+        for (Property playerProperty : playerProperties)
+        {
+            PropertyGroupColour groupColor = playerProperty.getPropertyGroup();
+            if (!playerGroups.contains(groupColor))
+            {
+                playerGroups.add(groupColor);
+            }
+        }
+
+        //find out which houses can be sold
+        for (PropertyGroupColour groupColour : playerGroups)
+        {
+            ArrayList<Property> playerGroupProperties = gameModel.getPlayerGroupProperties(groupColour, currentPlayerIndex);
+            int maxNumberOfHouses = 0;
+            for (Property groupProperty : playerGroupProperties)
+            {
+                if (groupProperty.getNumberOfHouses() > maxNumberOfHouses)
+                    maxNumberOfHouses = groupProperty.getNumberOfHouses();
+            }
+            ArrayList<Property> propertiesWithMaxHouses = new ArrayList<>();
+            for (Property groupProperty : playerGroupProperties)
+            {
+                if (groupProperty.getNumberOfHouses() == maxNumberOfHouses)
+                    propertiesWithMaxHouses.add(groupProperty);
+            }
+            for (Property groupProperty : propertiesWithMaxHouses)
+            {
+                int propertyIndex = gameModel.getPropertyIndex(groupProperty);
+                if (groupProperty.getNumberOfHouses() > 0)
+                {
+                    result.addOption(new PlayerOption("Sell House on " + groupProperty.getPropertyName() + " for " + groupProperty.getHousePrice(), PlayerOptionType.SellHouse, groupProperty.getPropertyName(), 
+                        new Instruction("", InstructionType.SellHouse, 0, 0, propertyIndex)));
+                }
+                else
+                {
+                    result.addOption(new PlayerOption("Sell Property " + groupProperty.getPropertyName() + " for " + groupProperty.getPurchasePrice(), PlayerOptionType.SellProperty, groupProperty.getPropertyName(), new Instruction("", InstructionType.SellProperty, 0, 0, propertyIndex)));
+                    result.addOption(new PlayerOption("Mortgage Property " + groupProperty.getPropertyName(), PlayerOptionType.MortgageProperty, groupProperty.getPropertyName(), new Instruction("", InstructionType.MortgageProperty, 0, 0, propertyIndex)));
+                }
+            }
+        }
+
     }
 
-    public String getMessage()
-    {
-        return _message;
-    }
-
-    public void setMessage(String _message)
-    {
-        this._message = _message;
-    }
-
-    public ArrayList<PlayerOption> getOptions()
-    {
-        return _options;
-    }
-
-    public void setOptions(ArrayList<PlayerOption> _options)
-    {
-        this._options = _options;
-    }
-}
 
 }
 

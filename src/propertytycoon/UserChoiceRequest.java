@@ -6,14 +6,13 @@
 package propertytycoon;
 
 import java.util.ArrayList;
-import propertytycoon.Player.PlayerOption;
 
 /**
  * This class contains the player options for the next step of the game. It is returned
  * to the GUI after the Player has clicked the go button  * to send the current 
  * selected option for processing.
  */
-public  class UserChoiceRequest
+public class UserChoiceRequest
 {
     private ArrayList<PlayerOption> _options;
     private String _message;
@@ -70,34 +69,5 @@ public  class UserChoiceRequest
     {
         _options = new ArrayList<PlayerOption>();
     }
-    public static interface IUserChoice 
-{
-    UserChoiceResponse MakeChoice(UserChoiceRequest request);
-}
-    public static class UserChoiceResponse
-{
     
-    private PlayerOption _selectedOption;
-
-    /**
-     * Constructor
-     * @param selectedOption
-     */
-    public UserChoiceResponse(PlayerOption selectedOption)
-    {
-        _selectedOption = selectedOption;
-    }
-
-    public PlayerOption getSelectedOption()
-    {
-        return _selectedOption;
-    }
-
-    public void setSelectedOption(PlayerOption _selectedOption)
-    {
-        this._selectedOption = _selectedOption;
-    }
-
-}
-
 }

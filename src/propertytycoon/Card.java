@@ -38,38 +38,4 @@ public class Card
         this._instruction = instruction;
     }
     
-
-public static class CardSpace extends Space
-{
-    private CardType _cardType;
-
-    /**
-     * Constructor
-     * @param title
-     * @param cardType
-     */
-    public CardSpace(String title, CardType cardType)
-    {
-        super(title);
-        _cardType = cardType;
-    }
-    
-    public CardType getCardType()
-    {
-        return _cardType;
-    }
-
-    public void setCardType(CardType _cardType)
-    {
-        this._cardType = _cardType;
-    }
-
-}
- 
-public static enum CardType
-{
-    PotLuck,
-    Opportunity
-}
-
 }

@@ -6,10 +6,6 @@
 package propertytycoon;
 
 import java.util.ArrayList;
-import propertytycoon.Instruction.InstructionType;
-import propertytycoon.Property.PropertyGroupColour;
-import propertytycoon.Property.PropertySpace;
-import propertytycoon.Property.PropertyType;
 
 /**
  * The GameModel class is the top-level class for all game data.
@@ -52,7 +48,7 @@ public class GameModel
                         
         for (int playerIndex = 0; playerIndex < 6; ++playerIndex)
         {
-            _players.add(new Player(Player.PlayerTokenType.values()[playerIndex], false, false, 1500));
+            _players.add(new Player(PlayerTokenType.values()[playerIndex], false, false, 1500));
         }
     }
     
@@ -369,15 +365,15 @@ public class GameModel
         int playerIndex = 0;
         for (; playerIndex < numHumanPlayers; ++playerIndex)
         {
-            _players.add(new Player(Player.PlayerTokenType.values()[playerIndex], true, false, 1500));
+            _players.add(new Player(PlayerTokenType.values()[playerIndex], true, false, 1500));
         }
         for (;playerIndex < numHumanPlayers + numAutoPlayers; ++playerIndex)
         {
-            _players.add(new Player(Player.PlayerTokenType.values()[playerIndex], true, true, 1500));
+            _players.add(new Player(PlayerTokenType.values()[playerIndex], true, true, 1500));
         }
         for (;playerIndex < 6; ++playerIndex)
         {
-            _players.add(new Player(Player.PlayerTokenType.values()[playerIndex], false, false, 1500));
+            _players.add(new Player(PlayerTokenType.values()[playerIndex], false, false, 1500));
         }
     }
 
@@ -688,7 +684,8 @@ public class GameModel
             }
             case UnMortgageProperty:
             {
-                Property property = ((PropertySpace)currentSpace).getProperty();
+                int propertyIndex = instruction.getTargetSpaceIndex();
+                Property property = _properties.get(propertyIndex);
                 property.setIsMortgaged(false);
                 currentPlayer.setBalance(currentPlayer.getBalance() - property.getPurchasePrice() / 2);
                 break;
@@ -732,6 +729,11 @@ public class GameModel
                 moveToNextPlayer();
 
                 break;
+            case SetEndOfTurn:
+            {
+                _gameStage = GameStageType.EndOfTurn;
+                break;
+            }
             case TradeProperties:
                 int otherPlayerIndex = instruction.getAmount1();
                 int propertyIndex1 = instruction.getAmount2();
@@ -944,13 +946,5 @@ public class GameModel
     {
         this._potLuckCards = _cards;
     }
-   public static  enum GameStageType
-{
-
-    StartOfTurn,
-    DiceThrown,
-    MovedToNewSpace,
-    EndOfTurn
-}
-
+   
 }
